@@ -46,6 +46,7 @@ export default defineConfig({
         "house-map":     path.resolve(import.meta.dirname, "house-map.html"),
         marketplace:     path.resolve(import.meta.dirname, "marketplace.html"),
         gangs:           path.resolve(import.meta.dirname, "gangs.html"),
+        admin:           path.resolve(import.meta.dirname, "admin.html"),
         cafes:           path.resolve(import.meta.dirname, "cafes.html"),
         restaurants:     path.resolve(import.meta.dirname, "restaurants.html"),
         bank:            path.resolve(import.meta.dirname, "bank.html"),

@@ -28,6 +28,36 @@ function requireAdmin(req: Request, res: Response) {
   return user;
 }
 
+// ── GET /admin/stats ──────────────────────────────────────────────────────────
+router.get("/admin/stats", async (req, res) => {
+  const admin = requireAdmin(req, res);
+  if (!admin) return;
+  try {
+    const counts = await Promise.all([
+      rawQuery(`SELECT COUNT(*) AS n FROM house_ownership`),
+      rawQuery(`SELECT COUNT(*) AS n FROM business_state`),
+      rawQuery(`SELECT COUNT(*) AS n FROM gangs`),
+      rawQuery(`SELECT COUNT(*) AS n FROM marketplace_listings WHERE status='active'`),
+      rawQuery(`SELECT COUNT(*) AS n FROM house_rental_listings WHERE is_available=true`),
+      rawQuery(`SELECT COUNT(*) AS n FROM tw_profiles`),
+      rawQuery(`SELECT COUNT(*) AS n FROM msg_profiles`),
+      rawQuery(`SELECT COUNT(*) AS n FROM known_users`),
+    ]);
+    res.json({
+      houses:         Number(counts[0][0]?.n ?? 0),
+      businesses:     Number(counts[1][0]?.n ?? 0),
+      gangs:          Number(counts[2][0]?.n ?? 0),
+      listings:       Number(counts[3][0]?.n ?? 0),
+      rentalListings: Number(counts[4][0]?.n ?? 0),
+      twitterUsers:   Number(counts[5][0]?.n ?? 0),
+      msgUsers:       Number(counts[6][0]?.n ?? 0),
+      knownUsers:     Number(counts[7][0]?.n ?? 0),
+    });
+  } catch (err) {
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
 // ── POST /admin/reset-data ────────────────────────────────────────────────────
 // Clears ALL game data. Money lives in the Discord bot so is unaffected.
 // Tables kept: auth_codes (sessions), msg_config (phone counter)

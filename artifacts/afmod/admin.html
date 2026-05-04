@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة الأدمن — عرب فيرست</title>
+  <link rel="icon" type="image/png" href="afmod-logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#04080f;--panel:#070d1a;--p2:#0b1323;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+      --text:#d8eaf5;--muted:rgba(216,234,245,.45);--green:#22c55e;--red:#ef4444;--gold:#d4af37;--cyan:#00d4ff;
+      --gdim:rgba(212,175,55,.12);--grborder:rgba(34,197,94,.2);--grdim:rgba(34,197,94,.1);
+      --rddim:rgba(239,68,68,.1);--rdborder:rgba(239,68,68,.2);
+      --font:'Reem Kufi',sans-serif;
+    }
+    body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100dvh;padding:2rem 1rem}
+    #loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:1rem}
+    .spinner{width:36px;height:36px;border:3px solid rgba(212,175,55,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .page-wrap{max-width:800px;margin:0 auto}
+    .page-header{display:flex;align-items:center;gap:1rem;margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+    .page-icon{width:52px;height:52px;background:var(--gdim);border:1px solid rgba(212,175,55,.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+    .page-title{font-size:1.6rem;font-weight:800;color:var(--gold)}
+    .page-sub{font-size:.82rem;color:var(--muted);margin-top:.25rem}
+    .section{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:1.75rem;margin-bottom:1.5rem}
+    .section-title{font-size:1rem;font-weight:700;margin-bottom:1.25rem;display:flex;align-items:center;gap:.6rem}
+    .section-title svg{width:18px;height:18px;opacity:.7}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem;margin-bottom:1.5rem}
+    .stat-box{background:var(--p2);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center}
+    .stat-val{font-size:1.6rem;font-weight:900;color:var(--cyan)}
+    .stat-lbl{font-size:.72rem;color:var(--muted);margin-top:.3rem}
+    .danger-zone{border-color:var(--rdborder);background:rgba(239,68,68,.04)}
+    .danger-title{color:var(--red)}
+    .danger-desc{font-size:.84rem;color:var(--muted);line-height:1.7;margin-bottom:1.5rem;padding:.9rem;background:var(--rddim);border:1px solid var(--rdborder);border-radius:10px}
+    .danger-desc strong{color:var(--text)}
+    .confirm-row{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap}
+    .confirm-inp{flex:1;min-width:200px;background:var(--p2);border:1px solid var(--border2);border-radius:10px;padding:.7rem 1rem;color:var(--text);font-family:var(--font);font-size:.9rem;outline:none}
+    .confirm-inp:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.15)}
+    .btn-danger{background:var(--red);color:#fff;border:none;border-radius:10px;padding:.75rem 1.5rem;font-family:var(--font);font-size:.9rem;font-weight:700;cursor:pointer;transition:opacity .2s;display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap}
+    .btn-danger:hover{opacity:.85}
+    .btn-danger:disabled{opacity:.4;cursor:not-allowed}
+    .btn-secondary{background:var(--p2);color:var(--text);border:1px solid var(--border2);border-radius:10px;padding:.65rem 1.25rem;font-family:var(--font);font-size:.85rem;font-weight:600;cursor:pointer;transition:opacity .2s;display:inline-flex;align-items:center;gap:.5rem}
+    .btn-secondary:hover{opacity:.75}
+    .result-box{margin-top:1rem;padding:.8rem 1rem;border-radius:10px;font-size:.85rem;display:none}
+    .result-box.ok{background:var(--grdim);border:1px solid var(--grborder);color:var(--green);display:block}
+    .result-box.err{background:var(--rddim);border:1px solid var(--rdborder);color:var(--red);display:block}
+    .hint{font-size:.76rem;color:var(--muted);margin-top:.6rem}
+    #toast-container{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:.5rem;z-index:9999;pointer-events:none;width:340px;max-width:calc(100vw - 2rem)}
+    .tst{background:var(--panel);border-radius:12px;padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.75rem;box-shadow:0 8px 32px rgba(0,0,0,.6);border:1px solid var(--border);animation:stIn .3s ease;pointer-events:auto}
+    .tst.suc{border-color:var(--grborder)}.tst.err{border-color:var(--rdborder)}
+    .t-ico{font-size:1.1rem;flex-shrink:0}.t-ttl{font-size:.87rem;font-weight:700}.t-msg{font-size:.78rem;color:var(--muted);margin-top:.2rem}
+    @keyframes stIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+    .back-link{display:inline-flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.85rem;text-decoration:none;margin-bottom:1.5rem;transition:color .2s}
+    .back-link:hover{color:var(--text)}
+    .tables-list{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.75rem}
+    .tbl-badge{background:var(--p2);border:1px solid var(--border);border-radius:6px;padding:.2rem .55rem;font-size:.7rem;color:var(--muted);font-family:monospace}
+  </style>
+</head>
+<body>
+  <div id="loading-screen"><div class="spinner"></div></div>
+
+  <div id="page" class="page-wrap" style="display:none">
+    <a href="index.html" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      الرئيسية
+    </a>
+
+    <div class="page-header">
+      <div class="page-icon">⚙️</div>
+      <div>
+        <div class="page-title">لوحة الأدمن</div>
+        <div class="page-sub">صلاحيات خاصة بـ n16q فقط</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        إحصائيات البيانات الحالية
+      </div>
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-box"><div class="stat-val" style="font-size:1.2rem">…</div><div class="stat-lbl">جاري التحميل</div></div>
+      </div>
+      <button class="btn-secondary" onclick="loadStats()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        تحديث الإحصائيات
+      </button>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="section danger-zone">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--red)"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span class="danger-title">تصفير جميع البيانات</span>
+      </div>
+
+      <div class="danger-desc">
+        هذا الإجراء سيحذف <strong>جميع</strong> البيانات التالية بشكل نهائي:<br/>
+        البيوت والمشاريع المملوكة · الإيجارات · العصابات · السوق · التصنيع · تويتر · الرسائل · البنك<br/><br/>
+        <strong>الفلوس لن تُمسّ</strong> — الأرصدة محفوظة في بوت الديسكورد وليس في قاعدة البيانات.
+      </div>
+
+      <div class="confirm-row">
+        <input class="confirm-inp" id="confirm-inp" type="text" placeholder='اكتب "تأكيد التصفير" للمتابعة' autocomplete="off" />
+        <button class="btn-danger" id="reset-btn" onclick="doReset()" disabled>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          تصفير الآن
+        </button>
+      </div>
+      <p class="hint">اكتب بالضبط: تأكيد التصفير</p>
+      <div class="result-box" id="reset-result"></div>
+
+      <div class="tables-list" id="tables-list">
+        <span class="tbl-badge">house_ownership</span><span class="tbl-badge">business_state</span>
+        <span class="tbl-badge">house_rental_listings</span><span class="tbl-badge">house_rental_bookings</span>
+        <span class="tbl-badge">marketplace_listings</span><span class="tbl-badge">marketplace_transactions</span>
+        <span class="tbl-badge">gangs</span><span class="tbl-badge">gang_members</span>
+        <span class="tbl-badge">manufacture_resources</span><span class="tbl-badge">tw_profiles</span>
+        <span class="tbl-badge">tw_tweets</span><span class="tbl-badge">msg_profiles</span>
+        <span class="tbl-badge">msg_chats</span><span class="tbl-badge">bank_owner</span>
+        <span class="tbl-badge">known_users</span><span class="tbl-badge">+ 13 جداول أخرى</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="shared.js"></script>
+  <script>
+  (function () {
+    var ADMIN = "n16q";
+
+    function toast(title, msg, type) {
+      var tc = document.getElementById("toast-container");
+      var el = document.createElement("div");
+      el.className = "tst " + (type === "success" ? "suc" : type === "error" ? "err" : "");
+      el.innerHTML = '<div class="t-ico">' + (type === "success" ? "✓" : type === "error" ? "✕" : "ℹ") + '</div><div><div class="t-ttl">' + title + '</div>' + (msg ? '<div class="t-msg">' + msg + '</div>' : '') + '</div>';
+      tc.appendChild(el);
+      setTimeout(function () { el.remove(); }, 5000);
+    }
+
+    function api(url, opts) {
+      return fetch(url, Object.assign({ credentials: "include", headers: { "Content-Type": "application/json" } }, opts)).then(function (r) {
+        return r.json().then(function (d) {
+          if (!r.ok) { var e = new Error(d.message || "Error"); (e as any).data = d; (e as any).status = r.status; throw e; }
+          return d;
+        });
+      });
+    }
+
+    function loadStats() {
+      var grid = document.getElementById("stats-grid");
+      grid.innerHTML = '<div class="stat-box"><div class="stat-val" style="font-size:1.2rem">…</div><div class="stat-lbl">جاري التحميل</div></div>';
+      api("/api/admin/stats").then(function (d) {
+        var items = [
+          { val: d.houses || 0,       lbl: "بيت مملوك" },
+          { val: d.businesses || 0,   lbl: "مشروع مملوك" },
+          { val: d.gangs || 0,        lbl: "عصابة" },
+          { val: d.listings || 0,     lbl: "إعلان سوق" },
+          { val: d.rentalListings||0, lbl: "إيجار نشط" },
+          { val: d.twitterUsers || 0, lbl: "حساب تويتر" },
+          { val: d.msgUsers || 0,     lbl: "مستخدم رسائل" },
+          { val: d.knownUsers || 0,   lbl: "لاعب مسجّل" },
+        ];
+        grid.innerHTML = items.map(function (i) {
+          return '<div class="stat-box"><div class="stat-val">' + Number(i.val).toLocaleString("ar-SA") + '</div><div class="stat-lbl">' + i.lbl + '</div></div>';
+        }).join("");
+      }).catch(function () {
+        grid.innerHTML = '<div class="stat-box"><div class="stat-val" style="font-size:.9rem;color:var(--red)">فشل التحميل</div><div class="stat-lbl">تحقق من الاتصال</div></div>';
+      });
+    }
+
+    var confirmInp = document.getElementById("confirm-inp");
+    var resetBtn   = document.getElementById("reset-btn");
+    confirmInp.addEventListener("input", function () {
+      resetBtn.disabled = confirmInp.value.trim() !== "تأكيد التصفير";
+    });
+
+    window.doReset = function () {
+      if (confirmInp.value.trim() !== "تأكيد التصفير") return;
+      var result = document.getElementById("reset-result");
+      result.className = "result-box";
+      resetBtn.disabled = true;
+      resetBtn.innerHTML = '<div style="width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite"></div> جاري التصفير…';
+      api("/api/admin/reset-data", { method: "POST", body: JSON.stringify({ confirm: "RESET_ALL_DATA" }) })
+        .then(function (d) {
+          result.textContent = "✓ " + (d.message || "تم التصفير بنجاح");
+          result.className = "result-box ok";
+          confirmInp.value = "";
+          resetBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> تصفير الآن';
+          toast("تم التصفير", "تم حذف جميع البيانات بنجاح.", "success");
+          loadStats();
+        })
+        .catch(function (err) {
+          result.textContent = "✕ " + (err && err.data && err.data.message ? err.data.message : "فشل التصفير");
+          result.className = "result-box err";
+          resetBtn.disabled = false;
+          resetBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> تصفير الآن';
+          toast("فشل", (err && err.data && err.data.message) || "حدث خطأ", "error");
+        });
+    };
+
+    window.loadStats = loadStats;
+
+    window.afCheckAuth(function (user) {
+      document.getElementById("loading-screen").classList.add("hidden");
+      if (!user || user.username !== ADMIN) {
+        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;min-height:100dvh;font-family:Reem Kufi,sans-serif;color:#ef4444;font-size:1.2rem">⛔ غير مصرح</div>';
+        return;
+      }
+      document.getElementById("page").style.display = "";
+      loadStats();
+    });
+  })();
+  </script>
+</body>
+</html>
