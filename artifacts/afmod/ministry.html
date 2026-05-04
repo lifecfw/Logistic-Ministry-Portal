@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>وزارة اللوجستيك | عرب فيرست</title>
+    <meta name="description" content="البوابة الرسمية لوزارة اللوجستيك في عرب فيرست." />
+    <!-- Open Graph / Embed -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="وزارة اللوجستيك | عرب فيرست" />
+    <meta property="og:description" content="البوابة الرسمية لتملّك الأصول في عرب فيرست — AFMOD Ministry of Logistics" />
+    <meta property="og:image" content="/afmod-logo.png" />
+    <meta property="og:site_name" content="Arab First" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="وزارة اللوجستيك | عرب فيرست" />
+    <meta name="twitter:description" content="البوابة الرسمية لتملّك الأصول في عرب فيرست" />
+    <meta name="twitter:image" content="/afmod-logo.png" />
+    <link rel="icon" type="image/png" href="afmod-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Login view -->
+    <div id="login-view" class="view hidden">
+      <div class="login-bg-gradient"></div>
+      <div class="login-bg-texture"></div>
+      <img src="navy-marble.png" alt="" class="login-bg-marble" />
+      <div class="login-card-wrapper">
+        <div class="login-card">
+          <div class="login-card-accent"></div>
+          <div class="login-card-body">
+            <div class="login-logo-wrapper">
+              <div class="login-logo-glow"></div>
+              <img src="afmod-logo.png" alt="AFMOD Seal" class="login-logo" />
+            </div>
+            <h1 class="login-title">بوابة وزارة اللوجستيك</h1>
+            <div class="login-divider"></div>
+            <form id="request-form" class="login-form">
+              <p class="login-description">الدخول مخصص للمواطنين المعتمدين. يرجى إدخال اسم المستخدم في ديسكورد للتحقق من هويتك.</p>
+              <input id="discord-username" type="text" class="input-field" placeholder="اسم المستخدم في ديسكورد" dir="ltr" autocomplete="username" required />
+              <button id="request-submit" type="submit" class="btn-primary">
+                <span class="btn-label">اطلب رمز التحقق</span>
+              </button>
+            </form>
+            <form id="verify-form" class="login-form hidden">
+              <p class="login-description">تم إرسال رمز التحقق في رسالة خاصة إلى<br /><span id="matched-username" class="matched-username" dir="ltr"></span></p>
+              <div class="otp-wrapper" dir="ltr">
+                <div class="otp-group" id="otp-group">
+                  <input type="text" inputmode="numeric" maxlength="1" class="otp-slot" data-index="0" />
+                  <input type="text" inputmode="numeric" maxlength="1" class="otp-slot" data-index="1" />
+                  <input type="text" inputmode="numeric" maxlength="1" class="otp-slot" data-index="2" />
+                  <input type="text" inputmode="numeric" maxlength="1" class="otp-slot" data-index="3" />
+                  <input type="text" inputmode="numeric" maxlength="1" class="otp-slot" data-index="4" />
+                  <input type="text" inputmode="numeric" maxlength="1" class="otp-slot" data-index="5" />
+                </div>
+                <div id="otp-timer" class="otp-timer">0:00</div>
+              </div>
+              <button id="verify-submit" type="submit" class="btn-primary" disabled>
+                <span class="btn-label">تحقق و دخول</span>
+              </button>
+              <button id="restart-btn" type="button" class="btn-link">ابدأ من جديد</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Home view -->
+    <div id="home-view" class="view hidden">
+      <div id="watermark" class="watermark"></div>
+      <div class="texture-overlay"></div>
+      <header class="site-header" id="site-header"></header>
+      <main class="main-content">
+        <section class="hero-section">
+          <div class="hero-bg-gradient"></div>
+          <img src="navy-marble.png" alt="" class="hero-bg-marble" />
+          <div class="container hero-content">
+            <div class="hero-seal"><img src="afmod-logo.png" alt="Seal" /></div>
+            <div class="hero-text">
+              <h1 class="hero-title">أهلاً بك في وزارة اللوجستيك</h1>
+              <p class="hero-subtitle">المواطن <span id="hero-citizen-name" class="hero-citizen-name"></span>، نرحب بك في البوابة الرسمية.</p>
+              <div class="hero-underline"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Nav cards -->
+        <section class="container home-cards-section">
+          <h2 class="home-cards-title">خدمات الوزارة</h2>
+          <div class="home-cards-grid">
+            <a href="houses.html" class="home-nav-card">
+              <div class="home-nav-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/>
+                  <path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/>
+                  <path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/>
+                </svg>
+              </div>
+              <div class="home-nav-card-body">
+                <h3>السكن الرسمي</h3>
+                <p>تصفّح المشاريع السكنية المعتمدة واشترِ وحدتك</p>
+              </div>
+              <div class="home-nav-card-arrow">&#8592;</div>
+            </a>
+            <a href="cars.html" class="home-nav-card">
+              <div class="home-nav-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/>
+                  <circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/>
+                </svg>
+              </div>
+              <div class="home-nav-card-body">
+                <h3>معرض السيارات</h3>
+                <p>كافة المركبات المرخّصة من السيدان إلى الفاخر</p>
+              </div>
+              <div class="home-nav-card-arrow">&#8592;</div>
+            </a>
+            <a href="gas.html" class="home-nav-card">
+              <div class="home-nav-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="22" x2="15" y2="22"/><line x1="4" y1="9" x2="14" y2="9"/>
+                  <path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/>
+                  <path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2v0a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/>
+                </svg>
+              </div>
+              <div class="home-nav-card-body">
+                <h3>محطات الوقود</h3>
+                <p>امتلك أحد المشاريع الثلاثة الرسمية في المدينة</p>
+              </div>
+              <div class="home-nav-card-arrow">&#8592;</div>
+            </a>
+            <a href="grocery.html" class="home-nav-card home-nav-card-green">
+              <div class="home-nav-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+              </div>
+              <div class="home-nav-card-body">
+                <h3>محلات البقالة</h3>
+                <p>مشاريع البقالة المستقلة التابعة لمحطات الوقود</p>
+              </div>
+              <div class="home-nav-card-arrow">&#8592;</div>
+            </a>
+            <a href="manufacture.html" class="home-nav-card" style="border-color:rgba(0,212,255,.25);background:linear-gradient(135deg,rgba(0,212,255,.06),rgba(0,0,0,0));">
+              <div class="home-nav-card-icon" style="color:#00d4ff;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M21 12h-2M5 12H3M19.07 19.07l-1.41-1.41M5.34 5.34 3.93 3.93"/>
+                  <path d="M12 2v2M12 20v2"/>
+                </svg>
+              </div>
+              <div class="home-nav-card-body">
+                <h3 style="color:#00d4ff;">المصنع السري</h3>
+                <p>نقّب عن الموارد وصنّع سلاحك الخاص — للمختارين فقط</p>
+              </div>
+              <div class="home-nav-card-arrow">&#8592;</div>
+            </a>
+            <a href="barber.html" class="home-nav-card">
+              <div class="home-nav-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 2v20"/><path d="M18 2v20"/><path d="M6 12h12"/>
+                  <path d="M2 7h4"/><path d="M18 7h4"/><path d="M2 17h4"/><path d="M18 17h4"/>
+                </svg>
+              </div>
+              <div class="home-nav-card-body">
+                <h3>محل الحلاقة</h3>
+                <p>محل الحلاقة الرسمي في ليبرتي كاونتي</p>
+              </div>
+              <div class="home-nav-card-arrow">&#8592;</div>
+            </a>
+            <a href="cafes.html" class="home-nav-card">
+              <div class="home-nav-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>
+                  <line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/>
+                </svg>
+              </div>
+              <div class="home-nav-card-body">
+                <h3>المقاهي والمخابز</h3>
+                <p>مقهى ليبرتي ومخبزة سبرينغ الرسميتان</p>
+              </div>
+              <div class="home-nav-card-arrow">&#8592;</div>
+            </a>
+            <a href="restaurants.html" class="home-nav-card home-nav-card-green">
+              <div class="home-nav-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/>
+                  <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+                </svg>
+              </div>
+              <div class="home-nav-card-body">
+                <h3>المطاعم</h3>
+                <p>لا ميسا وثري غايز وريك وجون — ثلاثة مطاعم</p>
+              </div>
+              <div class="home-nav-card-arrow">&#8592;</div>
+            </a>
+            <a href="stores.html" class="home-nav-card">
+              <div class="home-nav-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/>
+                </svg>
+              </div>
+              <div class="home-nav-card-body">
+                <h3>المحلات التجارية</h3>
+                <p>ستة محلات — ملابس ومجوهرات وأدوات وسلاح</p>
+              </div>
+              <div class="home-nav-card-arrow">&#8592;</div>
+            </a>
+            <a href="bank.html" class="home-nav-card" style="border-color:rgba(212,175,55,.3);background:linear-gradient(135deg,rgba(212,175,55,.07),rgba(0,0,0,0));">
+              <div class="home-nav-card-icon" style="color:#d4af37;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="22" x2="21" y2="22"/><rect x="5" y="12" width="3" height="10"/>
+                  <rect x="11" y="12" width="3" height="10"/><rect x="17" y="12" width="3" height="10"/>
+                  <polygon points="12 2 20 7 4 7"/>
+                </svg>
+              </div>
+              <div class="home-nav-card-body">
+                <h3 style="color:#d4af37;">البنك الرسمي</h3>
+                <p>بنك ريفر سيتي — أعلى عائد استثماري</p>
+              </div>
+              <div class="home-nav-card-arrow">&#8592;</div>
+            </a>
+            <a href="my-properties.html" class="home-nav-card home-nav-card-gold">
+              <div class="home-nav-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <polyline points="9 12 11 14 15 10"/>
+                </svg>
+              </div>
+              <div class="home-nav-card-body">
+                <h3>ممتلكاتي</h3>
+                <p>سياراتك ومساكنك ومشاريعك المسجّلة في الوزارة</p>
+              </div>
+              <div class="home-nav-card-arrow">&#8592;</div>
+            </a>
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer">
+        <div class="container footer-content">
+          <img src="afmod-logo.png" alt="AFMOD Seal" class="footer-logo" />
+          <p class="footer-line-en">ARAB FIRST CITY — MINISTRY OF LOGISTICS</p>
+          <p class="footer-line-ar">النظام • الدقة • الاعتمادية</p>
+        </div>
+      </footer>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="shared.js"></script>
+    <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var show = function (el) { if (el) el.classList.remove("hidden"); };
+      var hide = function (el) { if (el) el.classList.add("hidden"); };
+      var state = { matchedUsername: "", expiresIn: 0, timerId: null };
+
+      function showLoading() { show($("loading-screen")); hide($("login-view")); hide($("home-view")); }
+      function showLogin()   { hide($("loading-screen")); hide($("home-view")); show($("login-view")); resetLoginForm(); }
+      function showHome(user) {
+        hide($("loading-screen")); hide($("login-view")); show($("home-view"));
+        $("hero-citizen-name").textContent = user.displayName;
+        window.afRenderHeader(user, "home");
+        window.afRenderWatermark(user);
+      }
+
+      function resetLoginForm() {
+        show($("request-form")); hide($("verify-form"));
+        $("discord-username").value = "";
+        document.querySelectorAll(".otp-slot").forEach(function (s) { s.value = ""; });
+        if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+        $("verify-submit").disabled = true;
+      }
+
+      function getOtp() {
+        var v = ""; document.querySelectorAll(".otp-slot").forEach(function (s) { v += s.value; }); return v;
+      }
+
+      function startTimer(sec) {
+        state.expiresIn = sec;
+        var timer = $("otp-timer");
+        function render() { var m = Math.floor(state.expiresIn/60), s = state.expiresIn%60; timer.textContent = m+":"+(s<10?"0":"")+s; }
+        render();
+        if (state.timerId) clearInterval(state.timerId);
+        state.timerId = setInterval(function () { state.expiresIn = Math.max(0,state.expiresIn-1); render(); if (!state.expiresIn) { clearInterval(state.timerId); state.timerId = null; } }, 1000);
+      }
+
+      // OTP inputs
+      var slots = Array.prototype.slice.call(document.querySelectorAll(".otp-slot"));
+      slots.forEach(function (slot, i) {
+        slot.addEventListener("input", function (e) {
+          var v = e.target.value.replace(/\D/g,""); e.target.value = v.charAt(v.length-1)||"";
+          if (e.target.value && i < slots.length-1) slots[i+1].focus();
+          $("verify-submit").disabled = getOtp().length !== 6;
+        });
+        slot.addEventListener("keydown", function (e) { if (e.key==="Backspace" && !e.target.value && i>0) slots[i-1].focus(); });
+        slot.addEventListener("paste", function (e) {
+          e.preventDefault(); var text=(e.clipboardData||window.clipboardData).getData("text").replace(/\D/g,"").slice(0,6);
+          slots.forEach(function (s,j) { s.value = text.charAt(j)||""; }); $("verify-submit").disabled = getOtp().length!==6;
+        });
+      });
+
+      // Request form
+      $("request-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var username = $("discord-username").value.trim(); if (!username) return;
+        var btn = $("request-submit"); btn.disabled = true; btn.querySelector(".btn-label").textContent = "جاري الإرسال...";
+        window.afApi.request(username).then(function (data) {
+          state.matchedUsername = data.discordUsername;
+          $("matched-username").textContent = "@" + data.discordUsername;
+          hide($("request-form")); show($("verify-form"));
+          startTimer(data.expiresInSeconds || 600);
+          var first = document.querySelector(".otp-slot"); if (first) first.focus();
+        }).catch(function (err) {
+          var msg = "حدث خطأ غير متوقع";
+          if (err.status === 404) msg = "لم نجد مستخدم ديسكورد بهذا الاسم";
+          else if (err.status === 403) msg = "تأكد من أنك في سيرفر AFMOD وأن الرسائل الخاصة مفعّلة";
+          else if (err.status === 429) msg = "الرجاء الانتظار قبل طلب رمز جديد";
+          window.afToast("خطأ", msg, "error");
+        }).then(function () { btn.disabled = false; btn.querySelector(".btn-label").textContent = "اطلب رمز التحقق"; });
+      });
+
+      // Verify form
+      $("verify-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var code = getOtp(); if (code.length !== 6) return;
+        var btn = $("verify-submit"); btn.disabled = true; btn.querySelector(".btn-label").textContent = "جاري التحقق...";
+        window.afApi.verify(state.matchedUsername, code).then(function (user) {
+          if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+          showHome(user);
+        }).catch(function () { window.afToast("رمز غير صحيح", "الرمز غير صحيح أو منتهي الصلاحية", "error"); })
+        .then(function () { btn.disabled = getOtp().length!==6; btn.querySelector(".btn-label").textContent = "تحقق و دخول"; });
+      });
+
+      $("restart-btn").addEventListener("click", resetLoginForm);
+
+      // Bootstrap
+      showLoading();
+      window.afApi.me().then(function (user) { showHome(user); }).catch(function () { showLogin(); });
+    })();
+    </script>
+  </body>
+</html>

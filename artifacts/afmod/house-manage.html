@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>إدارة البيت | عرب فيرست</title>
+  <link rel="icon" type="image/png" href="afmod-logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#04080f;--bg2:#060c16;--panel:#070d1a;--p2:#0b1323;--p3:#0f192e;
+      --border:rgba(212,175,55,.10);--border2:rgba(212,175,55,.22);
+      --gold:#d4af37;--gdim:rgba(212,175,55,.12);--glow:rgba(212,175,55,.28);
+      --cyan:#00d4ff;--cdim:rgba(0,212,255,.10);
+      --green:#22c55e;--grdim:rgba(34,197,94,.12);
+      --red:#ef4444;--rdim:rgba(239,68,68,.12);
+      --text:#d8eaf5;--muted:rgba(216,234,245,.50);--dim:rgba(216,234,245,.25);
+      --font:'Cairo',sans-serif;--navw:248px;
+    }
+    html,body{min-height:100dvh;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;overflow-x:hidden}
+    .hidden{display:none!important}
+    button,input,textarea,select{font-family:var(--font)}
+    body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;
+      background:repeating-linear-gradient(0deg,rgba(0,0,0,.03) 0,rgba(0,0,0,.03) 1px,transparent 1px,transparent 2px)}
+
+    /* loading */
+    #vl{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;z-index:100}
+    .ring{width:80px;height:80px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--gold);animation:spin 1s linear infinite;position:relative}
+    .ring-inner{position:absolute;inset:12px;background:var(--panel);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* watermark */
+    .wm{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;display:flex;flex-wrap:wrap;gap:2.5rem;padding:2rem;align-content:flex-start;opacity:.025;user-select:none}
+    .wm-item{font-size:.8rem;color:var(--gold);white-space:nowrap;transform:rotate(-22deg);letter-spacing:.08em}
+
+    /* layout */
+    .site-header{position:sticky;top:0;z-index:50;background:rgba(4,8,15,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    .container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+    .header-content{display:flex;align-items:center;gap:1rem;height:64px;justify-content:space-between}
+    .header-brand{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:inherit}
+    .header-logo{height:36px;width:36px;object-fit:contain}
+    .header-titles{display:flex;flex-direction:column}
+    .header-title-ar{font-size:.95rem;font-weight:700;color:var(--gold);line-height:1.2}
+    .header-title-en{font-size:.65rem;color:var(--muted);letter-spacing:.08em;line-height:1.2}
+    .header-nav{display:flex;gap:.25rem;flex-wrap:wrap}
+    .nav-link{padding:.4rem .75rem;border-radius:6px;font-size:.82rem;font-weight:600;color:var(--muted);text-decoration:none;transition:background .15s,color .15s;white-space:nowrap}
+    .nav-link:hover,.nav-active{background:var(--gdim);color:var(--gold)}
+    .header-user{display:flex;align-items:center;gap:.75rem}
+    .header-balance{font-size:.8rem;color:var(--gold);background:var(--gdim);border:1px solid var(--border2);border-radius:20px;padding:.3rem .85rem;white-space:nowrap}
+    .user-pill{display:flex;align-items:center;gap:.6rem;background:var(--p2);border:1px solid var(--border);border-radius:40px;padding:.3rem .7rem .3rem .4rem}
+    .user-pill-text{display:flex;flex-direction:column;align-items:flex-end}
+    .user-display-name{font-size:.82rem;font-weight:700;line-height:1.2}
+    .user-username{font-size:.7rem;color:var(--muted);line-height:1.2}
+    .user-avatar{width:32px;height:32px;border-radius:50%;overflow:hidden;background:var(--p3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--gold)}
+    .user-avatar img{width:100%;height:100%;object-fit:cover}
+    .btn-icon{background:none;border:none;color:var(--muted);cursor:pointer;padding:.4rem;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:color .15s,background .15s}
+    .btn-icon:hover{color:var(--red);background:var(--rdim)}
+    .btn-icon svg{width:18px;height:18px}
+
+    /* main */
+    .main-content{padding:2rem 0 4rem}
+
+    /* back bar */
+    .back-bar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem}
+    .back-link{display:inline-flex;align-items:center;gap:.5rem;color:var(--gold);text-decoration:none;font-size:.88rem;font-weight:600;padding:.35rem .8rem;border:1px solid var(--border2);border-radius:8px;background:var(--gdim);transition:background .15s}
+    .back-link:hover{background:rgba(212,175,55,.22)}
+    .back-link svg{width:16px;height:16px}
+
+    /* house header */
+    .house-header{display:flex;align-items:center;gap:1.25rem;margin-bottom:2rem;padding:1.5rem;background:var(--p2);border:1px solid var(--border2);border-radius:14px}
+    .house-icon{width:72px;height:72px;border-radius:10px;overflow:hidden;background:var(--p3);border:1px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2.2rem}
+    .house-icon img{width:100%;height:100%;object-fit:cover}
+    .house-header-info{flex:1}
+    .house-tag{font-size:.7rem;font-weight:700;letter-spacing:.1em;color:var(--gold);text-transform:uppercase;margin-bottom:.25rem}
+    .house-header-name{font-size:1.45rem;font-weight:900;color:#fff;margin-bottom:.2rem}
+    .house-header-sub{font-size:.82rem;color:var(--muted)}
+
+    /* state cards */
+    .hm-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
+    .hm-stat-card{background:var(--p2);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1rem;text-align:center}
+    .hm-stat-card-gold{border-color:var(--border2);background:linear-gradient(135deg,rgba(212,175,55,.07),var(--p2))}
+    .hm-stat-label{font-size:.75rem;color:var(--muted);font-weight:600;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em}
+    .hm-stat-value{font-size:1.55rem;font-weight:900;color:#fff}
+    .hm-stat-value-gold{color:var(--gold)}
+    .hm-stat-sub{font-size:.73rem;color:var(--muted);margin-top:.2rem}
+
+    /* sections */
+    .hm-section{background:var(--p2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem}
+    .hm-section-title{font-size:1rem;font-weight:800;color:#fff;margin-bottom:.25rem;display:flex;align-items:center;gap:.6rem}
+    .hm-section-title svg{width:18px;height:18px;color:var(--gold)}
+    .hm-section-desc{font-size:.8rem;color:var(--muted);margin-bottom:1rem;margin-top:.25rem}
+
+    /* profit log chart */
+    .hm-chart-wrap{height:180px;position:relative;margin-bottom:.5rem}
+    .hm-chart-note{font-size:.75rem;color:var(--muted);text-align:center}
+
+    /* withdraw */
+    .hm-withdraw-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+    .hm-withdraw-desc{font-size:.82rem;color:var(--muted);margin-bottom:.5rem}
+    .hm-withdraw-amount{font-size:.92rem;font-weight:700;color:var(--gold)}
+    .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.7rem 1.5rem;border-radius:8px;border:1px solid rgba(212,175,55,.4);background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(212,175,55,.08));color:var(--gold);font-size:.88rem;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap}
+    .btn-primary:hover:not(:disabled){background:linear-gradient(135deg,rgba(212,175,55,.28),rgba(212,175,55,.14));border-color:rgba(212,175,55,.65)}
+    .btn-primary:disabled{opacity:.45;cursor:not-allowed}
+    .btn-danger{border-color:rgba(239,68,68,.4);background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(239,68,68,.06));color:var(--red)}
+    .btn-danger:hover:not(:disabled){background:linear-gradient(135deg,rgba(239,68,68,.25),rgba(239,68,68,.12));border-color:rgba(239,68,68,.65)}
+
+    /* rental settings */
+    .hm-form-row{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem}
+    .hm-form-label{font-size:.8rem;font-weight:700;color:var(--muted);letter-spacing:.04em}
+    .hm-form-input{background:var(--p3);border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;color:var(--text);font-size:.92rem;width:100%;transition:border .15s}
+    .hm-form-input:focus{outline:none;border-color:var(--border2)}
+    .hm-form-hint{font-size:.73rem;color:var(--muted)}
+    .hm-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1rem;background:var(--p3);border:1px solid var(--border);border-radius:10px;margin-bottom:1rem}
+    .hm-toggle-label{font-size:.88rem;font-weight:700;color:var(--text)}
+    .hm-toggle-sub{font-size:.75rem;color:var(--muted);margin-top:.15rem}
+    .toggle{position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0}
+    .toggle input{opacity:0;width:0;height:0}
+    .toggle-slider{position:absolute;inset:0;background:rgba(216,234,245,.12);border-radius:24px;cursor:pointer;transition:.2s}
+    .toggle-slider::before{content:"";position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+    .toggle input:checked + .toggle-slider{background:var(--gold)}
+    .toggle input:checked + .toggle-slider::before{transform:translateX(20px)}
+    .hm-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+
+    /* price range info */
+    .hm-price-range{display:flex;gap:.5rem;align-items:center;background:var(--cdim);border:1px solid rgba(0,212,255,.15);border-radius:8px;padding:.6rem 1rem;margin-bottom:1rem}
+    .hm-price-range-icon{font-size:1.1rem}
+    .hm-price-range-text{font-size:.78rem;color:var(--muted);line-height:1.5}
+    .hm-price-range-text strong{color:var(--cyan)}
+
+    /* bookings list */
+    .hm-booking-item{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:var(--p3);border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem}
+    .hm-booking-name{font-size:.88rem;font-weight:700}
+    .hm-booking-meta{font-size:.75rem;color:var(--muted);margin-top:.15rem}
+    .hm-booking-amount{font-size:.92rem;font-weight:700;color:var(--green)}
+
+    /* error / loading */
+    .hm-loading{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:3rem 0;color:var(--muted);font-size:.9rem}
+    .hm-error{text-align:center;padding:2rem 0;color:var(--red);font-size:.88rem}
+
+    /* available badge */
+    .badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.7rem;font-weight:700;padding:.25rem .6rem;border-radius:20px;letter-spacing:.04em}
+    .badge-green{background:var(--grdim);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+    .badge-red{background:var(--rdim);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+
+    /* toast */
+    .toast-container{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:9998;display:flex;flex-direction:column;gap:.5rem;width:min(90vw,360px)}
+    .toast{background:var(--p2);border:1px solid var(--border2);border-radius:10px;padding:.85rem 1.1rem;box-shadow:0 4px 32px rgba(0,0,0,.6)}
+    .toast-error{border-color:rgba(239,68,68,.4);background:linear-gradient(135deg,rgba(239,68,68,.08),var(--p2))}
+    .toast-title{font-size:.85rem;font-weight:800;color:var(--gold);margin-bottom:.2rem}
+    .toast-error .toast-title{color:var(--red)}
+    .toast-body{font-size:.8rem;color:var(--muted)}
+    footer.site-footer{background:var(--p2);border-top:1px solid var(--border);padding:1.25rem 0;text-align:center;margin-top:4rem}
+    .footer-logo{height:32px;margin-bottom:.5rem}
+    .footer-line-en{font-size:.7rem;letter-spacing:.12em;color:var(--muted)}
+    .footer-line-ar{font-size:.72rem;color:var(--dim);margin-top:.2rem}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div id="vl">
+    <div class="ring"><div class="ring-inner">🏠</div></div>
+    <p style="color:var(--gold);font-size:.9rem;font-weight:700;letter-spacing:.06em">AFMOD — وزارة اللوجستيك</p>
+  </div>
+
+  <div id="page" class="hidden">
+    <div id="watermark" class="wm"></div>
+    <header class="site-header" id="site-header"></header>
+
+    <main class="main-content">
+      <div class="container">
+
+        <div class="back-bar">
+          <a href="my-properties.html" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            ممتلكاتي
+          </a>
+        </div>
+
+        <!-- House header -->
+        <div class="house-header">
+          <div class="house-icon" id="hm-icon">🏠</div>
+          <div class="house-header-info">
+            <div class="house-tag">إدارة السكن — AFMOD</div>
+            <div class="house-header-name" id="hm-name">—</div>
+            <div class="house-header-sub" id="hm-sub">يمكنك عرض بيتك للإيجار وسحب أرباحك من هنا.</div>
+          </div>
+        </div>
+
+        <!-- Loading / Error -->
+        <div id="hm-loading" class="hm-loading">
+          <div class="ring"><div class="ring-inner">🏠</div></div>
+          <p>جاري تحميل بيانات البيت…</p>
+        </div>
+        <div id="hm-error" class="hm-error hidden">
+          <p id="hm-error-msg">تعذّر تحميل البيانات.</p>
+        </div>
+
+        <!-- Content -->
+        <div id="hm-content" class="hidden">
+
+          <!-- Stats -->
+          <div class="hm-stats-grid">
+            <div class="hm-stat-card hm-stat-card-gold">
+              <div class="hm-stat-label">أرباح الإيجار المتراكمة</div>
+              <div class="hm-stat-value hm-stat-value-gold" id="stat-profit">$0</div>
+              <div class="hm-stat-sub">جاهزة للسحب</div>
+            </div>
+            <div class="hm-stat-card">
+              <div class="hm-stat-label">حالة العرض</div>
+              <div class="hm-stat-value" id="stat-status" style="font-size:1.1rem;margin-top:.3rem">—</div>
+              <div class="hm-stat-sub" id="stat-price-sub">—</div>
+            </div>
+            <div class="hm-stat-card">
+              <div class="hm-stat-label">حجوزات نشطة</div>
+              <div class="hm-stat-value" id="stat-bookings">0</div>
+              <div class="hm-stat-sub">حجز حالي</div>
+            </div>
+          </div>
+
+          <!-- Withdraw -->
+          <div class="hm-section">
+            <h3 class="hm-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              سحب أرباح الإيجار
+            </h3>
+            <div class="hm-withdraw-row">
+              <div>
+                <p class="hm-withdraw-desc">تُحوَّل أرباح الإيجار فوراً إلى رصيدك في اللعبة عبر البوت.</p>
+                <div class="hm-withdraw-amount">المبلغ المتاح: <strong id="withdraw-display">$0</strong></div>
+              </div>
+              <button id="withdraw-btn" class="btn-primary" type="button" disabled>سحب الأرباح</button>
+            </div>
+          </div>
+
+          <!-- Profit chart -->
+          <div class="hm-section">
+            <h3 class="hm-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              سجل أرباح الإيجار
+            </h3>
+            <div class="hm-chart-wrap">
+              <canvas id="profit-chart"></canvas>
+            </div>
+            <p class="hm-chart-note" id="profit-chart-note"></p>
+          </div>
+
+          <!-- Rental settings -->
+          <div class="hm-section">
+            <h3 class="hm-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              إعدادات الإيجار
+            </h3>
+            <p class="hm-section-desc">حدّد السعر اليومي واجعل البيت متاحاً للإيجار. السعر المسموح به بين 10-15% من قيمة البيت.</p>
+
+            <div class="hm-price-range" id="price-range-info">
+              <div class="hm-price-range-icon">💡</div>
+              <div class="hm-price-range-text">
+                النطاق المسموح به للإيجار اليومي: <strong id="price-min">—</strong> حتى <strong id="price-max">—</strong>
+              </div>
+            </div>
+
+            <div class="hm-toggle-row">
+              <div>
+                <div class="hm-toggle-label">إتاحة البيت للإيجار</div>
+                <div class="hm-toggle-sub">عند التفعيل سيظهر بيتك في قائمة العروض المتاحة</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="toggle-available" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="hm-form-row">
+              <label class="hm-form-label" for="input-price">السعر اليومي ($)</label>
+              <input type="number" id="input-price" class="hm-form-input" placeholder="0" min="0" step="100" />
+              <span class="hm-form-hint" id="price-hint"></span>
+            </div>
+
+            <div class="hm-form-row">
+              <label class="hm-form-label" for="input-notes">ملاحظات للمستأجر (اختياري)</label>
+              <input type="text" id="input-notes" class="hm-form-input" placeholder="أي معلومات إضافية للمستأجر…" maxlength="200" />
+            </div>
+
+            <div class="hm-actions">
+              <button id="save-rental-btn" class="btn-primary" type="button">
+                <span class="btn-label">حفظ الإعدادات</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Active bookings -->
+          <div class="hm-section">
+            <h3 class="hm-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              الحجوزات النشطة
+            </h3>
+            <div id="bookings-list">
+              <p style="color:var(--muted);font-size:.82rem">لا توجد حجوزات نشطة حالياً.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <img src="afmod-logo.png" alt="AFMOD Seal" class="footer-logo" />
+        <p class="footer-line-en">ARAB FIRST — MINISTRY OF LOGISTICS</p>
+        <p class="footer-line-ar">© 2026 Arab First — جميع الحقوق محفوظة</p>
+      </div>
+    </footer>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+  <script src="shared.js"></script>
+  <script src="houses.js"></script>
+  <script>
+  (function () {
+    var e = window.escText, ea = window.escAttr, fp = window.formatPrice;
+
+    var params  = new URLSearchParams(window.location.search);
+    var houseId = params.get("id") || "";
+    if (!houseId) { window.location.href = "my-properties.html"; }
+
+    // Find house metadata
+    var houseData = (window.HOUSES || []).find(function (h) { return h.id === houseId; });
+    var houseName = houseData ? houseData.nameAr : houseId;
+    var housePriceVal = houseData ? houseData.price : 0;
+    var minDailyPrice = Math.floor(housePriceVal * 0.10);
+    var maxDailyPrice = Math.floor(housePriceVal * 0.15);
+    var houseImg = houseData && houseData.cover ? houseData.cover : "";
+
+    // Set header content
+    document.getElementById("hm-name").textContent = houseName;
+    document.getElementById("hm-sub").textContent =
+      houseData ? houseData.nameEn + " — " + (houseData.tier || "") : "";
+    if (houseImg) {
+      document.getElementById("hm-icon").innerHTML =
+        '<img src="' + ea(houseImg) + '" alt="" onerror="window.__afmodImageFallback(this)" referrerpolicy="no-referrer" />';
+    }
+    if (housePriceVal) {
+      document.getElementById("price-min").textContent = fp(minDailyPrice);
+      document.getElementById("price-max").textContent = fp(maxDailyPrice);
+    } else {
+      document.getElementById("price-range-info").classList.add("hidden");
+    }
+
+    // Price hint
+    var priceHint = document.getElementById("price-hint");
+    var priceInput = document.getElementById("input-price");
+    function updatePriceHint() {
+      var v = Number(priceInput.value);
+      if (!v) { priceHint.textContent = "أدخل السعر اليومي"; priceHint.style.color = ""; return; }
+      if (v < minDailyPrice) {
+        priceHint.textContent = "السعر أقل من الحد الأدنى المسموح (" + fp(minDailyPrice) + ")";
+        priceHint.style.color = "var(--red)";
+      } else if (v > maxDailyPrice) {
+        priceHint.textContent = "السعر أعلى من الحد الأقصى المسموح (" + fp(maxDailyPrice) + ")";
+        priceHint.style.color = "var(--red)";
+      } else {
+        priceHint.textContent = "✔ السعر ضمن النطاق المسموح";
+        priceHint.style.color = "var(--green)";
+      }
+    }
+    priceInput.addEventListener("input", updatePriceHint);
+
+    var profitChart = null;
+    var currentState = null;
+
+    function updateProfitChart(log) {
+      var labels  = (log || []).map(function (l) {
+        var d = new Date(Number(l.logged_at));
+        return (d.getHours() < 10 ? "0" : "") + d.getHours() + ":" +
+               (d.getMinutes() < 10 ? "0" : "") + d.getMinutes();
+      });
+      var amounts = (log || []).map(function (l) { return Number(l.amount); });
+      var ctx = document.getElementById("profit-chart").getContext("2d");
+      if (!profitChart) {
+        var grad = ctx.createLinearGradient(0, 0, 0, 180);
+        grad.addColorStop(0,   "rgba(212,175,55,0.55)");
+        grad.addColorStop(0.6, "rgba(212,175,55,0.12)");
+        grad.addColorStop(1,   "rgba(212,175,55,0)");
+        profitChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [{
+              data: amounts, fill: true,
+              backgroundColor: grad, borderColor: "#d4af37", borderWidth: 2.5,
+              pointBackgroundColor: "#d4af37", pointBorderColor: "#fff", pointBorderWidth: 2,
+              pointRadius: 5, pointHoverRadius: 8, tension: 0.42
+            }]
+          },
+          options: {
+            plugins: { legend: { display: false },
+              tooltip: {
+                backgroundColor: "#0a1f4d", titleColor: "#d4af37", bodyColor: "#e8e0c5",
+                borderColor: "rgba(212,175,55,0.3)", borderWidth: 1, padding: 10,
+                callbacks: { label: function (c) { return "  $" + Number(c.raw).toLocaleString("en-US"); } }
+              }
+            },
+            scales: {
+              x: { ticks: { font: { family: "Cairo", size: 11 }, color: "#7a8aaa", maxRotation: 0 }, grid: { color: "rgba(10,31,77,.04)" } },
+              y: { ticks: { font: { family: "Cairo", size: 11 }, color: "#7a8aaa",
+                callback: function (v) { return v >= 1000 ? "$" + Math.round(v/1000) + "K" : "$" + v; }
+              }, grid: { color: "rgba(10,31,77,.06)" }, border: { display: false } }
+            },
+            responsive: true, maintainAspectRatio: false,
+            animation: { duration: 700, easing: "easeOutQuart" },
+            interaction: { mode: "index", intersect: false }
+          }
+        });
+      } else {
+        profitChart.data.labels = labels;
+        profitChart.data.datasets[0].data = amounts;
+        profitChart.update("active");
+      }
+      var noteEl = document.getElementById("profit-chart-note");
+      noteEl.textContent = log.length === 0 ? "لا يوجد سجل أرباح بعد. يبدأ السجل عند أول إيجار." : "";
+    }
+
+    function renderBookings(bookings) {
+      var el = document.getElementById("bookings-list");
+      if (!bookings || bookings.length === 0) {
+        el.innerHTML = '<p style="color:var(--muted);font-size:.82rem">لا توجد حجوزات نشطة حالياً.</p>';
+        return;
+      }
+      el.innerHTML = "";
+      bookings.forEach(function (b) {
+        var item = document.createElement("div");
+        item.className = "hm-booking-item";
+        var expDate = new Date(Number(b.expires_at));
+        item.innerHTML =
+          '<div>' +
+            '<div class="hm-booking-name">' + e(b.renter_display_name || b.renter_username || "مستأجر") + '</div>' +
+            '<div class="hm-booking-meta">' + Number(b.days) + ' يوم · حتى ' +
+              expDate.toLocaleDateString("ar-SA") + '</div>' +
+          '</div>' +
+          '<div class="hm-booking-amount">+' + fp(Number(b.total_price)) + '</div>';
+        el.appendChild(item);
+      });
+    }
+
+    function renderState(data) {
+      currentState = data;
+      var profit = Number(data.accumulatedProfit || 0);
+      document.getElementById("stat-profit").textContent = fp(profit);
+      document.getElementById("withdraw-display").textContent = fp(profit);
+      document.getElementById("withdraw-btn").disabled = profit <= 0;
+
+      var listing = data.listing;
+      var bookings = data.activeBookings || [];
+      document.getElementById("stat-bookings").textContent = bookings.length;
+
+      if (listing) {
+        var avail = listing.is_available;
+        document.getElementById("stat-status").innerHTML = avail
+          ? '<span class="badge badge-green">متاح للإيجار</span>'
+          : '<span class="badge badge-red">غير متاح</span>';
+        document.getElementById("stat-price-sub").textContent =
+          avail ? fp(Number(listing.daily_price)) + " / يوم" : "";
+        document.getElementById("toggle-available").checked = avail;
+        document.getElementById("input-price").value = Number(listing.daily_price) || "";
+        document.getElementById("input-notes").value = listing.notes || "";
+      } else {
+        document.getElementById("stat-status").innerHTML = '<span class="badge badge-red">لم تُفعَّل بعد</span>';
+        document.getElementById("stat-price-sub").textContent = "";
+        if (minDailyPrice) document.getElementById("input-price").value = minDailyPrice;
+      }
+
+      updatePriceHint();
+      updateProfitChart(data.profitLog || []);
+      renderBookings(bookings);
+    }
+
+    function loadState() {
+      document.getElementById("hm-loading").classList.remove("hidden");
+      document.getElementById("hm-content").classList.add("hidden");
+      document.getElementById("hm-error").classList.add("hidden");
+      window.afApi.houseState(houseId).then(function (data) {
+        document.getElementById("hm-loading").classList.add("hidden");
+        document.getElementById("hm-content").classList.remove("hidden");
+        renderState(data);
+      }).catch(function (err) {
+        document.getElementById("hm-loading").classList.add("hidden");
+        document.getElementById("hm-error").classList.remove("hidden");
+        document.getElementById("hm-error-msg").textContent =
+          "تعذّر تحميل بيانات البيت. " + ((err && err.message) || "");
+      });
+    }
+
+    // Save rental settings
+    document.getElementById("save-rental-btn").addEventListener("click", function () {
+      var btn = this;
+      var label = btn.querySelector(".btn-label") || btn;
+      var dp = Number(priceInput.value);
+      if (!dp || dp < minDailyPrice || dp > maxDailyPrice) {
+        window.afToast("خطأ", "السعر خارج النطاق المسموح به (" + fp(minDailyPrice) + " – " + fp(maxDailyPrice) + ")", "error");
+        return;
+      }
+      btn.disabled = true;
+      label.textContent = "جاري الحفظ…";
+      window.afApi.houseSetRental({
+        houseId: houseId,
+        dailyPrice: dp,
+        isAvailable: document.getElementById("toggle-available").checked,
+        notes: document.getElementById("input-notes").value,
+      }).then(function () {
+        window.afToast("تم الحفظ", "تم حفظ إعدادات الإيجار بنجاح.", "success");
+        loadState();
+      }).catch(function (err) {
+        window.afToast("خطأ", (err && err.message) || "تعذّر الحفظ", "error");
+      }).finally(function () {
+        btn.disabled = false;
+        label.textContent = "حفظ الإعدادات";
+      });
+    });
+
+    // Withdraw
+    document.getElementById("withdraw-btn").addEventListener("click", function () {
+      var btn = this;
+      btn.disabled = true;
+      btn.textContent = "جاري السحب…";
+      window.afApi.houseWithdraw(houseId).then(function (data) {
+        window.afToast("تم السحب", "تم تحويل " + fp(data.withdrawn) + " إلى رصيدك.", "success");
+        loadState();
+      }).catch(function (err) {
+        window.afToast("فشل السحب", (err && err.message) || "تعذّر السحب", "error");
+        btn.disabled = false;
+        btn.textContent = "سحب الأرباح";
+      });
+    });
+
+    window.afCheckAuth(function (user) {
+      document.getElementById("vl").classList.add("hidden");
+      document.getElementById("page").classList.remove("hidden");
+      window.afRenderHeader(user, "my-properties");
+      window.afRenderWatermark(user);
+      loadState();
+    });
+  })();
+  </script>
+</body>
+</html>

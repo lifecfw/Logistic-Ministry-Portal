@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>بوابة عرب فيرست — الدولة الرقمية</title>
+    <meta name="description" content="البوابة الرسمية للدولة الرقمية — عرب فيرست" />
+    <link rel="icon" type="image/png" href="afmod-logo.png" />
+
+    <!-- Open Graph / Embed -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="بوابة عرب فيرست — الدولة الرقمية" />
+    <meta property="og:description" content="البوابة الرسمية للدولة الرقمية — عرب فيرست | Arab First Digital State Portal" />
+    <meta property="og:image" content="/afmod-logo.png" />
+    <meta property="og:site_name" content="Arab First" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="بوابة عرب فيرست — الدولة الرقمية" />
+    <meta name="twitter:description" content="البوابة الرسمية للدولة الرقمية — عرب فيرست | Arab First Digital State Portal" />
+    <meta name="twitter:image" content="/afmod-logo.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      :root {
+        --navy: #0a1a3d; --navy-deep: #050f29; --gold: #d4af37; --gold-light: #f0d060;
+        --text: #e8e0d0; --text-muted: rgba(232,224,208,0.55); --surface: rgba(255,255,255,0.04);
+        --border: rgba(212,175,55,0.18); --font: 'Reem Kufi', 'Noto Kufi Arabic', sans-serif;
+      }
+      html, body { min-height: 100dvh; font-family: var(--font); background: var(--navy-deep); color: var(--text); overflow-x: hidden; }
+      body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100dvh; padding: 2rem 1rem; position: relative; }
+
+      .bg-marble { position: fixed; inset: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.07; pointer-events: none; z-index: 0; }
+      .bg-gradient { position: fixed; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(10,26,61,0.95) 0%, var(--navy-deep) 70%); pointer-events: none; z-index: 1; }
+      .bg-glow { position: fixed; top: -30%; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(212,175,55,0.06) 0%, transparent 70%); pointer-events: none; z-index: 1; }
+
+      .portal { position: relative; z-index: 10; width: 100%; max-width: 900px; text-align: center; }
+
+      .portal-header { margin-bottom: 3rem; }
+      .portal-seal { width: 90px; height: 90px; margin: 0 auto 1.25rem; position: relative; }
+      .portal-seal-glow { position: absolute; inset: -12px; border-radius: 50%; background: radial-gradient(ellipse, rgba(212,175,55,0.25) 0%, transparent 70%); }
+      .portal-seal img { width: 100%; height: 100%; object-fit: contain; position: relative; z-index: 1; }
+      .portal-title-en { font-family: 'Playfair Display', serif; font-size: 0.78rem; font-weight: 400; letter-spacing: 0.25em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.5rem; }
+      .portal-title-ar { font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 0.5rem; }
+      .portal-subtitle { font-size: 0.9rem; color: var(--text-muted); }
+      .portal-divider { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 1.25rem auto; }
+
+      .portal-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      @media (max-width: 620px) { .portal-cards { grid-template-columns: 1fr; } }
+
+      .card-social { border-color: rgba(212,175,55,0.15); }
+      .card-social:hover { border-color: rgba(212,175,55,0.4); box-shadow: 0 12px 40px rgba(212,175,55,0.08); }
+      .card-social .card-icon { background: rgba(212,175,55,0.08); color: var(--gold); }
+      .card-social .card-tag { background: rgba(212,175,55,0.08); color: var(--gold); border-color: rgba(212,175,55,0.25); }
+
+      .portal-card {
+        display: flex; flex-direction: column; align-items: flex-start; gap: 1rem;
+        padding: 2rem; border-radius: 20px; text-decoration: none;
+        border: 1px solid var(--border); background: var(--surface);
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        position: relative; overflow: hidden; cursor: pointer;
+        transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+      }
+      .portal-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+      .portal-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%); pointer-events: none; }
+
+      .card-ministry { border-color: rgba(212,175,55,0.25); }
+      .card-ministry:hover { border-color: rgba(212,175,55,0.55); box-shadow: 0 12px 40px rgba(212,175,55,0.12); }
+      .card-ministry .card-icon { background: rgba(212,175,55,0.12); color: var(--gold); }
+      .card-ministry .card-tag { background: rgba(212,175,55,0.12); color: var(--gold); border-color: rgba(212,175,55,0.3); }
+
+      .card-messages { border-color: rgba(56,189,248,0.2); }
+      .card-messages:hover { border-color: rgba(56,189,248,0.5); box-shadow: 0 12px 40px rgba(56,189,248,0.08); }
+      .card-messages .card-icon { background: rgba(56,189,248,0.1); color: #38bdf8; }
+      .card-messages .card-tag { background: rgba(56,189,248,0.1); color: #38bdf8; border-color: rgba(56,189,248,0.3); }
+
+      .card-icon { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+      .card-icon svg { width: 30px; height: 30px; }
+      .card-body { text-align: right; width: 100%; }
+      .card-tag { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 6px; border: 1px solid; display: inline-block; margin-bottom: 0.6rem; }
+      .card-title { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+      .card-title-en { font-family: 'Playfair Display', serif; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.6rem; letter-spacing: 0.06em; }
+      .card-desc { font-size: 0.84rem; color: var(--text-muted); line-height: 1.6; }
+      .card-arrow { font-size: 1.5rem; color: var(--gold); margin-top: 0.75rem; transition: transform 0.2s; display: block; text-align: left; }
+      .portal-card:hover .card-arrow { transform: translateX(-6px); }
+
+      .portal-footer { margin-top: 3rem; font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.08em; opacity: 0.6; }
+    </style>
+  <script>(function(){function _b(e){if(e.key==="F12"){e.preventDefault();e.stopPropagation();return false;}if(e.ctrlKey&&e.shiftKey&&["i","I","j","J","c","C","k","K"].indexOf(e.key)!==-1){e.preventDefault();e.stopPropagation();return false;}if(e.ctrlKey&&["u","U","s","S","p","P"].indexOf(e.key)!==-1){e.preventDefault();e.stopPropagation();return false;}}document.addEventListener("contextmenu",function(e){e.preventDefault();e.stopPropagation();},true);document.addEventListener("keydown",_b,true);window.addEventListener("keydown",_b,true);})();</script>
+  </head>
+  <body>
+    <img src="navy-marble.png" alt="" class="bg-marble" />
+    <div class="bg-gradient"></div>
+    <div class="bg-glow"></div>
+
+    <div class="portal">
+      <header class="portal-header">
+        <div class="portal-seal">
+          <div class="portal-seal-glow"></div>
+          <img src="afmod-logo.png" alt="Arab First Seal" />
+        </div>
+        <p class="portal-title-en">Arab First — Digital State Portal</p>
+        <h1 class="portal-title-ar">بوابة الدولة الرقمية</h1>
+        <p class="portal-subtitle">اختر النظام الذي تريد الدخول إليه</p>
+        <div class="portal-divider"></div>
+      </header>
+
+      <div class="portal-cards">
+        <a href="ministry.html" class="portal-card card-ministry">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <path d="M9 22v-4h6v4"/>
+              <path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/>
+              <path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/>
+              <path d="M8 10h.01"/><path d="M8 14h.01"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <div class="card-tag">وزارة رسمية</div>
+            <h2 class="card-title">وزارة اللوجستيك</h2>
+            <p class="card-title-en">Ministry of Logistics — AFMOD</p>
+            <p class="card-desc">سيارات، محطات الوقود، ومشاريع البقالة. البوابة الرسمية لتملّك الأصول في عرب فيرست.</p>
+            <span class="card-arrow">&#8592;</span>
+          </div>
+        </a>
+
+        <a href="messages.html" class="portal-card card-messages">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <div class="card-tag">نظام اتصالات</div>
+            <h2 class="card-title">أنظمة الدولة</h2>
+            <p class="card-title-en">State Communication Systems</p>
+            <p class="card-desc">منصة المراسلة الرسمية للمواطنين. أنشئ ملفك الشخصي وتواصل مع مواطني عرب فيرست بالنص والصور.</p>
+            <span class="card-arrow" style="color:#38bdf8">&#8592;</span>
+          </div>
+        </a>
+
+        <a href="social.html" class="portal-card card-social">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              <path d="M8 10h8M8 14h4"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <div class="card-tag">شبكة اجتماعية</div>
+            <h2 class="card-title">منصة التواصل</h2>
+            <p class="card-title-en">Arab First Social Network</p>
+            <p class="card-desc">الشبكة الاجتماعية الرسمية لمواطني عرب فيرست. شارك، تفاعل، وتواصل مع المجتمع.</p>
+            <span class="card-arrow">&#8592;</span>
+          </div>
+        </a>
+
+        <a href="marketplace.html" class="portal-card card-market" style="border-color:rgba(34,197,94,0.25);">
+          <div class="card-icon" style="background:rgba(34,197,94,0.10);color:#22c55e;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <div class="card-tag" style="background:rgba(34,197,94,0.10);color:#22c55e;border-color:rgba(34,197,94,0.3);">سوق حر</div>
+            <h2 class="card-title">مزادي</h2>
+            <p class="card-title-en">Arab First Marketplace</p>
+            <p class="card-desc">بيع واشترِ الأصول والموارد والأسلحة بين مواطني عرب فيرست. سوق حر بإحصائيات مفصّلة.</p>
+            <span class="card-arrow" style="color:#22c55e">&#8592;</span>
+          </div>
+        </a>
+
+        <a class="portal-card" href="gangs.html" style="border-color:rgba(220,38,38,0.25);">
+          <div class="card-icon" style="background:rgba(220,38,38,0.12);color:#ef4444;border-color:rgba(220,38,38,0.25);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <div class="card-tag" style="background:rgba(220,38,38,0.10);color:#ef4444;border-color:rgba(220,38,38,0.3);">عصابات</div>
+            <h2 class="card-title">نظام العصابات</h2>
+            <p class="card-title-en">Arab First Gangs</p>
+            <p class="card-desc">أنشئ عصابتك وأدِر أعضاءها وخزينتها وأسلحتها، وافرض سيطرتك على الخريطة برشّ المناطق.</p>
+            <span class="card-arrow" style="color:#ef4444">&#8592;</span>
+          </div>
+        </a>
+      </div>
+
+      <p class="portal-footer">© 2026 Arab First &mdash; جميع الحقوق محفوظة</p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>خريطة البيوت | عرب فيرست</title>
+  <link rel="icon" type="image/png" href="afmod-logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --navy: #0b1323; --navy2: #0f1c31; --gold: #d4af37; --gold2: rgba(212,175,55,.15);
+      --text: #d8eaf5; --muted: rgba(216,234,245,.5); --radius: 12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: var(--navy); color: var(--text); font-family: Cairo, sans-serif; }
+
+    .hm-page { display: flex; flex-direction: column; min-height: 100vh; }
+
+    /* ── TOOLBAR ── */
+    .hm-toolbar {
+      background: rgba(11,19,35,.97);
+      border-bottom: 1px solid rgba(212,175,55,.18);
+      padding: .7rem 1.2rem;
+      display: flex; align-items: center; gap: .7rem; flex-wrap: wrap;
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(10px);
+    }
+    .hm-back {
+      display: flex; align-items: center; gap: .4rem;
+      color: var(--gold); font-size: .82rem; font-weight: 600;
+      text-decoration: none; padding: .35rem .7rem;
+      border: 1px solid rgba(212,175,55,.25); border-radius: 8px;
+      transition: background .2s;
+    }
+    .hm-back:hover { background: rgba(212,175,55,.08); }
+    .hm-title { font-family: 'Reem Kufi', sans-serif; font-size: 1rem; font-weight: 700; color: var(--gold); flex: 1; }
+    .hm-filters { display: flex; gap: .45rem; flex-wrap: wrap; }
+    .hm-filter-btn {
+      padding: .3rem .75rem; border-radius: 20px; border: 1px solid rgba(212,175,55,.2);
+      background: transparent; color: var(--muted); font-family: Cairo, sans-serif;
+      font-size: .78rem; font-weight: 600; cursor: pointer; transition: all .2s;
+    }
+    .hm-filter-btn.active, .hm-filter-btn:hover { background: rgba(212,175,55,.13); color: var(--gold); border-color: var(--gold); }
+    .hm-filter-btn[data-tier="اقتصادي"].active  { background: rgba(74,222,128,.12); color: #4ade80; border-color: #4ade80; }
+    .hm-filter-btn[data-tier="متوسط"].active    { background: rgba(96,165,250,.12); color: #60a5fa; border-color: #60a5fa; }
+    .hm-filter-btn[data-tier="فاخر"].active     { background: rgba(251,191,36,.12); color: #fbbf24; border-color: #fbbf24; }
+    .hm-filter-btn[data-tier="حصري"].active     { background: rgba(167,139,250,.12); color: #a78bfa; border-color: #a78bfa; }
+
+    /* ── MAP CONTAINER ── */
+    .hm-map-wrap {
+      flex: 1; position: relative; overflow: hidden;
+      cursor: grab; user-select: none;
+      min-height: 0;
+    }
+    .hm-map-wrap:active { cursor: grabbing; }
+    .hm-map-inner {
+      position: absolute; inset: 0;
+      transform-origin: 0 0;
+      transition: none;
+    }
+    .hm-map-img {
+      display: block; width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(.85) saturate(.9);
+      pointer-events: none;
+      min-width: 100%; min-height: 100%;
+    }
+    .hm-map-overlay { position: absolute; inset: 0; background: rgba(11,19,35,.35); pointer-events: none; }
+
+    /* ── PINS ── */
+    .hm-pin {
+      position: absolute; transform: translate(-50%, -100%);
+      cursor: pointer; transition: transform .15s, opacity .2s;
+      z-index: 10;
+    }
+    .hm-pin:hover, .hm-pin.hovered { transform: translate(-50%, -100%) scale(1.25); z-index: 20; }
+    .hm-pin.hidden { opacity: 0; pointer-events: none; }
+    .hm-pin-inner {
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .hm-pin-bubble {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 3px solid #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; box-shadow: 0 3px 12px rgba(0,0,0,.5);
+      position: relative;
+    }
+    .hm-pin-bubble::after {
+      content: ''; position: absolute; bottom: -10px; left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+    }
+    .hm-pin-label {
+      background: rgba(11,19,35,.88); border-radius: 6px; padding: .15rem .5rem;
+      font-size: .65rem; font-weight: 700; white-space: nowrap; margin-top: 2px;
+      border: 1px solid rgba(255,255,255,.15); color: #fff;
+      backdrop-filter: blur(4px);
+    }
+
+    /* tier colors */
+    .tier-eco   { background: #166534; border-color: #4ade80; }
+    .tier-eco::after { border-top-color: #166534; }
+    .tier-med   { background: #1e3a5f; border-color: #60a5fa; }
+    .tier-med::after { border-top-color: #1e3a5f; }
+    .tier-lux   { background: #78350f; border-color: #fbbf24; }
+    .tier-lux::after { border-top-color: #78350f; }
+    .tier-exc   { background: #3b0764; border-color: #a78bfa; }
+    .tier-exc::after { border-top-color: #3b0764; }
+
+    /* ── POPUP ── */
+    .hm-popup {
+      position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 2rem); max-width: 480px;
+      background: rgba(11,19,35,.97); border: 1px solid rgba(212,175,55,.3);
+      border-radius: 16px; padding: 1rem 1.2rem;
+      box-shadow: 0 8px 40px rgba(0,0,0,.6);
+      z-index: 100; display: none;
+      backdrop-filter: blur(16px);
+      animation: slideUp .22s ease;
+    }
+    .hm-popup.visible { display: block; }
+    @keyframes slideUp { from { transform: translateX(-50%) translateY(20px); opacity:0; } to { transform: translateX(-50%) translateY(0); opacity:1; } }
+    .hm-popup-close {
+      position: absolute; top: .7rem; left: .7rem; width: 28px; height: 28px;
+      border-radius: 50%; background: rgba(216,234,245,.1); border: none;
+      color: var(--muted); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .hm-popup-close:hover { background: rgba(216,234,245,.2); color: var(--text); }
+    .hm-popup-head { display: flex; align-items: center; gap: .8rem; margin-bottom: .75rem; }
+    .hm-popup-img {
+      width: 72px; height: 54px; object-fit: cover; border-radius: 8px;
+      border: 1px solid rgba(212,175,55,.2); flex-shrink: 0;
+    }
+    .hm-popup-info { flex: 1; min-width: 0; }
+    .hm-popup-tier { font-size: .65rem; font-weight: 700; border-radius: 4px; padding: .1rem .45rem; display: inline-block; margin-bottom: .2rem; }
+    .hm-popup-name { font-size: 1rem; font-weight: 700; color: #fff; }
+    .hm-popup-en   { font-size: .72rem; color: var(--muted); }
+    .hm-popup-price { font-size: 1.05rem; font-weight: 800; color: var(--gold); margin-top: .1rem; }
+    .hm-popup-rows { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; margin-bottom: .8rem; }
+    .hm-popup-row { background: rgba(216,234,245,.04); border-radius: 8px; padding: .45rem .6rem; }
+    .hm-popup-row-lbl { font-size: .65rem; color: var(--muted); margin-bottom: .15rem; }
+    .hm-popup-row-val { font-size: .78rem; font-weight: 600; color: var(--text); line-height: 1.35; }
+    .hm-popup-desc { font-size: .78rem; color: rgba(216,234,245,.65); line-height: 1.6; margin-bottom: .8rem; }
+    .hm-popup-btns { display: flex; gap: .5rem; }
+    .hm-popup-btn-detail {
+      flex: 1; padding: .6rem; border-radius: 8px; border: 1px solid rgba(212,175,55,.3);
+      background: rgba(212,175,55,.1); color: var(--gold); font-family: Cairo, sans-serif;
+      font-size: .82rem; font-weight: 700; cursor: pointer; text-align: center;
+      text-decoration: none; display: block;
+    }
+    .hm-popup-btn-detail:hover { background: rgba(212,175,55,.18); }
+
+    /* ── ZOOM CONTROLS ── */
+    .hm-zoom {
+      position: absolute; bottom: 1rem; right: 1rem;
+      display: flex; flex-direction: column; gap: .3rem; z-index: 30;
+    }
+    .hm-zoom-btn {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(11,19,35,.9); border: 1px solid rgba(212,175,55,.25);
+      color: var(--gold); font-size: 1.2rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px); transition: background .15s;
+    }
+    .hm-zoom-btn:hover { background: rgba(212,175,55,.15); }
+
+    /* ── LEGEND ── */
+    .hm-legend {
+      position: absolute; top: .8rem; right: .8rem;
+      background: rgba(11,19,35,.88); border: 1px solid rgba(212,175,55,.2);
+      border-radius: 10px; padding: .6rem .85rem;
+      z-index: 30; backdrop-filter: blur(8px);
+    }
+    .hm-legend-title { font-size: .65rem; color: var(--gold); font-weight: 700; margin-bottom: .4rem; text-align: center; }
+    .hm-legend-item { display: flex; align-items: center; gap: .5rem; margin-bottom: .25rem; font-size: .68rem; color: var(--text); }
+    .hm-legend-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid; flex-shrink: 0; }
+    .eco-dot { background: #166534; border-color: #4ade80; }
+    .med-dot { background: #1e3a5f; border-color: #60a5fa; }
+    .lux-dot { background: #78350f; border-color: #fbbf24; }
+    .exc-dot { background: #3b0764; border-color: #a78bfa; }
+
+    /* district labels */
+    .hm-district {
+      position: absolute; transform: translate(-50%, -50%);
+      font-family: 'Reem Kufi', sans-serif; font-size: .65rem; font-weight: 600;
+      color: rgba(255,255,255,.45); letter-spacing: .05em; text-transform: uppercase;
+      white-space: nowrap; pointer-events: none; text-shadow: 0 1px 4px rgba(0,0,0,.8);
+    }
+
+    @media (max-width: 600px) {
+      .hm-title { display: none; }
+      .hm-popup { bottom: .5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="hm-page">
+  <!-- Toolbar -->
+  <div class="hm-toolbar">
+    <a href="houses.html" class="hm-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+      البيوت
+    </a>
+    <div class="hm-title">🗺️ خريطة البيوت — عرب فيرست</div>
+    <div class="hm-filters">
+      <button class="hm-filter-btn active" data-tier="all">الكل</button>
+      <button class="hm-filter-btn" data-tier="اقتصادي">اقتصادي</button>
+      <button class="hm-filter-btn" data-tier="متوسط">متوسط</button>
+      <button class="hm-filter-btn" data-tier="فاخر">فاخر</button>
+      <button class="hm-filter-btn" data-tier="حصري">حصري</button>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div class="hm-map-wrap" id="map-wrap">
+    <div class="hm-map-inner" id="map-inner">
+      <img
+        id="map-img"
+        class="hm-map-img"
+        src="https://static.wikia.nocookie.net/emergency-response-liberty-county/images/c/ce/Updatedmap.png/revision/latest?cb=20240422023107"
+        alt="Liberty County Map"
+        referrerpolicy="no-referrer"
+        draggable="false"
+      />
+      <div class="hm-map-overlay"></div>
+
+      <!-- district labels -->
+      <div class="hm-district" style="left:18%;top:70%">Trailer Park</div>
+      <div class="hm-district" style="left:53%;top:52%">Springfield</div>
+      <div class="hm-district" style="left:73%;top:45%">Housing Suburb</div>
+      <div class="hm-district" style="left:42%;top:18%">High Rock Park</div>
+      <div class="hm-district" style="left:45%;top:45%">West Springfield</div>
+
+      <!-- Pins injected by JS -->
+      <div id="pins-container"></div>
+    </div>
+
+    <!-- Zoom controls -->
+    <div class="hm-zoom">
+      <button class="hm-zoom-btn" id="zoom-in" title="تكبير">+</button>
+      <button class="hm-zoom-btn" id="zoom-out" title="تصغير">−</button>
+      <button class="hm-zoom-btn" id="zoom-reset" title="إعادة ضبط" style="font-size:.75rem">⟳</button>
+    </div>
+
+    <!-- Legend -->
+    <div class="hm-legend">
+      <div class="hm-legend-title">الفئات</div>
+      <div class="hm-legend-item"><div class="hm-legend-dot eco-dot"></div>اقتصادي</div>
+      <div class="hm-legend-item"><div class="hm-legend-dot med-dot"></div>متوسط</div>
+      <div class="hm-legend-item"><div class="hm-legend-dot lux-dot"></div>فاخر</div>
+      <div class="hm-legend-item"><div class="hm-legend-dot exc-dot"></div>حصري</div>
+    </div>
+  </div>
+
+  <!-- Popup -->
+  <div class="hm-popup" id="house-popup">
+    <button class="hm-popup-close" id="popup-close">×</button>
+    <div class="hm-popup-head">
+      <img id="popup-img" class="hm-popup-img" src="" alt="" referrerpolicy="no-referrer" />
+      <div class="hm-popup-info">
+        <span id="popup-tier" class="hm-popup-tier"></span>
+        <div id="popup-name" class="hm-popup-name"></div>
+        <div id="popup-en" class="hm-popup-en"></div>
+        <div id="popup-price" class="hm-popup-price"></div>
+      </div>
+    </div>
+    <p id="popup-desc" class="hm-popup-desc"></p>
+    <div class="hm-popup-rows">
+      <div class="hm-popup-row">
+        <div class="hm-popup-row-lbl">📍 العنوان</div>
+        <div id="popup-addr" class="hm-popup-row-val"></div>
+      </div>
+      <div class="hm-popup-row">
+        <div class="hm-popup-row-lbl">🏠 الوحدات</div>
+        <div id="popup-units" class="hm-popup-row-val"></div>
+      </div>
+      <div class="hm-popup-row">
+        <div class="hm-popup-row-lbl">🛏️ غرف النوم</div>
+        <div id="popup-beds" class="hm-popup-row-val"></div>
+      </div>
+      <div class="hm-popup-row">
+        <div class="hm-popup-row-lbl">🚿 الحمّامات</div>
+        <div id="popup-baths" class="hm-popup-row-val"></div>
+      </div>
+    </div>
+    <div class="hm-popup-btns">
+      <a id="popup-link" href="houses.html" class="hm-popup-btn-detail">عرض التفاصيل الكاملة ←</a>
+    </div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script src="houses.js"></script>
+<script>
+(function () {
+'use strict';
+
+/* ── HOUSE PIN LOCATIONS on map (% of image width/height) ──
+   Map: Updatedmap.png — Liberty County
+   Approximate positions based on game geography:
+   - Trailer Park: SW area
+   - Springfield: center
+   - Housing Suburb: east-center
+   - High Rock Park: north
+   - West Springfield: west of Springfield
+   - North of Gun Store: north of Springfield center
+*/
+var PIN_DATA = [
+  {
+    id: 'single-trailer',
+    pins: [
+      { x: 17, y: 67, label: 'حي المقطورات' },
+      { x: 54, y: 48, label: 'سبرينغفيلد' },
+      { x: 51, y: 38, label: 'شمال الأسلحة' }
+    ]
+  },
+  {
+    id: 'log-cabin',
+    pins: [
+      { x: 41, y: 17, label: 'هاي روك بارك' }
+    ]
+  },
+  {
+    id: 'double-trailer',
+    pins: [
+      { x: 20, y: 71, label: 'حي المقطورات' },
+      { x: 56, y: 50, label: 'سبرينغفيلد' },
+      { x: 52, y: 40, label: 'شمال الأسلحة' }
+    ]
+  },
+  {
+    id: 'small-house',
+    pins: [
+      { x: 73, y: 43, label: 'حي السكن' }
+    ]
+  },
+  {
+    id: 'medium-house',
+    pins: [
+      { x: 70, y: 47, label: 'حي السكن' },
+      { x: 57, y: 45, label: 'سبرينغفيلد' },
+      { x: 46, y: 48, label: 'غرب سبرينغفيلد' }
+    ]
+  },
+  {
+    id: 'large-house',
+    pins: [
+      { x: 72, y: 50, label: 'حي السكن' },
+      { x: 58, y: 43, label: 'سبرينغفيلد' },
+      { x: 47, y: 51, label: 'غرب سبرينغفيلد' }
+    ]
+  }
+];
+
+var TIER_CSS  = { 'اقتصادي': 'tier-eco', 'متوسط': 'tier-med', 'فاخر': 'tier-lux', 'حصري': 'tier-exc' };
+var TIER_BADGE_BG = { 'اقتصادي': 'rgba(74,222,128,.18)', 'متوسط': 'rgba(96,165,250,.18)', 'فاخر': 'rgba(251,191,36,.18)', 'حصري': 'rgba(167,139,250,.18)' };
+var TIER_BADGE_C  = { 'اقتصادي': '#4ade80', 'متوسط': '#60a5fa', 'فاخر': '#fbbf24', 'حصري': '#a78bfa' };
+var TIER_EMOJI = { 'اقتصادي': '🏚️', 'متوسط': '🏠', 'فاخر': '🏡', 'حصري': '🏰' };
+
+var housesMap = {};
+(window.HOUSES || []).forEach(function (h) { housesMap[h.id] = h; });
+
+var activeTier = 'all';
+var allPinEls  = [];
+
+/* ── RENDER PINS ── */
+function buildPins() {
+  var container = document.getElementById('pins-container');
+  container.innerHTML = '';
+  allPinEls = [];
+
+  PIN_DATA.forEach(function (pd) {
+    var house = housesMap[pd.id];
+    if (!house) return;
+    var tierClass = TIER_CSS[house.tier] || 'tier-eco';
+    var emoji     = TIER_EMOJI[house.tier] || '🏠';
+
+    pd.pins.forEach(function (p) {
+      var el = document.createElement('div');
+      el.className = 'hm-pin';
+      el.style.left = p.x + '%';
+      el.style.top  = p.y + '%';
+      el.dataset.houseId = house.id;
+      el.dataset.tier    = house.tier;
+      el.innerHTML =
+        '<div class="hm-pin-inner">' +
+          '<div class="hm-pin-bubble ' + tierClass + '">' + emoji + '</div>' +
+          '<div class="hm-pin-label">' + p.label + '</div>' +
+        '</div>';
+      el.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        openPopup(house);
+        allPinEls.forEach(function (e) { e.classList.remove('hovered'); });
+        el.classList.add('hovered');
+      });
+      container.appendChild(el);
+      allPinEls.push(el);
+    });
+  });
+
+  applyFilter();
+}
+
+function applyFilter() {
+  allPinEls.forEach(function (el) {
+    var tier = el.dataset.tier;
+    el.classList.toggle('hidden', activeTier !== 'all' && tier !== activeTier);
+  });
+}
+
+/* ── POPUP ── */
+function openPopup(house) {
+  var popup = document.getElementById('house-popup');
+  document.getElementById('popup-img').src        = house.cover;
+  document.getElementById('popup-name').textContent = house.nameAr;
+  document.getElementById('popup-en').textContent   = house.nameEn;
+  document.getElementById('popup-price').textContent = '$' + Number(house.price).toLocaleString('en-US');
+  document.getElementById('popup-desc').textContent  = house.descriptionAr || '';
+  document.getElementById('popup-addr').textContent  = house.addressAr || '—';
+  document.getElementById('popup-units').textContent = house.units + ' وحدة';
+  document.getElementById('popup-beds').textContent  = house.bedroomsAr;
+  document.getElementById('popup-baths').textContent = house.bathroomsAr;
+  var tierEl = document.getElementById('popup-tier');
+  tierEl.textContent = house.tier;
+  tierEl.style.background = TIER_BADGE_BG[house.tier] || 'rgba(212,175,55,.15)';
+  tierEl.style.color = TIER_BADGE_C[house.tier] || '#d4af37';
+  popup.classList.add('visible');
+}
+
+document.getElementById('popup-close').addEventListener('click', function () {
+  document.getElementById('house-popup').classList.remove('visible');
+  allPinEls.forEach(function (e) { e.classList.remove('hovered'); });
+});
+
+document.getElementById('map-wrap').addEventListener('click', function (ev) {
+  if (ev.target === this || ev.target.id === 'map-inner' || ev.target.id === 'map-img') {
+    document.getElementById('house-popup').classList.remove('visible');
+    allPinEls.forEach(function (e) { e.classList.remove('hovered'); });
+  }
+});
+
+/* ── FILTER BUTTONS ── */
+document.querySelectorAll('.hm-filter-btn').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    document.querySelectorAll('.hm-filter-btn').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    activeTier = btn.dataset.tier;
+    applyFilter();
+  });
+});
+
+/* ── PAN & ZOOM ── */
+var scale = 1, panX = 0, panY = 0;
+var isDragging = false, startX, startY, startPanX, startPanY;
+var mapInner = document.getElementById('map-inner');
+var mapWrap  = document.getElementById('map-wrap');
+
+function applyTransform() {
+  mapInner.style.transform = 'translate(' + panX + 'px,' + panY + 'px) scale(' + scale + ')';
+}
+
+mapWrap.addEventListener('mousedown', function (e) {
+  if (e.button !== 0) return;
+  isDragging = true; startX = e.clientX; startY = e.clientY;
+  startPanX = panX; startPanY = panY;
+});
+window.addEventListener('mousemove', function (e) {
+  if (!isDragging) return;
+  panX = startPanX + (e.clientX - startX);
+  panY = startPanY + (e.clientY - startY);
+  clampPan();
+  applyTransform();
+});
+window.addEventListener('mouseup', function () { isDragging = false; });
+
+mapWrap.addEventListener('wheel', function (e) {
+  e.preventDefault();
+  var delta = e.deltaY < 0 ? 1.12 : 0.9;
+  zoomAt(e.clientX, e.clientY, delta);
+}, { passive: false });
+
+/* Touch */
+var lastDist = 0, lastMidX, lastMidY;
+mapWrap.addEventListener('touchstart', function (e) {
+  if (e.touches.length === 1) {
+    isDragging = true;
+    startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+    startPanX = panX; startPanY = panY;
+  } else if (e.touches.length === 2) {
+    isDragging = false;
+    lastDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    lastMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    lastMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+  }
+}, { passive: true });
+mapWrap.addEventListener('touchmove', function (e) {
+  e.preventDefault();
+  if (e.touches.length === 1 && isDragging) {
+    panX = startPanX + (e.touches[0].clientX - startX);
+    panY = startPanY + (e.touches[0].clientY - startY);
+    clampPan(); applyTransform();
+  } else if (e.touches.length === 2) {
+    var dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    var midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    var midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+    zoomAt(midX, midY, dist / lastDist);
+    lastDist = dist; lastMidX = midX; lastMidY = midY;
+  }
+}, { passive: false });
+mapWrap.addEventListener('touchend', function () { isDragging = false; });
+
+function zoomAt(cx, cy, delta) {
+  var rect = mapWrap.getBoundingClientRect();
+  var mx = cx - rect.left; var my = cy - rect.top;
+  var newScale = Math.min(4, Math.max(0.5, scale * delta));
+  panX = mx - (mx - panX) * (newScale / scale);
+  panY = my - (my - panY) * (newScale / scale);
+  scale = newScale;
+  clampPan(); applyTransform();
+}
+
+function clampPan() {
+  var rect = mapWrap.getBoundingClientRect();
+  var w = rect.width * scale; var h = rect.height * scale;
+  var maxX = 0; var minX = rect.width  - w;
+  var maxY = 0; var minY = rect.height - h;
+  if (w <= rect.width)  { panX = (rect.width  - w) / 2; }
+  else { panX = Math.min(maxX, Math.max(minX, panX)); }
+  if (h <= rect.height) { panY = (rect.height - h) / 2; }
+  else { panY = Math.min(maxY, Math.max(minY, panY)); }
+}
+
+document.getElementById('zoom-in').addEventListener('click', function () {
+  var rect = mapWrap.getBoundingClientRect();
+  zoomAt(rect.width / 2, rect.height / 2, 1.25);
+});
+document.getElementById('zoom-out').addEventListener('click', function () {
+  var rect = mapWrap.getBoundingClientRect();
+  zoomAt(rect.width / 2, rect.height / 2, 0.8);
+});
+document.getElementById('zoom-reset').addEventListener('click', function () {
+  scale = 1; panX = 0; panY = 0; applyTransform();
+});
+
+/* ── INIT ── */
+buildPins();
+
+})();
+</script>
+</body>
+</html>

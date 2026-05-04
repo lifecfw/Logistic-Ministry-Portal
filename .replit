@@ -1,0 +1,80 @@
+modules = ["web", "nodejs-20", "python-3.11"]
+
+[deployment]
+router = "application"
+deploymentTarget = "autoscale"
+run = ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
+build = ["bash", "-c", "pnpm install && pnpm --filter @workspace/afmod run build && pnpm --filter @workspace/api-server run build"]
+
+[deployment.postBuild]
+args = ["pnpm", "store", "prune"]
+env = { "CI" = "true" }
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm install && pnpm --filter @workspace/afmod run build && pnpm --filter @workspace/api-server run dev"
+waitForPort = 5000
+
+[agent]
+stack = "FLASK_VANILLA_JS"
+expertMode = true
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 20000
+
+[[ports]]
+localPort = 3000
+externalPort = 3002
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 8080
+externalPort = 8080
+
+[[ports]]
+localPort = 8787
+externalPort = 3003
+
+[[ports]]
+localPort = 19161
+externalPort = 3001
+
+[[ports]]
+localPort = 20751
+externalPort = 3000
+
+[userenv]
+
+[userenv.shared]
+DISCORD_GUILD_ID = "1183042468854382612"
+AFMOD_BOT_URL = "http://fi5.bot-hosting.net:20170"
+PORT = "5000"
+BASE_PATH = "/"
+ERLC_WEBHOOK_PORT = "8787"
+
+[nix]
+channel = "stable-25_05"
+packages = ["openssl", "postgresql"]

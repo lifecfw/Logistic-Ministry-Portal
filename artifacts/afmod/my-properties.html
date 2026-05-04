@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>ممتلكاتي | عرب فيرست</title>
+    <meta name="description" content="إدارة ممتلكاتك في عرب فيرست" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ممتلكاتي | عرب فيرست" />
+    <meta property="og:description" content="إدارة ممتلكاتك الرسمية في عرب فيرست — AFMOD Ministry of Logistics" />
+    <meta property="og:image" content="/afmod-logo.png" />
+    <meta property="og:site_name" content="Arab First" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="ممتلكاتي | عرب فيرست" />
+    <meta name="twitter:description" content="إدارة ممتلكاتك في عرب فيرست" />
+    <meta name="twitter:image" content="/afmod-logo.png" />
+    <link rel="icon" type="image/png" href="afmod-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* ── House Management Drawer ── */
+      .hm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+      .hm-overlay.open{opacity:1;pointer-events:all}
+      .hm-drawer{background:var(--navy,#0b1323);border:1px solid rgba(212,175,55,.18);border-bottom:none;border-radius:20px 20px 0 0;width:100%;max-width:720px;max-height:92dvh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+      .hm-overlay.open .hm-drawer{transform:translateY(0)}
+      .hm-drag{width:48px;height:5px;background:rgba(212,175,55,.25);border-radius:99px;margin:14px auto 0;flex-shrink:0}
+      .hm-head{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.5rem 1rem;border-bottom:1px solid rgba(212,175,55,.1);flex-shrink:0}
+      .hm-icon{width:56px;height:56px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.2);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0}
+      .hm-icon img{width:100%;height:100%;object-fit:cover}
+      .hm-head-info{flex:1;min-width:0}
+      .hm-head-tag{font-size:.68rem;font-weight:700;letter-spacing:.1em;color:var(--gold,#d4af37);text-transform:uppercase;margin-bottom:.2rem}
+      .hm-head-name{font-size:1.15rem;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .hm-head-sub{font-size:.78rem;color:rgba(216,234,245,.5)}
+      .hm-close{background:none;border:none;color:rgba(216,234,245,.5);cursor:pointer;padding:.4rem;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:color .15s,background .15s;flex-shrink:0}
+      .hm-close:hover{color:#ef4444;background:rgba(239,68,68,.1)}
+      .hm-close svg{width:20px;height:20px}
+      .hm-body{padding:1.25rem 1.5rem 2rem;display:flex;flex-direction:column;gap:1.5rem}
+
+      .hm-loading-row{display:flex;align-items:center;justify-content:center;gap:1rem;padding:2rem 0;color:rgba(216,234,245,.5);font-size:.88rem}
+      .hm-spin{width:28px;height:28px;border-radius:50%;border:2px solid rgba(212,175,55,.15);border-top-color:#d4af37;animation:hm-spin .9s linear infinite}
+      @keyframes hm-spin{to{transform:rotate(360deg)}}
+      .hm-error-row{padding:1.5rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:12px;color:#ef4444;font-size:.85rem}
+
+      .hm-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
+      @media(max-width:480px){.hm-stats{grid-template-columns:1fr 1fr}}
+      .hm-stat{background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.1);border-radius:12px;padding:.9rem 1rem}
+      .hm-stat-label{font-size:.7rem;color:rgba(216,234,245,.5);margin-bottom:.3rem;line-height:1.3}
+      .hm-stat-val{font-size:1.15rem;font-weight:900;color:#fff;line-height:1.1}
+      .hm-stat-val.gold{color:#d4af37}
+      .hm-stat-sub{font-size:.7rem;color:rgba(216,234,245,.4);margin-top:.2rem}
+
+      .hm-section{background:rgba(255,255,255,.03);border:1px solid rgba(212,175,55,.08);border-radius:14px;padding:1.1rem 1.25rem}
+      .hm-section-title{display:flex;align-items:center;gap:.5rem;font-size:.92rem;font-weight:700;color:var(--gold,#d4af37);margin-bottom:.9rem}
+      .hm-section-title svg{width:16px;height:16px;flex-shrink:0}
+
+      .hm-withdraw-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+      .hm-withdraw-desc{font-size:.8rem;color:rgba(216,234,245,.55);margin-bottom:.35rem}
+      .hm-withdraw-amount{font-size:.88rem;color:rgba(216,234,245,.85)}
+      .hm-withdraw-amount strong{color:#d4af37}
+
+      .hm-chart-wrap{height:160px;position:relative}
+
+      .hm-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.9rem}
+      .hm-toggle-label{font-size:.85rem;font-weight:600;color:rgba(216,234,245,.9)}
+      .hm-toggle-sub{font-size:.75rem;color:rgba(216,234,245,.45);margin-top:.15rem}
+      .hm-toggle{position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0}
+      .hm-toggle input{opacity:0;width:0;height:0}
+      .hm-toggle-slider{position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,.1);border-radius:99px;transition:.2s}
+      .hm-toggle-slider::before{content:"";position:absolute;width:18px;height:18px;right:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+      .hm-toggle input:checked + .hm-toggle-slider{background:#22c55e}
+      .hm-toggle input:checked + .hm-toggle-slider::before{transform:translateX(-20px)}
+
+      .hm-price-hint{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.15);border-radius:8px;padding:.6rem .85rem;font-size:.78rem;color:rgba(212,175,55,.9);margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
+      .hm-form-row{margin-bottom:.75rem}
+      .hm-form-label{display:block;font-size:.78rem;color:rgba(216,234,245,.6);margin-bottom:.35rem;font-weight:600}
+      .hm-form-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(212,175,55,.15);border-radius:8px;color:#d8eaf5;font-size:.9rem;padding:.55rem .85rem;font-family:inherit;outline:none;transition:border-color .15s}
+      .hm-form-input:focus{border-color:rgba(212,175,55,.45)}
+      .hm-form-hint{display:block;font-size:.75rem;margin-top:.3rem;color:rgba(216,234,245,.5)}
+      .hm-actions{display:flex;justify-content:flex-end;margin-top:.75rem}
+
+      .hm-btn-primary{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.35rem;background:linear-gradient(135deg,#d4af37,#b8942e);color:#0a0800;font-size:.85rem;font-weight:700;border:none;border-radius:8px;cursor:pointer;transition:opacity .15s;font-family:inherit}
+      .hm-btn-primary:hover{opacity:.85}
+      .hm-btn-primary:disabled{opacity:.45;cursor:not-allowed}
+      .hm-btn-withdraw{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1.1rem;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#22c55e;font-size:.82rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;transition:background .15s}
+      .hm-btn-withdraw:hover{background:rgba(34,197,94,.2)}
+      .hm-btn-withdraw:disabled{opacity:.4;cursor:not-allowed}
+
+      .hm-booking-item{display:flex;align-items:center;justify-content:space-between;padding:.65rem 0;border-bottom:1px solid rgba(216,234,245,.06)}
+      .hm-booking-item:last-child{border-bottom:none}
+      .hm-booking-name{font-size:.85rem;font-weight:700;color:rgba(216,234,245,.9)}
+      .hm-booking-meta{font-size:.75rem;color:rgba(216,234,245,.45);margin-top:.15rem}
+      .hm-booking-amount{font-size:.88rem;font-weight:700;color:#22c55e}
+
+      .hm-badge-green{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#22c55e;font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:20px}
+      .hm-badge-red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#ef4444;font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:20px}
+    </style>
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen"><div class="spinner"></div></div>
+    <div id="page" class="view hidden">
+      <div id="watermark" class="watermark"></div>
+      <div class="texture-overlay"></div>
+      <header class="site-header" id="site-header"></header>
+      <main class="main-content">
+        <section class="container dashboard-section">
+          <div class="dashboard-header">
+            <div>
+              <div class="dashboard-title-row">
+                <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/>
+                </svg>
+                <h2>ممتلكاتي</h2>
+              </div>
+              <p class="dashboard-description">جميع السيارات والمشاريع المسجّلة باسمك في وزارة اللوجستيك.</p>
+            </div>
+          </div>
+
+          <div id="props-loading" class="props-loading">
+            <div class="spinner"></div>
+            <p>جاري تحميل ممتلكاتك…</p>
+          </div>
+          <div id="props-error" class="props-error hidden">
+            <p>تعذّر تحميل الممتلكات. تأكد من اتصال البوت وحاول مجدداً.</p>
+          </div>
+
+          <div id="props-content" class="hidden">
+
+            <!-- Houses -->
+            <div class="props-section">
+              <h3 class="props-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/>
+                  <path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/>
+                </svg>
+                المساكن <span id="houses-owned-count" class="props-count">0</span>
+              </h3>
+              <div id="houses-owned" class="props-grid"></div>
+              <p id="houses-empty" class="props-empty hidden">لا توجد مساكن مسجّلة باسمك بعد. <a href="houses.html">تصفّح السكن</a></p>
+            </div>
+
+            <!-- Cars -->
+            <div class="props-section">
+              <h3 class="props-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/>
+                  <circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/>
+                </svg>
+                السيارات <span id="cars-owned-count" class="props-count">0</span>
+              </h3>
+              <div id="cars-owned" class="props-grid"></div>
+              <p id="cars-empty" class="props-empty hidden">لا توجد سيارات مسجّلة باسمك بعد. <a href="cars.html">تصفّح المعرض</a></p>
+            </div>
+
+            <!-- Gas Stations -->
+            <div class="props-section">
+              <h3 class="props-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="22" x2="15" y2="22"/><line x1="4" y1="9" x2="14" y2="9"/>
+                  <path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/>
+                  <path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/>
+                </svg>
+                محطات الوقود <span id="gas-owned-count" class="props-count">0</span>
+              </h3>
+              <div id="gas-owned" class="props-grid"></div>
+              <p id="gas-empty" class="props-empty hidden">لا توجد محطات مسجّلة باسمك بعد. <a href="gas.html">تصفّح المحطات</a></p>
+            </div>
+
+            <!-- Grocery -->
+            <div class="props-section">
+              <h3 class="props-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+                محلات البقالة <span id="grocery-owned-count" class="props-count">0</span>
+              </h3>
+              <div id="grocery-owned" class="props-grid"></div>
+              <p id="grocery-empty" class="props-empty hidden">لا توجد بقالات مسجّلة باسمك بعد. <a href="grocery.html">تصفّح البقالات</a></p>
+            </div>
+
+            <!-- Barber Shops -->
+            <div class="props-section">
+              <h3 class="props-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 2v20"/><path d="M18 2v20"/>
+                  <path d="M6 12h12"/><path d="M2 7h4"/><path d="M18 7h4"/>
+                  <path d="M2 17h4"/><path d="M18 17h4"/>
+                </svg>
+                محلات الحلاقة <span id="barber-owned-count" class="props-count">0</span>
+              </h3>
+              <div id="barber-owned" class="props-grid"></div>
+              <p id="barber-empty" class="props-empty hidden">لا توجد محلات حلاقة مسجّلة باسمك بعد. <a href="barber.html">تصفّح المحلات</a></p>
+            </div>
+
+            <!-- Cafes & Bakeries -->
+            <div class="props-section">
+              <h3 class="props-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>
+                  <line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/>
+                </svg>
+                المقاهي والمخابز <span id="cafe-owned-count" class="props-count">0</span>
+              </h3>
+              <div id="cafe-owned" class="props-grid"></div>
+              <p id="cafe-empty" class="props-empty hidden">لا توجد مقاهي أو مخابز مسجّلة باسمك بعد. <a href="cafes.html">تصفّح المقاهي</a></p>
+            </div>
+
+            <!-- Restaurants -->
+            <div class="props-section">
+              <h3 class="props-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/>
+                  <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+                </svg>
+                المطاعم <span id="restaurant-owned-count" class="props-count">0</span>
+              </h3>
+              <div id="restaurant-owned" class="props-grid"></div>
+              <p id="restaurant-empty" class="props-empty hidden">لا توجد مطاعم مسجّلة باسمك بعد. <a href="restaurants.html">تصفّح المطاعم</a></p>
+            </div>
+
+            <!-- Stores -->
+            <div class="props-section">
+              <h3 class="props-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/>
+                </svg>
+                المحلات التجارية <span id="store-owned-count" class="props-count">0</span>
+              </h3>
+              <div id="store-owned" class="props-grid"></div>
+              <p id="store-empty" class="props-empty hidden">لا توجد محلات تجارية مسجّلة باسمك بعد. <a href="stores.html">تصفّح المحلات</a></p>
+            </div>
+
+            <!-- Bank -->
+            <div class="props-section">
+              <h3 class="props-section-title" style="color:#d4af37;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="22" x2="21" y2="22"/><rect x="5" y="12" width="3" height="10"/>
+                  <rect x="11" y="12" width="3" height="10"/><rect x="17" y="12" width="3" height="10"/>
+                  <polygon points="12 2 20 7 4 7"/>
+                </svg>
+                البنك <span id="bank-owned-count" class="props-count">0</span>
+              </h3>
+              <div id="bank-owned" class="props-grid"></div>
+              <p id="bank-empty" class="props-empty hidden">لا يوجد بنك مسجّل باسمك بعد. <a href="bank.html">تصفّح البنك</a></p>
+            </div>
+
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer"><div class="container footer-content"><img src="afmod-logo.png" alt="AFMOD Seal" class="footer-logo" /><p class="footer-line-en">ARAB FIRST — MINISTRY OF LOGISTICS</p><p class="footer-line-ar">© 2026 Arab First — جميع الحقوق محفوظة</p></div></footer>
+    </div>
+
+    <!-- House Management Drawer -->
+    <div id="hm-overlay" class="hm-overlay" role="dialog" aria-modal="true" aria-label="إدارة البيت">
+      <div class="hm-drawer" id="hm-drawer">
+        <div class="hm-drag"></div>
+        <div class="hm-head">
+          <div class="hm-icon" id="hm-icon">🏠</div>
+          <div class="hm-head-info">
+            <div class="hm-head-tag">إدارة البيت</div>
+            <div class="hm-head-name" id="hm-name">—</div>
+            <div class="hm-head-sub" id="hm-sub"></div>
+          </div>
+          <button class="hm-close" id="hm-close" aria-label="إغلاق">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="hm-body">
+          <div id="hm-loading-row" class="hm-loading-row">
+            <div class="hm-spin"></div>
+            <span>جاري التحميل…</span>
+          </div>
+          <div id="hm-error-row" class="hm-error-row hidden" id="hm-error-row">
+            تعذّر تحميل بيانات البيت. <span id="hm-error-msg"></span>
+          </div>
+          <div id="hm-content" class="hidden">
+
+            <!-- Stats -->
+            <div class="hm-stats">
+              <div class="hm-stat">
+                <div class="hm-stat-label">أرباح الإيجار المتراكمة</div>
+                <div class="hm-stat-val gold" id="stat-profit">$0</div>
+                <div class="hm-stat-sub">جاهزة للسحب</div>
+              </div>
+              <div class="hm-stat">
+                <div class="hm-stat-label">حالة العرض</div>
+                <div class="hm-stat-val" id="stat-status" style="font-size:.95rem;margin-top:.25rem">—</div>
+                <div class="hm-stat-sub" id="stat-price-sub"></div>
+              </div>
+              <div class="hm-stat">
+                <div class="hm-stat-label">حجوزات نشطة</div>
+                <div class="hm-stat-val" id="stat-bookings">0</div>
+                <div class="hm-stat-sub">حجز حالي</div>
+              </div>
+            </div>
+
+            <!-- Withdraw -->
+            <div class="hm-section">
+              <h3 class="hm-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                سحب أرباح الإيجار
+              </h3>
+              <div class="hm-withdraw-row">
+                <div>
+                  <p class="hm-withdraw-desc">تُحوَّل أرباح الإيجار فوراً إلى رصيدك في اللعبة عبر البوت.</p>
+                  <div class="hm-withdraw-amount">المبلغ المتاح: <strong id="withdraw-display">$0</strong></div>
+                </div>
+                <button id="withdraw-btn" class="hm-btn-withdraw" type="button" disabled>سحب الأرباح</button>
+              </div>
+            </div>
+
+            <!-- Profit chart -->
+            <div class="hm-section">
+              <h3 class="hm-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                سجل أرباح الإيجار
+              </h3>
+              <div class="hm-chart-wrap">
+                <canvas id="profit-chart"></canvas>
+              </div>
+              <p style="font-size:.75rem;color:rgba(216,234,245,.4);margin-top:.4rem" id="profit-chart-note"></p>
+            </div>
+
+            <!-- Rental settings -->
+            <div class="hm-section">
+              <h3 class="hm-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                إعدادات الإيجار
+              </h3>
+              <p style="font-size:.8rem;color:rgba(216,234,245,.5);margin-bottom:.9rem">حدّد السعر اليومي واجعل البيت متاحاً للإيجار. السعر المسموح به بين 10-15% من قيمة البيت.</p>
+
+              <div class="hm-price-hint" id="price-range-info">
+                💡 النطاق المسموح به للإيجار اليومي: <strong id="price-min">—</strong> حتى <strong id="price-max">—</strong>
+              </div>
+
+              <div class="hm-toggle-row">
+                <div>
+                  <div class="hm-toggle-label">إتاحة البيت للإيجار</div>
+                  <div class="hm-toggle-sub">عند التفعيل سيظهر بيتك في قائمة العروض المتاحة</div>
+                </div>
+                <label class="hm-toggle">
+                  <input type="checkbox" id="toggle-available" />
+                  <span class="hm-toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="hm-form-row">
+                <label class="hm-form-label" for="input-price">السعر اليومي ($)</label>
+                <input type="number" id="input-price" class="hm-form-input" placeholder="0" min="0" step="100" />
+                <span class="hm-form-hint" id="price-hint"></span>
+              </div>
+
+              <div class="hm-form-row">
+                <label class="hm-form-label" for="input-notes">ملاحظات للمستأجر (اختياري)</label>
+                <input type="text" id="input-notes" class="hm-form-input" placeholder="أي معلومات إضافية للمستأجر…" maxlength="200" />
+              </div>
+
+              <div class="hm-actions">
+                <button id="save-rental-btn" class="hm-btn-primary" type="button">
+                  <span id="save-label">حفظ الإعدادات</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Active bookings -->
+            <div class="hm-section">
+              <h3 class="hm-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                الحجوزات النشطة
+              </h3>
+              <div id="bookings-list">
+                <p style="color:rgba(216,234,245,.4);font-size:.82rem">لا توجد حجوزات نشطة حالياً.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="shared.js"></script>
+    <script src="houses.js"></script>
+    <script>
+    (function () {
+      var e = window.escText, ea = window.escAttr, fp = window.formatPrice;
+
+      var BUSINESS_TYPES = ["gas","grocery","barber","cafe","bakery","mexican","burger","rickjohns","apparel","dollar","tools","market","jewels","bank","guns"];
+
+      var BTYPE_FALLBACK_IMG = {
+        car:       "https://wiki.erlc.fun/images/1/1a/Patrol_Car.png",
+        gas:       "https://wiki.erlc.fun/images/3/3b/Gas_Station.png",
+        grocery:   "https://wiki.erlc.fun/images/8/8f/Grocery_Store.png",
+        barber:    "https://wiki.erlc.fun/images/4/47/Barber_Shop.png",
+        cafe:      "https://wiki.erlc.fun/images/2/28/Coffee_Shop.png",
+        bakery:    "https://wiki.erlc.fun/images/6/61/Bakery.png",
+        mexican:   "https://wiki.erlc.fun/images/3/3b/Gas_Station.png",
+        burger:    "https://wiki.erlc.fun/images/3/3b/Gas_Station.png",
+        rickjohns: "https://wiki.erlc.fun/images/8/8f/Grocery_Store.png",
+        apparel:   "https://wiki.erlc.fun/images/8/8f/Grocery_Store.png",
+        dollar:    "https://wiki.erlc.fun/images/8/8f/Grocery_Store.png",
+        tools:     "https://wiki.erlc.fun/images/8/8f/Grocery_Store.png",
+        market:    "https://wiki.erlc.fun/images/8/8f/Grocery_Store.png",
+        jewels:    "https://wiki.erlc.fun/images/8/8f/Grocery_Store.png",
+        guns:      "https://wiki.erlc.fun/images/8/8f/Grocery_Store.png",
+        bank:      "https://wiki.erlc.fun/images/5/5d/Neighborhood.png",
+        house:     null
+      };
+
+      function propCard(item, type) {
+        var card = document.createElement("div");
+        card.className = "prop-card";
+        var imgSrc = item.image;
+        if (!imgSrc && type === "house" && item.id && window.HOUSES) {
+          var houseData = window.HOUSES.find(function (h) { return h.id === item.id; });
+          if (houseData && houseData.cover) imgSrc = houseData.cover;
+        }
+        if (!imgSrc && BTYPE_FALLBACK_IMG[type]) {
+          imgSrc = BTYPE_FALLBACK_IMG[type];
+        }
+        var imageHtml = imgSrc
+          ? '<div class="prop-card-img"><img src="'+ea(imgSrc)+'" alt="'+ea(item.name)+'" loading="lazy" referrerpolicy="no-referrer" onerror="window.__afmodImageFallback(this)" /></div>'
+          : '<div class="prop-card-img prop-card-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2" width="16" height="20" rx="2"/></svg></div>';
+        var priceHtml = item.price ? '<div class="prop-card-price">'+e(fp(item.price))+'</div>' : '';
+        var subHtml = item.nameEn && item.nameEn !== item.name ? '<p class="prop-card-sub">'+e(item.nameEn)+'</p>' : '';
+        var boughtHtml = item.boughtAt ? '<p class="prop-card-date">تاريخ الشراء: '+e(item.boughtAt.slice(0,10))+'</p>' : '';
+        var manageBtn = '';
+        if (type === "house" && item.id) {
+          manageBtn = '<button class="btn-manage-business" data-manage-house="'+ea(item.id)+'">إدارة البيت ←</button>';
+        } else if (BUSINESS_TYPES.includes(type) && item.id) {
+          var bUrl = 'business.html?id='+encodeURIComponent(item.id)+'&type='+type;
+          manageBtn = '<a href="'+ea(bUrl)+'" class="btn-manage-business">إدارة المشروع ←</a>';
+        }
+        card.innerHTML = imageHtml + '<div class="prop-card-body"><h4 class="prop-card-name">'+e(item.name)+'</h4>'+subHtml+priceHtml+boughtHtml+'<span class="prop-card-badge">مملوك</span>'+manageBtn+'</div>';
+        return card;
+      }
+
+      function renderSection(containerId, emptyId, countId, items, type) {
+        var container = document.getElementById(containerId);
+        var emptyEl = document.getElementById(emptyId);
+        var countEl = document.getElementById(countId);
+        container.innerHTML = "";
+        countEl.textContent = items.length;
+        if (!items.length) { emptyEl.classList.remove("hidden"); return; }
+        emptyEl.classList.add("hidden");
+        items.forEach(function (item) { container.appendChild(propCard(item, type)); });
+      }
+
+      function loadProperties() {
+        window.afApi.myProperties().then(function (data) {
+          document.getElementById("props-loading").classList.add("hidden");
+          document.getElementById("props-content").classList.remove("hidden");
+          renderSection("houses-owned",  "houses-empty",  "houses-owned-count",  data.houses      || [], "house");
+          renderSection("cars-owned",    "cars-empty",    "cars-owned-count",    data.cars        || [], "car");
+          renderSection("gas-owned",     "gas-empty",     "gas-owned-count",     data.gasStations || [], "gas");
+          renderSection("grocery-owned", "grocery-empty", "grocery-owned-count", data.groceries   || [], "grocery");
+          renderSection("barber-owned",  "barber-empty",  "barber-owned-count",  data.barbers     || [], "barber");
+          var cafeBakery = (data.cafes || []).concat(data.bakeries || []);
+          renderSection("cafe-owned",       "cafe-empty",       "cafe-owned-count",       cafeBakery,                                                   "cafe");
+          var restaurants = (data.mexicans || []).concat(data.burgers || [], data.rickjohns || []);
+          renderSection("restaurant-owned", "restaurant-empty", "restaurant-owned-count", restaurants,                                                  "mexican");
+          var stores = (data.apparels || []).concat(data.dollars || [], data.tools || [], data.markets || [], data.jewels || [], data.guns || []);
+          renderSection("store-owned",      "store-empty",      "store-owned-count",      stores,                                                       "apparel");
+          renderSection("bank-owned",       "bank-empty",       "bank-owned-count",       data.banks       || [],                                        "bank");
+        }).catch(function () {
+          document.getElementById("props-loading").classList.add("hidden");
+          document.getElementById("props-error").classList.remove("hidden");
+        });
+      }
+
+      // ── House Management Drawer ──────────────────────────────────────────────
+      var hmOverlay  = document.getElementById("hm-overlay");
+      var hmDrawer   = document.getElementById("hm-drawer");
+      var currentHouseId = null;
+      var currentMinPrice = 0, currentMaxPrice = 0;
+      var profitChart = null;
+
+      function closeDrawer() {
+        hmOverlay.classList.remove("open");
+        document.body.style.overflow = "";
+        currentHouseId = null;
+      }
+
+      document.getElementById("hm-close").addEventListener("click", closeDrawer);
+      hmOverlay.addEventListener("click", function (ev) {
+        if (ev.target === hmOverlay) closeDrawer();
+      });
+
+      function openDrawer(houseId) {
+        currentHouseId = houseId;
+        var houseData = (window.HOUSES || []).find(function (h) { return h.id === houseId; });
+        var housePriceVal = houseData ? houseData.price : 0;
+        currentMinPrice = Math.floor(housePriceVal * 0.10);
+        currentMaxPrice = Math.floor(housePriceVal * 0.15);
+
+        document.getElementById("hm-name").textContent = houseData ? houseData.nameAr : houseId;
+        document.getElementById("hm-sub").textContent = houseData ? (houseData.nameEn + (houseData.tier ? " — " + houseData.tier : "")) : "";
+        var iconEl = document.getElementById("hm-icon");
+        if (houseData && houseData.cover) {
+          iconEl.innerHTML = '<img src="'+ea(houseData.cover)+'" alt="" referrerpolicy="no-referrer" onerror="window.__afmodImageFallback(this)" />';
+        } else {
+          iconEl.textContent = "🏠";
+        }
+        if (housePriceVal) {
+          document.getElementById("price-min").textContent = fp(currentMinPrice);
+          document.getElementById("price-max").textContent = fp(currentMaxPrice);
+          document.getElementById("price-range-info").style.display = "";
+        } else {
+          document.getElementById("price-range-info").style.display = "none";
+        }
+
+        document.getElementById("hm-loading-row").classList.remove("hidden");
+        document.getElementById("hm-error-row").classList.add("hidden");
+        document.getElementById("hm-content").classList.add("hidden");
+
+        hmOverlay.classList.add("open");
+        document.body.style.overflow = "hidden";
+        hmDrawer.scrollTop = 0;
+
+        loadHouseState();
+      }
+
+      document.getElementById("props-content").addEventListener("click", function (ev) {
+        var btn = ev.target.closest("[data-manage-house]");
+        if (btn) {
+          ev.preventDefault();
+          openDrawer(btn.getAttribute("data-manage-house"));
+        }
+      });
+
+      var priceInput = document.getElementById("input-price");
+      var priceHint  = document.getElementById("price-hint");
+      function updatePriceHint() {
+        var v = Number(priceInput.value);
+        if (!v) { priceHint.textContent = "أدخل السعر اليومي"; priceHint.style.color = ""; return; }
+        if (v < currentMinPrice) {
+          priceHint.textContent = "السعر أقل من الحد الأدنى (" + fp(currentMinPrice) + ")";
+          priceHint.style.color = "#ef4444";
+        } else if (v > currentMaxPrice) {
+          priceHint.textContent = "السعر أعلى من الحد الأقصى (" + fp(currentMaxPrice) + ")";
+          priceHint.style.color = "#ef4444";
+        } else {
+          priceHint.textContent = "✔ السعر ضمن النطاق";
+          priceHint.style.color = "#22c55e";
+        }
+      }
+      priceInput.addEventListener("input", updatePriceHint);
+
+      function renderProfitChart(log) {
+        var labels  = (log || []).map(function (l) {
+          var d = new Date(Number(l.logged_at));
+          return (d.getHours()<10?"0":"")+d.getHours()+":"+(d.getMinutes()<10?"0":"")+d.getMinutes();
+        });
+        var amounts = (log || []).map(function (l) { return Number(l.amount); });
+        var ctx = document.getElementById("profit-chart").getContext("2d");
+        if (!profitChart) {
+          var grad = ctx.createLinearGradient(0, 0, 0, 160);
+          grad.addColorStop(0,   "rgba(212,175,55,0.5)");
+          grad.addColorStop(0.7, "rgba(212,175,55,0.08)");
+          grad.addColorStop(1,   "rgba(212,175,55,0)");
+          profitChart = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: labels,
+              datasets: [{ data: amounts, fill: true, backgroundColor: grad, borderColor: "#d4af37", borderWidth: 2.2,
+                pointBackgroundColor: "#d4af37", pointBorderColor: "#fff", pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 7, tension: 0.4 }]
+            },
+            options: {
+              plugins: { legend: { display: false },
+                tooltip: { backgroundColor: "#0b1323", titleColor: "#d4af37", bodyColor: "#d8eaf5",
+                  borderColor: "rgba(212,175,55,.25)", borderWidth: 1, padding: 9,
+                  callbacks: { label: function (c) { return " $" + Number(c.raw).toLocaleString("en-US"); } } }
+              },
+              scales: {
+                x: { ticks: { font: { family: "Reem Kufi", size: 10 }, color: "#6a7a9a", maxRotation: 0 }, grid: { color: "rgba(255,255,255,.04)" } },
+                y: { ticks: { font: { family: "Reem Kufi", size: 10 }, color: "#6a7a9a",
+                  callback: function (v) { return v >= 1000 ? "$"+(v/1000).toFixed(0)+"K" : "$"+v; }
+                }, grid: { color: "rgba(255,255,255,.05)" }, border: { display: false } }
+              },
+              responsive: true, maintainAspectRatio: false,
+              animation: { duration: 600 }, interaction: { mode: "index", intersect: false }
+            }
+          });
+        } else {
+          profitChart.data.labels = labels;
+          profitChart.data.datasets[0].data = amounts;
+          profitChart.update("active");
+        }
+        document.getElementById("profit-chart-note").textContent =
+          log.length === 0 ? "لا يوجد سجل أرباح بعد. يبدأ السجل عند أول إيجار." : "";
+      }
+
+      function renderBookings(bookings) {
+        var el = document.getElementById("bookings-list");
+        if (!bookings || !bookings.length) {
+          el.innerHTML = '<p style="color:rgba(216,234,245,.4);font-size:.82rem">لا توجد حجوزات نشطة حالياً.</p>';
+          return;
+        }
+        el.innerHTML = "";
+        bookings.forEach(function (b) {
+          var item = document.createElement("div");
+          item.className = "hm-booking-item";
+          var expDate = new Date(Number(b.expires_at));
+          item.innerHTML =
+            '<div><div class="hm-booking-name">'+e(b.renter_display_name || b.renter_username || "مستأجر")+'</div>'+
+            '<div class="hm-booking-meta">'+Number(b.days)+' يوم · حتى '+expDate.toLocaleDateString("ar-SA")+'</div></div>'+
+            '<div class="hm-booking-amount">+'+fp(Number(b.total_price))+'</div>';
+          el.appendChild(item);
+        });
+      }
+
+      function renderState(data) {
+        var profit = Number(data.accumulatedProfit || 0);
+        document.getElementById("stat-profit").textContent = fp(profit);
+        document.getElementById("withdraw-display").textContent = fp(profit);
+        document.getElementById("withdraw-btn").disabled = profit <= 0;
+
+        var listing  = data.listing;
+        var bookings = data.activeBookings || [];
+        document.getElementById("stat-bookings").textContent = bookings.length;
+
+        if (listing) {
+          var avail = listing.is_available;
+          document.getElementById("stat-status").innerHTML = avail
+            ? '<span class="hm-badge-green">متاح للإيجار</span>'
+            : '<span class="hm-badge-red">غير متاح</span>';
+          document.getElementById("stat-price-sub").textContent =
+            avail ? fp(Number(listing.daily_price)) + " / يوم" : "";
+          document.getElementById("toggle-available").checked = avail;
+          document.getElementById("input-price").value = Number(listing.daily_price) || "";
+          document.getElementById("input-notes").value = listing.notes || "";
+        } else {
+          document.getElementById("stat-status").innerHTML = '<span class="hm-badge-red">لم تُفعَّل بعد</span>';
+          document.getElementById("stat-price-sub").textContent = "";
+          if (currentMinPrice) document.getElementById("input-price").value = currentMinPrice;
+        }
+        updatePriceHint();
+        renderProfitChart(data.profitLog || []);
+        renderBookings(bookings);
+      }
+
+      function loadHouseState() {
+        window.afApi.houseState(currentHouseId).then(function (data) {
+          document.getElementById("hm-loading-row").classList.add("hidden");
+          document.getElementById("hm-content").classList.remove("hidden");
+          renderState(data);
+        }).catch(function (err) {
+          document.getElementById("hm-loading-row").classList.add("hidden");
+          document.getElementById("hm-error-row").classList.remove("hidden");
+          document.getElementById("hm-error-msg").textContent = (err && err.message) || "";
+        });
+      }
+
+      document.getElementById("save-rental-btn").addEventListener("click", function () {
+        var btn = this;
+        var label = document.getElementById("save-label");
+        var dp = Number(priceInput.value);
+        if (!dp || dp < currentMinPrice || dp > currentMaxPrice) {
+          window.afToast("خطأ", "السعر خارج النطاق المسموح (" + fp(currentMinPrice) + " – " + fp(currentMaxPrice) + ")", "error");
+          return;
+        }
+        btn.disabled = true;
+        label.textContent = "جاري الحفظ…";
+        window.afApi.houseSetRental({
+          houseId: currentHouseId,
+          dailyPrice: dp,
+          isAvailable: document.getElementById("toggle-available").checked,
+          notes: document.getElementById("input-notes").value,
+        }).then(function () {
+          window.afToast("تم الحفظ", "تم حفظ إعدادات الإيجار بنجاح.", "success");
+          loadHouseState();
+        }).catch(function (err) {
+          window.afToast("خطأ", (err && err.message) || "تعذّر الحفظ", "error");
+        }).finally(function () {
+          btn.disabled = false;
+          label.textContent = "حفظ الإعدادات";
+        });
+      });
+
+      document.getElementById("withdraw-btn").addEventListener("click", function () {
+        var btn = this;
+        btn.disabled = true;
+        btn.textContent = "جاري السحب…";
+        window.afApi.houseWithdraw(currentHouseId).then(function (data) {
+          window.afToast("تم السحب", "تم تحويل " + fp(data.withdrawn) + " إلى رصيدك.", "success");
+          loadHouseState();
+        }).catch(function (err) {
+          window.afToast("فشل السحب", (err && err.message) || "تعذّر السحب", "error");
+          btn.disabled = false;
+          btn.textContent = "سحب الأرباح";
+        });
+      });
+
+      window.afCheckAuth(function (user) {
+        document.getElementById("loading-screen").classList.add("hidden");
+        document.getElementById("page").classList.remove("hidden");
+        window.afRenderHeader(user, "my-properties");
+        window.afRenderWatermark(user);
+        loadProperties();
+      });
+    })();
+    </script>
+  </body>
+</html>

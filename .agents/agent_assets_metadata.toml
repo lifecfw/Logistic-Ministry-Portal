@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "BFT8B4rQr4Qi36Gf8svx6"
+uri = "file://artifacts/afmod/public/navy-marble.png"
+type = "image"
+title = "Dark navy marble texture"

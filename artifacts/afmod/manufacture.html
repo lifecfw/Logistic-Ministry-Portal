@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta name="description" content="محتوى محمي — الوصول قاصر على المستخدمين المصرح لهم فقط" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>المصنع السري | عرب فيرست</title>
+  <link rel="icon" type="image/png" href="afmod-logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <script>
+    window.addEventListener('DOMContentLoaded',function(){
+      document.addEventListener('contextmenu',function(e){if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA')e.preventDefault()});
+      document.addEventListener('copy',function(e){if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA')e.preventDefault()});
+      document.addEventListener('cut',function(e){if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA')e.preventDefault()});
+      document.addEventListener('dragstart',function(e){e.preventDefault()});
+      document.addEventListener('drop',function(e){e.preventDefault()});
+      document.addEventListener('keydown',function(e){
+        var isInput = e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA';
+        if(!isInput&&(e.ctrlKey||e.metaKey)&&(e.key==='c'||e.key==='x')){e.preventDefault()}
+        if(!isInput&&(e.ctrlKey||e.metaKey)&&e.key==='a'){e.preventDefault()}
+        if(!isInput&&(e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault()}
+        if(!isInput&&(e.ctrlKey||e.metaKey)&&e.key==='p'){e.preventDefault()}
+        if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==='i'||e.key==='j'||e.key==='c')){e.preventDefault()}
+        if(e.key==='F12'||e.key==='F11'){e.preventDefault()}
+      });
+    });
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:    #04080f;
+      --bg2:   #060c16;
+      --panel: #070d1a;
+      --p2:    #0b1323;
+      --p3:    #0f192e;
+      --border:  rgba(0,212,255,0.10);
+      --border2: rgba(0,212,255,0.22);
+      --cyan:  #00d4ff;
+      --cdim:  rgba(0,212,255,0.10);
+      --cglow: rgba(0,212,255,0.30);
+      --gold:  #d4af37;
+      --gdim:  rgba(212,175,55,0.12);
+      --green: #22c55e;
+      --grdim: rgba(34,197,94,0.12);
+      --red:   #ef4444;
+      --rdim:  rgba(239,68,68,0.12);
+      --text:  #d8eaf5;
+      --muted: rgba(216,234,245,0.50);
+      --dim:   rgba(216,234,245,0.25);
+      --font:  'Cairo', sans-serif;
+      --navw:  248px;
+    }
+    html, body { min-height:100dvh; background:var(--bg); color:var(--text); font-family:var(--font); font-size:15px; overflow-x:hidden; }
+    .hidden { display:none !important; }
+    button, input, textarea { font-family:var(--font); }
+
+    /* scanline */
+    body::after {
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:9999;
+      background:repeating-linear-gradient(0deg,rgba(0,0,0,.03) 0,rgba(0,0,0,.03) 1px,transparent 1px,transparent 2px);
+    }
+
+    /* ── LOADING ── */
+    #vl { position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;z-index:100; }
+    .ring { width:80px;height:80px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--cyan);animation:spin 1s linear infinite;position:relative; }
+    .ring-inner { position:absolute;inset:12px;background:var(--panel);border-radius:50%;display:flex;align-items:center;justify-content:center; }
+    .ring-inner svg { width:30px;height:30px;color:var(--cyan); }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading-txt { color:var(--cyan);font-size:.75rem;letter-spacing:3px;opacity:.7;text-transform:uppercase; }
+
+    /* ── AUTH ── */
+    #va { position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;z-index:90; }
+    .auth-card { background:var(--panel);border:1px solid var(--border2);border-radius:20px;padding:2.5rem;width:100%;max-width:420px;box-shadow:0 0 60px rgba(0,212,255,.07); }
+    .auth-logo { text-align:center;margin-bottom:1.5rem; }
+    .auth-logo .a-icon { width:64px;height:64px;display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;background:var(--cdim);border:1px solid var(--border2);border-radius:18px; }
+    .auth-logo .a-icon svg { width:34px;height:34px;color:var(--cyan); }
+    .auth-logo h1 { font-size:1.3rem;font-weight:700;color:var(--cyan); }
+    .auth-logo p { font-size:.8rem;color:var(--muted);margin-top:.2rem; }
+    .a-div { height:1px;background:var(--border);margin:1.25rem 0; }
+    .a-step { display:none; }
+    .a-step.on { display:block; }
+    .fl { display:block;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:.4rem; }
+    .fi { width:100%;padding:.75rem 1rem;background:var(--p2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.9rem;outline:none;transition:border-color .15s; }
+    .fi:focus { border-color:var(--border2); }
+    .ahint { font-size:.75rem;color:var(--dim);margin-top:.4rem; }
+    .ahint.err { color:var(--red); }
+    .btn-a { width:100%;padding:.85rem;margin-top:1rem;background:var(--cyan);color:#030b14;font-weight:700;font-size:.95rem;border:none;border-radius:10px;cursor:pointer;transition:opacity .15s; }
+    .btn-a:disabled { opacity:.4;cursor:not-allowed; }
+    .btn-back { background:none;border:none;color:var(--muted);font-size:.82rem;cursor:pointer;width:100%;text-align:center;padding:.5rem;margin-top:.25rem; }
+    .btn-back:hover { color:var(--text); }
+    .otp-row { display:flex;gap:.5rem;justify-content:center;margin:1rem 0;direction:ltr; }
+    .otp-s { width:48px;height:56px;background:var(--p2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:1.5rem;font-weight:700;text-align:center;outline:none; }
+    .otp-s:focus { border-color:var(--cyan); }
+    .otimer { text-align:center;font-size:.8rem;color:var(--muted); }
+    .aerr { background:var(--rdim);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:.7rem 1rem;font-size:.85rem;color:#fca5a5;margin-top:.75rem;display:none; }
+    .aerr.on { display:block; }
+
+    /* ── APP LAYOUT ── */
+    #vapp { display:flex;min-height:100dvh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width:var(--navw);flex-shrink:0;position:sticky;top:0;height:100dvh;
+      display:flex;flex-direction:column;background:var(--panel);border-left:1px solid var(--border);
+      padding:1.25rem .75rem 1rem;overflow-y:auto;
+    }
+    .sb-brand { display:flex;align-items:center;gap:.85rem;padding:.6rem .8rem;margin-bottom:1.5rem;background:linear-gradient(135deg,rgba(0,212,255,.07),rgba(0,212,255,.02));border:1px solid var(--border);border-radius:14px; }
+    .sb-icon { width:40px;height:40px;background:linear-gradient(135deg,rgba(0,212,255,.18),rgba(0,212,255,.06));border:1px solid var(--border2);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+    .sb-icon svg { width:22px;height:22px;color:var(--cyan); }
+    .sb-title { font-size:.9rem;font-weight:700;color:var(--cyan);line-height:1.15; }
+    .sb-sub { font-size:.62rem;color:var(--dim);letter-spacing:1.2px;text-transform:uppercase;margin-top:.1rem; }
+
+    .nb { display:flex;align-items:center;gap:.85rem;padding:.72rem .85rem;border-radius:10px;background:none;border:none;color:var(--muted);font-size:.88rem;font-weight:500;cursor:pointer;text-align:right;width:100%;transition:all .18s;margin-bottom:.15rem;position:relative;overflow:hidden; }
+    .nb:hover { background:rgba(0,212,255,.06);color:var(--text); }
+    .nb.on { background:rgba(0,212,255,.1);color:var(--cyan);font-weight:600; }
+    .nb.on::after { content:"";position:absolute;right:0;top:20%;bottom:20%;width:3px;border-radius:3px 0 0 3px;background:var(--cyan);box-shadow:0 0 10px var(--cyan); }
+    .nb .ni { width:18px;height:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:.8;transition:opacity .15s; }
+    .nb .ni svg { width:18px;height:18px; }
+    .nb:hover .ni, .nb.on .ni { opacity:1; }
+    .nbadge { margin-right:auto;font-size:.63rem;padding:.1rem .5rem;border-radius:20px;font-weight:700;flex-shrink:0; }
+    .bok  { background:var(--grdim);color:var(--green);border:1px solid rgba(34,197,94,.25); }
+    .blck { background:var(--rdim);color:#fca5a5;border:1px solid rgba(239,68,68,.2); }
+    .sb-div { height:1px;background:var(--border);margin:.75rem; }
+
+    .sb-user { margin-top:auto;background:var(--p2);border:1px solid var(--border);border-radius:12px;padding:.85rem .9rem; }
+    .su-row { display:flex;align-items:center;gap:.7rem; }
+    .su-av { width:36px;height:36px;border-radius:50%;background:var(--cdim);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--cyan);flex-shrink:0;overflow:hidden; }
+    .su-av img { width:100%;height:100%;object-fit:cover; }
+    .su-info { min-width:0;flex:1; }
+    .su-name { font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .su-bal { font-size:.72rem;color:var(--cyan); }
+    .su-logout { background:none;border:none;cursor:pointer;color:var(--dim);padding:.25rem;border-radius:6px;transition:color .15s;flex-shrink:0; }
+    .su-logout:hover { color:var(--red); }
+
+    /* ── MAIN ── */
+    .mf-main { flex:1;min-width:0;padding:2rem;overflow-y:auto; }
+    .mf-sect { display:none; }
+    .mf-sect.on { display:block; }
+    .pg-title { font-size:1.5rem;font-weight:700;margin-bottom:.35rem; }
+    .pg-sub { color:var(--muted);font-size:.88rem;margin-bottom:2rem; }
+
+    /* ── HOME ── */
+    .stat-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:.85rem;margin-bottom:2rem; }
+    .stat-card { background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1rem;text-align:center;position:relative;overflow:hidden;transition:border-color .2s,transform .2s; }
+    .stat-card:hover { transform:translateY(-2px); }
+    .stat-card::before { content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.4; }
+    .s-ico { width:42px;height:42px;margin:0 auto .7rem;display:flex;align-items:center;justify-content:center;background:var(--cdim);border:1px solid var(--border2);border-radius:12px; }
+    .s-ico svg { width:22px;height:22px;color:var(--cyan); }
+    .s-lbl { font-size:.68rem;color:var(--muted);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.5px; }
+    .s-val { font-size:1.55rem;font-weight:800;color:var(--cyan); }
+
+    .step-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem; }
+    .step-card { background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:1.75rem 1.5rem;cursor:pointer;transition:border-color .2s,transform .2s,box-shadow .2s;position:relative;overflow:hidden; }
+    .step-card:hover:not(.lk) { border-color:var(--border2);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.6); }
+    .step-card::before { content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 0%,rgba(0,212,255,.07),transparent 70%);transition:opacity .2s;pointer-events:none; }
+    .step-card:hover:not(.lk)::before { opacity:1; }
+    .step-card.lk { opacity:.45;cursor:not-allowed; }
+    .step-card.done { border-color:rgba(34,197,94,.3);background:linear-gradient(160deg,var(--panel),rgba(34,197,94,.03)); }
+    .snum { font-size:.62rem;color:var(--dim);letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem; }
+    .snum::after { content:"";flex:1;height:1px;background:var(--border); }
+    .sico { width:52px;height:52px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;background:var(--cdim);border:1px solid var(--border2);border-radius:14px; }
+    .sico svg { width:28px;height:28px;color:var(--cyan); }
+    .step-card.done .sico { background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3); }
+    .step-card.done .sico svg { color:var(--green); }
+    .stitle { font-size:1.05rem;font-weight:700;margin-bottom:.4rem; }
+    .sdesc { font-size:.82rem;color:var(--muted);line-height:1.65; }
+    .sstatus { margin-top:1rem;font-size:.76rem;display:flex;align-items:center;gap:.4rem; }
+    .sstatus::before { content:"";width:6px;height:6px;border-radius:50%;flex-shrink:0; }
+    .ss-done { color:var(--green); } .ss-done::before { background:var(--green);box-shadow:0 0 6px var(--green); }
+    .ss-lk { color:#fca5a5; } .ss-lk::before { background:#fca5a5; }
+    .ss-open { color:var(--cyan); } .ss-open::before { background:var(--cyan);box-shadow:0 0 6px var(--cyan); }
+
+    /* ── MINE ── */
+    .cave { background:linear-gradient(180deg,#020409 0%,#040810 70%,#060c18 100%);border:1px solid var(--border);border-radius:20px;min-height:300px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem;text-align:center;margin-bottom:1.5rem; }
+    .cave-stalact { position:absolute;top:0;left:0;right:0;height:60px;overflow:hidden; }
+    .cave-stalact svg { width:100%;height:100%; }
+    .cave-glow { position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 100%,rgba(0,212,255,.05),transparent 60%); }
+    .cave-title { font-size:1.25rem;font-weight:800;color:var(--cyan);margin-bottom:.4rem;z-index:1;text-shadow:0 0 30px rgba(0,212,255,.4); }
+    .cave-sub { font-size:.85rem;color:var(--muted);margin-bottom:1.5rem;z-index:1; }
+    .btn-mine { background:linear-gradient(135deg,var(--cyan),#008faa);border:none;border-radius:12px;padding:.9rem 2.75rem;color:#030b14;font-weight:800;font-size:1rem;cursor:pointer;font-family:var(--font);transition:transform .15s,opacity .15s,box-shadow .15s;box-shadow:0 6px 24px rgba(0,212,255,.25);z-index:1;display:inline-flex;align-items:center;gap:.6rem; }
+    .btn-mine svg { width:20px;height:20px; }
+    .btn-mine:hover:not(:disabled) { transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,212,255,.4); }
+    .btn-mine:disabled { opacity:.4;cursor:not-allowed; }
+    .mine-cd { color:var(--muted);font-size:.88rem;margin-top:.75rem;z-index:1; }
+
+    .mine-ax { width:80px;height:80px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;background:rgba(0,212,255,.07);border:1px solid var(--border2);border-radius:50%;z-index:1;transition:background .3s; }
+    .mine-ax svg { width:44px;height:44px;color:var(--cyan); }
+    .mine-ax.sw svg { animation:sw .4s ease-in-out 5; }
+    @keyframes sw{0%,100%{transform:rotate(0)}25%{transform:rotate(-35deg) translateY(-4px)}75%{transform:rotate(12deg)}}
+
+    .res-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:.85rem; }
+    .res-c { background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1rem;text-align:center;transition:border-color .2s,transform .2s; }
+    .res-c:hover { transform:translateY(-2px); }
+    .res-c.glow { border-color:var(--border2);animation:gpop .5s ease; }
+    @keyframes gpop{0%,100%{transform:scale(1)}40%{transform:scale(1.08)}}
+    .rc-ico { width:38px;height:38px;margin:0 auto .55rem;display:flex;align-items:center;justify-content:center;background:var(--cdim);border:1px solid var(--border);border-radius:10px; }
+    .rc-ico svg { width:20px;height:20px;color:var(--cyan); }
+    .rc-lbl { font-size:.68rem;color:var(--muted);margin-bottom:.25rem;text-transform:uppercase;letter-spacing:.4px; }
+    .rc-val { font-size:1.35rem;font-weight:800;color:var(--cyan); }
+
+    .req-bar { display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.25rem;justify-content:center; }
+    .req-chip { background:var(--p2);border:1px solid var(--border);border-radius:8px;padding:.3rem .7rem;font-size:.74rem;color:var(--muted); }
+    .req-chip.met { border-color:rgba(34,197,94,.3);color:var(--green); }
+    .req-chip.unm { border-color:rgba(239,68,68,.3);color:#fca5a5; }
+
+    .spark { position:absolute;font-size:1.2rem;pointer-events:none;animation:fup 1s ease-out forwards; }
+    @keyframes fup{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-65px)}}
+
+    /* ── QUIZ ── */
+    .quiz-wrap { max-width:620px;margin:0 auto; }
+    .qprog { display:flex;gap:.5rem;margin-bottom:2rem; }
+    .qstep { height:4px;flex:1;border-radius:2px;background:var(--border);transition:background .3s; }
+    .qstep.done { background:var(--green); }
+    .qstep.cur  { background:var(--cyan); }
+
+    .qcard { background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:2rem; }
+    .qcard.shake { animation:qs .4s ease; }
+    @keyframes qs{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}60%{transform:translateX(10px)}80%{transform:translateX(-5px)}}
+    .qnum { font-size:.74rem;color:var(--dim);margin-bottom:.75rem;letter-spacing:1px; }
+    .qq   { font-size:1.08rem;color:var(--text);line-height:1.7;margin-bottom:1.5rem; }
+    .qopts { display:grid;grid-template-columns:1fr 1fr;gap:.7rem; }
+    .qopt { background:var(--p2);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;cursor:pointer;color:var(--muted);font-size:.88rem;text-align:right;transition:.2s; }
+    .qopt:hover { border-color:var(--border2);color:var(--text); }
+    .qopt.ok  { background:var(--grdim);border-color:rgba(34,197,94,.4);color:var(--green); }
+    .qopt.bad { background:var(--rdim);border-color:rgba(239,68,68,.4);color:#fca5a5; }
+
+    /* ── IPHONE ── */
+    .iw { display:flex;justify-content:center;align-items:flex-start;padding:1rem 0 2rem; }
+    .iphone { width:280px;height:590px;background:#0d0d0d;border-radius:52px;border:8px solid #2a2a2a;box-shadow:0 0 0 1.5px #3c3c3c,0 40px 100px rgba(0,0,0,.9),inset 0 0 0 1px rgba(255,255,255,.06);position:relative;overflow:hidden;flex-shrink:0; }
+    .iph-island { position:absolute;top:13px;left:50%;transform:translateX(-50%);width:116px;height:34px;background:#000;border-radius:20px;z-index:10; }
+    .iph-screen { position:absolute;inset:0;background:#f2f2f7;display:flex;flex-direction:column;overflow:hidden; }
+    .iph-sbar { display:flex;justify-content:space-between;align-items:center;padding:14px 22px 0;font-size:12px;font-weight:700;color:#000;font-family:'Cairo',-apple-system,sans-serif;direction:ltr; }
+    .ibat { display:flex;align-items:center;gap:3px; }
+    .ibat-b { width:22px;height:11px;border:1.5px solid #000;border-radius:3px;position:relative;padding:1px; }
+    .ibat-b::after { content:"";position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:2px;height:5px;background:#000;border-radius:0 1px 1px 0; }
+    .ibat-f { background:#000;border-radius:1px;height:100%;width:80%; }
+    .iph-back { display:flex;align-items:center;gap:5px;padding:8px 16px 4px;color:#007aff;font-size:15px;font-family:'Cairo',-apple-system,sans-serif;direction:rtl; }
+    .iph-body { flex:1;display:flex;flex-direction:column;align-items:center;padding:12px 20px; }
+    .iph-av { width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,#d4af37,#a8882a);display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin-bottom:8px;box-shadow:0 4px 16px rgba(0,0,0,.2); }
+    .iph-name { font-size:20px;font-weight:700;color:#000;font-family:'Cairo',-apple-system,sans-serif;text-align:center; }
+    .iph-phone { font-size:13px;color:#555;font-family:'Cairo',-apple-system,sans-serif;margin-top:2px;direction:ltr; }
+    .iph-acts { display:flex;gap:18px;margin-top:20px; }
+    .iph-act { display:flex;flex-direction:column;align-items:center;gap:6px; }
+    .iph-circle { width:50px;height:50px;border-radius:50%;background:#e4e4e9;display:flex;align-items:center;justify-content:center;font-size:1.3rem;cursor:pointer; }
+    .iph-albl { font-size:11px;color:#555;font-family:'Cairo',-apple-system,sans-serif; }
+    .iph-call { margin-top:auto;margin-bottom:30px;width:70px;height:70px;background:#34c759;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(52,199,89,.5);transition:transform .15s; }
+    .iph-call:hover { transform:scale(1.08); }
+    .calling { position:absolute;inset:0;background:#1c1c1e;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20; }
+    .c-av { width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#d4af37,#a8882a);display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin-bottom:16px; }
+    .c-name { color:#fff;font-size:20px;font-weight:700;font-family:'Cairo',-apple-system,sans-serif;margin-bottom:8px; }
+    .c-stat { color:#8e8e93;font-size:15px;font-family:'Cairo',-apple-system,sans-serif; }
+    .pulse { width:130px;height:130px;border-radius:50%;position:absolute;border:2px solid rgba(52,199,89,.3);animation:pls 1.4s ease-out infinite; }
+    .pulse:nth-child(2){animation-delay:.4s} .pulse:nth-child(3){animation-delay:.8s}
+    @keyframes pls{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.4);opacity:0}}
+    .c-end { margin-top:50px;width:68px;height:68px;background:#ff3b30;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer; }
+    .c-end svg { width:28px;height:28px;fill:#fff;transform:rotate(135deg); }
+
+    .buy-ov { position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(8px); }
+    .buy-box { background:var(--panel);border:1px solid var(--border2);border-radius:20px;padding:2.5rem 2rem;max-width:360px;width:90%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.8); }
+    .buy-box .bico { width:64px;height:64px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;background:var(--cdim);border:1px solid var(--border2);border-radius:18px; }
+    .buy-box .bico svg { width:34px;height:34px;color:var(--gold); }
+    .buy-box h3 { color:var(--cyan);font-size:1.3rem;margin-bottom:.5rem; }
+    .buy-box p { color:var(--muted);font-size:.9rem;margin-bottom:1rem;line-height:1.6; }
+    .buy-price { font-size:1.8rem;font-weight:800;color:var(--gold);margin-bottom:1.5rem; }
+    .buy-btns { display:flex;gap:.75rem; }
+    .btn-confirm { flex:1;background:linear-gradient(135deg,var(--cyan),#008faa);border:none;border-radius:10px;padding:.8rem;color:#030b14;font-weight:800;font-size:1rem;cursor:pointer;font-family:var(--font);transition:.15s; }
+    .btn-confirm:disabled { opacity:.4;cursor:not-allowed; }
+    .btn-cancel { flex:1;background:var(--p2);border:1px solid var(--border);border-radius:10px;padding:.8rem;color:var(--muted);font-size:1rem;cursor:pointer;font-family:var(--font);transition:.15s; }
+
+    /* ── WIKI PANEL ── */
+    .wiki-layout { display:flex;gap:1.75rem;align-items:flex-start;margin-bottom:2rem;flex-wrap:wrap; }
+    .wiki-body { flex:1;min-width:260px; }
+    .wiki-body h2 { font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:.6rem;direction:ltr; }
+    .wiki-body p  { font-size:.88rem;color:var(--muted);line-height:1.75;margin-bottom:.75rem; }
+    .wiki-body .wbadge { display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .7rem;border-radius:20px;font-size:.72rem;font-weight:700;letter-spacing:.05em;margin-left:.4rem; }
+    .wbadge-crim { background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#fca5a5; }
+    .wbadge-semi { background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);color:var(--cyan); }
+    .wiki-divider { height:1px;background:var(--border);margin:1rem 0; }
+
+    .wiki-ib { width:260px;flex-shrink:0;background:var(--panel);border:1px solid var(--border2);border-radius:14px;overflow:hidden;box-shadow:0 0 40px rgba(0,212,255,.07); }
+    .wiki-ib-title { background:linear-gradient(135deg,#0d2040,#092038);border-bottom:2px solid var(--cyan);padding:.65rem 1rem;font-weight:800;font-size:.95rem;color:var(--cyan);letter-spacing:.04em;text-align:center;direction:ltr; }
+    .wiki-ib-subtitle { background:rgba(0,212,255,.06);padding:.3rem 1rem;text-align:center;font-size:.7rem;color:var(--muted);border-bottom:1px solid var(--border); }
+    .wiki-ib-render { background:radial-gradient(ellipse at 50% 60%,rgba(0,212,255,.08),transparent 70%),linear-gradient(180deg,#020d1a,#030f1f);padding:1.25rem .5rem;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border); }
+    .wiki-ib-render svg { width:100%;max-width:230px;height:auto;filter:drop-shadow(0 0 8px rgba(0,212,255,.3)); }
+
+    .wiki-ib table { width:100%;border-collapse:collapse; }
+    .wiki-ib tr:nth-child(even) td { background:rgba(0,212,255,.03); }
+    .wiki-ib tr:last-child td { border-bottom:none; }
+    .wiki-ib td { padding:.45rem .85rem;font-size:.78rem;border-bottom:1px solid rgba(0,212,255,.07);vertical-align:top; }
+    .wiki-ib td:first-child { color:var(--muted);font-weight:600;white-space:nowrap;width:48%;direction:ltr; }
+    .wiki-ib td:last-child { color:var(--text);font-weight:700;direction:ltr; }
+    .wiki-ib-cat { display:flex;gap:.35rem;flex-wrap:wrap;padding:.65rem .85rem;border-top:1px solid var(--border);background:rgba(0,0,0,.2); }
+    .wiki-cat-tag { font-size:.67rem;padding:.18rem .6rem;border-radius:12px;font-weight:600; }
+    .wct-pistol  { background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);color:var(--gold); }
+    .wct-semi    { background:rgba(0,212,255,.08); border:1px solid rgba(0,212,255,.22);color:var(--cyan); }
+    .wct-9mm     { background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.25);color:var(--green); }
+    .wct-crim    { background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.22);color:#fca5a5; }
+
+    .stat-bar-row { display:flex;align-items:center;gap:.6rem;padding:.4rem .85rem;border-bottom:1px solid rgba(0,212,255,.07); }
+    .stat-bar-lbl { font-size:.72rem;color:var(--muted);font-weight:600;width:68px;flex-shrink:0;direction:ltr; }
+    .stat-bar-track { flex:1;height:5px;background:rgba(0,212,255,.1);border-radius:3px;overflow:hidden; }
+    .stat-bar-fill  { height:100%;border-radius:3px;transition:width .6s ease; }
+    .sbf-green { background:linear-gradient(90deg,#16a34a,#22c55e); }
+    .sbf-cyan  { background:linear-gradient(90deg,#0891b2,#00d4ff); }
+    .sbf-red   { background:linear-gradient(90deg,#b91c1c,#ef4444); }
+    .sbf-gold  { background:linear-gradient(90deg,#a8882a,#d4af37); }
+    .stat-bar-num { font-size:.7rem;color:var(--dim);width:28px;text-align:left;flex-shrink:0;direction:ltr; }
+
+    /* ── CRAFT ── */
+    .pre-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.85rem;margin-bottom:1.5rem; }
+    .pre-item { background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;display:flex;align-items:center;gap:.85rem;transition:border-color .2s; }
+    .pre-item:has(.ok) { border-color:rgba(34,197,94,.2); }
+    .pre-ico { width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--cdim);border-radius:10px;border:1px solid var(--border); }
+    .pre-ico svg { width:19px;height:19px;color:var(--cyan); }
+    .pre-item:has(.ok) .pre-ico { background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3); }
+    .pre-item:has(.ok) .pre-ico svg { color:var(--green); }
+    .pre-lbl { font-size:.77rem;color:var(--muted); }
+    .pre-val { font-size:.95rem;font-weight:700; }
+    .ok { color:var(--green); } .bad { color:var(--red); }
+
+    .canvas-wrap { background:#030810;border:1px solid rgba(0,212,255,.2);border-radius:16px;overflow:hidden;position:relative;box-shadow:0 0 40px rgba(0,212,255,.07); }
+    #weapon-canvas { display:block;width:100%;max-width:560px;height:auto;cursor:crosshair;touch-action:none; }
+    .craft-hint { text-align:center;color:var(--muted);font-size:.82rem;margin-top:.6rem; }
+    .craft-fail { text-align:center;color:var(--red);font-size:.85rem;margin-top:.6rem;opacity:0;transition:opacity .3s; }
+    .craft-fail.on { opacity:1; }
+
+    .suc-ov { position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px); }
+    .suc-box { background:linear-gradient(135deg,#020d04,#040d18);border:1px solid rgba(34,197,94,.35);border-radius:24px;padding:3rem 2.5rem;text-align:center;max-width:420px;width:90%;box-shadow:0 0 80px rgba(34,197,94,.12),0 40px 100px rgba(0,0,0,.8); }
+    .suc-ico { width:80px;height:80px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:50%;animation:spop .5s ease; }
+    .suc-ico svg { width:42px;height:42px;color:var(--green); }
+    @keyframes spop{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+    .suc-title { color:var(--green);font-size:1.6rem;font-weight:800;margin-bottom:.6rem; }
+    .suc-sub { color:var(--muted);font-size:.95rem;line-height:1.6; }
+    .suc-badge { margin-top:1.5rem;display:inline-flex;align-items:center;gap:.5rem;background:var(--grdim);border:1px solid rgba(34,197,94,.3);border-radius:20px;padding:.4rem 1rem;color:var(--green);font-size:.82rem; }
+    .btn-suc { margin-top:1.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:10px;padding:.75rem 2rem;color:#fff;font-weight:700;font-size:1rem;cursor:pointer;font-family:var(--font); }
+
+    /* ── TOAST ── */
+    .tc { position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:9998;display:flex;flex-direction:column;gap:.6rem;pointer-events:none;min-width:280px;max-width:90vw; }
+    .tst { display:flex;align-items:flex-start;gap:.75rem;background:#0f1929;border:1px solid var(--border2);border-radius:12px;padding:.85rem 1rem;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:tup .3s ease;pointer-events:all; }
+    @keyframes tup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .tst.suc { border-color:rgba(34,197,94,.4); } .tst.err { border-color:rgba(239,68,68,.4); }
+    .t-ico { font-size:1.1rem;flex-shrink:0; }
+    .t-ttl { font-weight:700;font-size:.88rem; }
+    .t-msg { font-size:.8rem;color:var(--muted);margin-top:.12rem; }
+
+    /* ── TRANSFER / WEAPONS SECTIONS ── */
+    .sec-card { background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.25rem; }
+    .sec-card-title { font-size:.95rem;font-weight:700;color:var(--cyan);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem; }
+    .res-inputs { display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.75rem;margin-bottom:1rem; }
+    .ri-wrap { display:flex;flex-direction:column;gap:.3rem; }
+    .ri-label { font-size:.72rem;font-weight:600;color:var(--muted); }
+    .ri-input { background:var(--p2);border:1px solid var(--border);border-radius:8px;padding:.5rem .75rem;color:var(--text);font-size:.9rem;font-family:var(--font);outline:none;width:100%; }
+    .ri-input:focus { border-color:var(--border2); }
+    .target-row { display:flex;gap:.75rem;align-items:flex-end;margin-bottom:1rem; }
+    .target-row .ri-wrap { flex:1; }
+    .btn-do { padding:.75rem 1.5rem;border-radius:10px;border:none;font-family:var(--font);font-weight:700;font-size:.92rem;cursor:pointer;transition:.15s; }
+    .btn-do:disabled { opacity:.4;cursor:not-allowed; }
+    .btn-do-cyan { background:linear-gradient(135deg,var(--cyan),#008faa);color:#030b14; }
+    .btn-do-green { background:linear-gradient(135deg,var(--green),#16a34a);color:#fff; }
+    .btn-do:hover:not(:disabled) { opacity:.85;transform:translateY(-1px); }
+    .tr-result { font-size:.82rem;padding:.6rem .85rem;border-radius:8px;margin-top:.5rem;text-align:center;display:none; }
+    .tr-result.ok  { display:block;background:var(--grdim);border:1px solid rgba(34,197,94,.3);color:var(--green); }
+    .tr-result.err { display:block;background:var(--rdim);border:1px solid rgba(239,68,68,.3);color:#fca5a5; }
+    .wep-big { text-align:center;padding:2rem 1rem; }
+    .wep-num { font-size:5rem;font-weight:900;color:var(--cyan);line-height:1;text-shadow:0 0 40px rgba(0,212,255,.4); }
+    .wep-lbl { color:var(--muted);font-size:.9rem;margin-top:.25rem; }
+    .wep-badge { display:inline-flex;align-items:center;gap:.5rem;background:var(--grdim);border:1px solid rgba(34,197,94,.3);border-radius:20px;padding:.35rem 1rem;color:var(--green);font-size:.82rem;margin-top:1rem; }
+
+    /* ── MOBILE ── */
+    @media (max-width:720px) {
+      .sidebar { display:none; }
+      .mf-main { padding:1.25rem 1rem; }
+      .mob-hdr { display:flex;align-items:center;gap:.75rem;padding:.8rem 1rem;background:var(--panel);border-bottom:1px solid var(--border);margin-bottom:1rem;border-radius:0 0 14px 14px; }
+      .mob-nav { display:flex;gap:.35rem;overflow-x:auto;padding-bottom:.25rem;margin-bottom:1.5rem; }
+      .mob-nb { flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.6rem .85rem;border-radius:10px;background:none;border:none;color:var(--muted);font-size:.68rem;cursor:pointer;transition:background .15s,color .15s; }
+      .mob-nb .mi { width:22px;height:22px;display:flex;align-items:center;justify-content:center;opacity:.75;transition:opacity .15s; }
+      .mob-nb .mi svg { width:22px;height:22px; }
+      .mob-nb.on { background:rgba(0,212,255,.1);color:var(--cyan); }
+      .mob-nb.on .mi { opacity:1; }
+    }
+    @media (min-width:721px) {
+      .mob-hdr, .mob-nav { display:none !important; }
+    }
+  </style>
+<script>(function(){function _b(e){if(e.key==="F12"){e.preventDefault();e.stopPropagation();return false;}if(e.ctrlKey&&e.shiftKey&&["i","I","j","J","c","C","k","K"].indexOf(e.key)!==-1){e.preventDefault();e.stopPropagation();return false;}if(e.ctrlKey&&["u","U","s","S","p","P"].indexOf(e.key)!==-1){e.preventDefault();e.stopPropagation();return false;}}document.addEventListener("contextmenu",function(e){e.preventDefault();e.stopPropagation();},true);document.addEventListener("keydown",_b,true);window.addEventListener("keydown",_b,true);})();</script>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="vl">
+  <div class="ring"><div class="ring-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M4 20V10l6-6v6l6-6v16"/><path d="M14 20v-6h4v6"/></svg></div></div>
+  <div class="loading-txt">ARAB FIRST — SECRET FACTORY</div>
+</div>
+
+<!-- AUTH -->
+<div id="va" class="hidden">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M4 20V10l6-6v6l6-6v16"/><path d="M14 20v-6h4v6"/></svg></span>
+      <h1>المصنع السري</h1>
+      <p>للدخول يجب أن تكون عضواً في سيرفر عرب فيرست</p>
+    </div>
+    <div class="a-div"></div>
+    <div id="as1" class="a-step on">
+      <div style="margin-bottom:.9rem">
+        <label class="fl">اسم مستخدم ديسكورد</label>
+        <input id="au" class="fi" type="text" placeholder="username" dir="ltr" autocomplete="off" />
+        <div id="ah1" class="ahint"></div>
+      </div>
+      <button id="ab1" class="btn-a">إرسال رمز التحقق</button>
+      <div id="ae1" class="aerr"></div>
+    </div>
+    <div id="as2" class="a-step">
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;text-align:center">أدخل الرمز المرسل لك على ديسكورد</p>
+      <div class="otp-row" id="otp-row"></div>
+      <p class="otimer" id="otimer"></p>
+      <button id="ab2" class="btn-a" disabled>تحقق</button>
+      <button id="abk" class="btn-back">← رجوع</button>
+      <div id="ae2" class="aerr"></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="vapp" class="hidden">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sb-brand">
+      <span class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M4 20V10l6-6v6l6-6v16"/><path d="M14 20v-6h4v6"/></svg></span>
+      <div>
+        <div class="sb-title">المصنع السري</div>
+        <div class="sb-sub">Arab First · ERLC</div>
+      </div>
+    </div>
+
+    <button class="nb on" id="sn-home" onclick="G('home')"><span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span> الرئيسية</button>
+    <button class="nb" id="sn-mine" onclick="G('mine')"><span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> الكهف والتنقيب</button>
+    <button class="nb" id="sn-table" onclick="G('table')">
+      <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></span> طاولة التصنيع
+      <span class="nbadge blck" id="nb-table">مقفل</span>
+    </button>
+    <button class="nb" id="sn-craft" onclick="G('craft')">
+      <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg></span> تصنيع السلاح
+      <span class="nbadge blck" id="nb-craft">مقفل</span>
+    </button>
+    <button class="nb" id="sn-transfer" onclick="G('transfer')"><span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> تحويل الموارد</button>
+    <button class="nb" id="sn-weapons" onclick="G('weapons')">
+      <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> أسلحتي
+      <span class="nbadge blck" id="nb-weapons">0</span>
+    </button>
+
+    <div class="sb-div"></div>
+
+    <div class="sb-user">
+      <div class="su-row">
+        <div class="su-av" id="su-av"></div>
+        <div class="su-info">
+          <div class="su-name" id="su-name">—</div>
+          <div class="su-bal" id="su-bal">…</div>
+        </div>
+        <button class="su-logout" onclick="doLogout()" title="خروج">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="mf-main">
+
+    <!-- Mobile header -->
+    <div class="mob-hdr">
+      <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--cdim);border:1px solid var(--border2);border-radius:9px;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M4 20V10l6-6v6l6-6v16"/><path d="M14 20v-6h4v6"/></svg></span>
+      <div style="flex:1">
+        <div style="font-size:.9rem;font-weight:700;color:var(--cyan)">المصنع السري</div>
+        <div id="mb-bal" style="font-size:.72rem;color:var(--muted)">…</div>
+      </div>
+      <div id="mb-av" class="su-av" style="width:32px;height:32px;font-size:.75rem"></div>
+    </div>
+
+    <!-- Mobile nav -->
+    <div class="mob-nav">
+      <button class="mob-nb on" id="mn-home" onclick="G('home')"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>الرئيسية</button>
+      <button class="mob-nb" id="mn-mine" onclick="G('mine')"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>الكهف</button>
+      <button class="mob-nb" id="mn-table" onclick="G('table')"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></span>الطاولة</button>
+      <button class="mob-nb" id="mn-craft" onclick="G('craft')"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg></span>التصنيع</button>
+      <button class="mob-nb" id="mn-transfer" onclick="G('transfer')"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span>تحويل</button>
+      <button class="mob-nb" id="mn-weapons" onclick="G('weapons')"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>أسلحتي</button>
+    </div>
+
+    <!-- HOME -->
+    <section id="s-home" class="mf-sect on">
+      <h1 class="pg-title">المصنع السري</h1>
+      <p class="pg-sub">نظام التصنيع الحصري — عرب فيرست ERLC</p>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><div class="s-lbl">فولاذ</div><div class="s-val" id="h-st">0</div></div>
+        <div class="stat-card"><div class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div><div class="s-lbl">ألمنيوم</div><div class="s-val" id="h-al">0</div></div>
+        <div class="stat-card"><div class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div><div class="s-lbl">بلاستيك</div><div class="s-val" id="h-pl">0</div></div>
+        <div class="stat-card"><div class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="19"/><line x1="5.64" y1="5.64" x2="4.22" y2="4.22"/><line x1="19.78" y1="19.78" x2="18.36" y2="18.36"/><line x1="5" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="19" y2="12"/><line x1="5.64" y1="18.36" x2="4.22" y2="19.78"/><line x1="19.78" y1="4.22" x2="18.36" y2="5.64"/><circle cx="12" cy="12" r="4"/></svg></div><div class="s-lbl">حديد</div><div class="s-val" id="h-ir">0</div></div>
+        <div class="stat-card"><div class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="s-lbl">فحم</div><div class="s-val" id="h-co">0</div></div>
+        <div class="stat-card" style="border-color:rgba(34,197,94,.2)"><div class="s-ico" style="background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.25)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div><div class="s-lbl">أسلحة</div><div class="s-val" id="h-wp" style="color:var(--green)">0</div></div>
+      </div>
+      <div class="step-grid">
+        <div class="step-card" id="sc-mine" onclick="G('mine')">
+          <div class="snum">STEP 01</div>
+          <div class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+          <div class="stitle">تجميع الموارد</div>
+          <div class="sdesc">انزل إلى الكهف وابدأ التنقيب عن المواد الخام. كل 10 دقائق جولة واحدة.</div>
+          <div class="sstatus ss-open" id="ss-mine">متاح الآن</div>
+        </div>
+        <div class="step-card" id="sc-table" onclick="clickTable()">
+          <div class="snum">STEP 02</div>
+          <div class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+          <div class="stitle">طاولة التصنيع</div>
+          <div class="sdesc">اجتز الاختبار الجنائي وتواصل مع التاجر للحصول على طاولتك بـ $6,000.</div>
+          <div class="sstatus ss-lk" id="ss-table">مقفل</div>
+        </div>
+        <div class="step-card lk" id="sc-craft" onclick="clickCraft()">
+          <div class="snum">STEP 03</div>
+          <div class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg></div>
+          <div class="stitle">تصنيع السلاح</div>
+          <div class="sdesc">استخدم مواردك وطاولتك لصنع سلاحك والحصول على رتبتك الحصرية في ديسكورد.</div>
+          <div class="sstatus ss-lk" id="ss-craft">يتطلب الطاولة</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MINE -->
+    <section id="s-mine" class="mf-sect">
+      <h1 class="pg-title">الكهف السري</h1>
+      <p class="pg-sub">اضغط للتنقيب — كل 10 دقائق جولة واحدة</p>
+      <div class="cave" id="cave">
+        <div class="cave-stalact">
+          <svg viewBox="0 0 800 60" preserveAspectRatio="none" fill="#020409">
+            <polygon points="0,0 60,0 35,56 0,0"/><polygon points="70,0 130,0 100,63 70,0"/>
+            <polygon points="140,0 195,0 170,50 140,0"/><polygon points="205,0 265,0 237,66 205,0"/>
+            <polygon points="275,0 330,0 305,53 275,0"/><polygon points="340,0 400,0 372,60 340,0"/>
+            <polygon points="410,0 465,0 440,56 410,0"/><polygon points="475,0 535,0 508,63 475,0"/>
+            <polygon points="545,0 600,0 575,48 545,0"/><polygon points="610,0 670,0 643,60 610,0"/>
+            <polygon points="680,0 735,0 710,53 680,0"/><polygon points="745,0 800,0 800,0 788,43 745,0"/>
+          </svg>
+        </div>
+        <div class="cave-glow"></div>
+        <div class="mine-ax" id="mineax"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+        <div class="cave-title">الكهف السري</div>
+        <div class="cave-sub">اضغط على الزر للتنقيب عن الموارد الخام</div>
+        <button class="btn-mine" id="mine-btn" onclick="doMine()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> ابدأ التنقيب</button>
+        <div class="mine-cd" id="mine-cd"></div>
+      </div>
+      <div class="res-grid">
+        <div class="res-c"><div class="rc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><div class="rc-lbl">فولاذ</div><div class="rc-val" id="r-st">0</div></div>
+        <div class="res-c"><div class="rc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div><div class="rc-lbl">ألمنيوم</div><div class="rc-val" id="r-al">0</div></div>
+        <div class="res-c"><div class="rc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div><div class="rc-lbl">بلاستيك</div><div class="rc-val" id="r-pl">0</div></div>
+        <div class="res-c"><div class="rc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="19"/><line x1="5.64" y1="5.64" x2="4.22" y2="4.22"/><line x1="19.78" y1="19.78" x2="18.36" y2="18.36"/><line x1="5" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="19" y2="12"/><line x1="5.64" y1="18.36" x2="4.22" y2="19.78"/><line x1="19.78" y1="4.22" x2="18.36" y2="5.64"/><circle cx="12" cy="12" r="4"/></svg></div><div class="rc-lbl">حديد</div><div class="rc-val" id="r-ir">0</div></div>
+        <div class="res-c"><div class="rc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="rc-lbl">فحم</div><div class="rc-val" id="r-co">0</div></div>
+      </div>
+      <div class="req-bar" id="req-bar"></div>
+    </section>
+
+    <!-- TABLE QUIZ -->
+    <section id="s-table" class="mf-sect">
+      <h1 class="pg-title">الاختبار الجنائي</h1>
+      <p class="pg-sub">أجب على 5 أسئلة صحيحة متتالية للوصول إلى تاجر الطاولات</p>
+      <div class="quiz-wrap">
+        <div class="qprog" id="qprog"></div>
+        <div class="qcard" id="qcard">
+          <div class="qnum" id="qnum"></div>
+          <div class="qq"   id="qq"></div>
+          <div class="qopts" id="qopts"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IPHONE -->
+    <section id="s-iphone" class="mf-sect">
+      <h1 class="pg-title">تاجر الطاولات</h1>
+      <p class="pg-sub">اجتزت الاختبار! اتصل بالتاجر لشراء طاولة التصنيع</p>
+      <div class="iw">
+        <div class="iphone">
+          <div class="iph-island"></div>
+          <div class="iph-screen">
+            <div id="iph-contact" style="display:flex;flex-direction:column;height:100%">
+              <div class="iph-sbar">
+                <span id="iph-time">9:41</span>
+                <div class="ibat"><span>100%</span><div class="ibat-b"><div class="ibat-f"></div></div></div>
+              </div>
+              <div class="iph-back">
+                <svg width="9" height="16" viewBox="0 0 9 16" fill="none" stroke="#007aff" stroke-width="2.5" stroke-linecap="round"><path d="M8 1L1 8l7 7"/></svg>
+                <span style="font-size:15px">رجوع</span>
+              </div>
+              <div class="iph-body">
+                <div class="iph-av" style="font-size:0"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+                <div class="iph-name">تاجر الطاولات</div>
+                <div class="iph-phone">+1 (555) 0-CRAFT</div>
+                <div class="iph-acts">
+                  <div class="iph-act"><div class="iph-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="iph-albl">رسالة</div></div>
+                  <div class="iph-act"><div class="iph-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="#1c1c1e"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div><div class="iph-albl">اتصال</div></div>
+                  <div class="iph-act"><div class="iph-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="iph-albl">دفع</div></div>
+                </div>
+                <div class="iph-call" onclick="startCall()">
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                </div>
+              </div>
+            </div>
+            <div id="iph-calling" style="display:none;position:absolute;inset:0">
+              <div class="calling">
+                <div class="pulse"></div><div class="pulse"></div><div class="pulse"></div>
+                <div class="c-av" style="font-size:0"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+                <div class="c-name">تاجر الطاولات</div>
+                <div class="c-stat" id="c-stat">جارٍ الاتصال...</div>
+                <div class="c-end" onclick="endCall()">
+                  <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANSFER RESOURCES -->
+    <section id="s-transfer" class="mf-sect">
+      <h1 class="pg-title">تحويل الموارد</h1>
+      <p class="pg-sub">أرسل موارد التصنيع لأي لاعب آخر — بحد أقصى 999 لكل مادة</p>
+      <div class="sec-card">
+        <div class="sec-card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> المستلم</div>
+        <div class="target-row">
+          <div class="ri-wrap">
+            <div class="ri-label">اسم مستخدم ديسكورد (بدون @)</div>
+            <input type="text" id="tr-username" class="ri-input" placeholder="username" dir="ltr" autocomplete="off" />
+          </div>
+        </div>
+        <div class="sec-card-title" style="margin-top:.5rem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg> الكميات</div>
+        <div class="res-inputs">
+          <div class="ri-wrap"><div class="ri-label">فولاذ</div><input type="number" id="tr-steel" class="ri-input" placeholder="0" min="0" max="999" /></div>
+          <div class="ri-wrap"><div class="ri-label">ألمنيوم</div><input type="number" id="tr-aluminum" class="ri-input" placeholder="0" min="0" max="999" /></div>
+          <div class="ri-wrap"><div class="ri-label">بلاستيك</div><input type="number" id="tr-plastic" class="ri-input" placeholder="0" min="0" max="999" /></div>
+          <div class="ri-wrap"><div class="ri-label">حديد</div><input type="number" id="tr-iron" class="ri-input" placeholder="0" min="0" max="999" /></div>
+          <div class="ri-wrap"><div class="ri-label">فحم</div><input type="number" id="tr-coal" class="ri-input" placeholder="0" min="0" max="999" /></div>
+        </div>
+        <button id="tr-btn" class="btn-do btn-do-cyan" onclick="doTransferResources()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg> إرسال الموارد</button>
+        <div id="tr-result" class="tr-result"></div>
+      </div>
+    </section>
+
+    <!-- MY WEAPONS -->
+    <section id="s-weapons" class="mf-sect">
+      <h1 class="pg-title">أسلحتي</h1>
+      <p class="pg-sub">مخزن الأسلحة الشخصي — يمكنك تحويل سلاح لأي لاعب</p>
+      <div class="sec-card">
+        <div class="wep-big">
+          <div class="wep-num" id="wp-count">0</div>
+          <div class="wep-lbl">Beretta M9 — سلاح مصنّع</div>
+          <div class="wep-badge" id="wp-badge" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> مسلّح</div>
+        </div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg> تحويل سلاح</div>
+        <div class="target-row">
+          <div class="ri-wrap">
+            <div class="ri-label">اسم مستخدم المستلم</div>
+            <input type="text" id="wp-username" class="ri-input" placeholder="username" dir="ltr" autocomplete="off" />
+          </div>
+          <div class="ri-wrap" style="width:90px;flex-shrink:0">
+            <div class="ri-label">الكمية</div>
+            <input type="number" id="wp-qty" class="ri-input" value="1" min="1" max="99" style="width:90px" />
+          </div>
+        </div>
+        <button id="wp-btn" class="btn-do btn-do-green" onclick="doTransferWeapon()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> تحويل سلاح</button>
+        <div id="wp-result" class="tr-result"></div>
+      </div>
+    </section>
+
+    <!-- ADMIN PANEL (n16q only) -->
+    <section id="s-admin" class="mf-sect hidden" style="max-width:560px;margin:0 auto">
+      <h1 class="pg-title">لوحة الأدمن</h1>
+      <p class="pg-sub">أعطِ موارد تصنيع لأي مستخدم. يمكنك تعديل الكميات لكل مادة.</p>
+      <div style="background:rgba(212,175,55,.07);border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:1.5rem;display:flex;flex-direction:column;gap:1rem">
+        <div>
+          <label style="font-size:.8rem;font-weight:700;color:rgba(216,234,245,.6);display:block;margin-bottom:.35rem">اسم مستخدم ديسكورد (بدون @)</label>
+          <input type="text" id="adm-username" placeholder="اسم المستخدم…"
+            style="width:100%;background:#0b1323;border:1px solid rgba(212,175,55,.2);border-radius:8px;padding:.65rem 1rem;color:#d8eaf5;font-family:Cairo,sans-serif;font-size:.92rem" />
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+          <div>
+            <label style="font-size:.75rem;font-weight:700;color:rgba(216,234,245,.5);display:block;margin-bottom:.25rem">فولاذ</label>
+            <input type="number" id="adm-steel" placeholder="0" min="0" max="999999"
+              style="width:100%;background:#0b1323;border:1px solid rgba(212,175,55,.15);border-radius:6px;padding:.5rem .75rem;color:#d8eaf5;font-family:Cairo,sans-serif;font-size:.88rem" />
+          </div>
+          <div>
+            <label style="font-size:.75rem;font-weight:700;color:rgba(216,234,245,.5);display:block;margin-bottom:.25rem">ألمنيوم</label>
+            <input type="number" id="adm-aluminum" placeholder="0" min="0" max="999999"
+              style="width:100%;background:#0b1323;border:1px solid rgba(212,175,55,.15);border-radius:6px;padding:.5rem .75rem;color:#d8eaf5;font-family:Cairo,sans-serif;font-size:.88rem" />
+          </div>
+          <div>
+            <label style="font-size:.75rem;font-weight:700;color:rgba(216,234,245,.5);display:block;margin-bottom:.25rem">بلاستيك</label>
+            <input type="number" id="adm-plastic" placeholder="0" min="0" max="999999"
+              style="width:100%;background:#0b1323;border:1px solid rgba(212,175,55,.15);border-radius:6px;padding:.5rem .75rem;color:#d8eaf5;font-family:Cairo,sans-serif;font-size:.88rem" />
+          </div>
+          <div>
+            <label style="font-size:.75rem;font-weight:700;color:rgba(216,234,245,.5);display:block;margin-bottom:.25rem">حديد</label>
+            <input type="number" id="adm-iron" placeholder="0" min="0" max="999999"
+              style="width:100%;background:#0b1323;border:1px solid rgba(212,175,55,.15);border-radius:6px;padding:.5rem .75rem;color:#d8eaf5;font-family:Cairo,sans-serif;font-size:.88rem" />
+          </div>
+          <div>
+            <label style="font-size:.75rem;font-weight:700;color:rgba(216,234,245,.5);display:block;margin-bottom:.25rem">فحم</label>
+            <input type="number" id="adm-coal" placeholder="0" min="0" max="999999"
+              style="width:100%;background:#0b1323;border:1px solid rgba(212,175,55,.15);border-radius:6px;padding:.5rem .75rem;color:#d8eaf5;font-family:Cairo,sans-serif;font-size:.88rem" />
+          </div>
+        </div>
+        <button id="adm-give-btn" type="button"
+          style="width:100%;padding:.8rem;border-radius:8px;border:1px solid rgba(212,175,55,.4);background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(212,175,55,.06));color:#d4af37;font-size:.92rem;font-weight:700;font-family:Cairo,sans-serif;cursor:pointer">
+          منح الموارد
+        </button>
+        <p id="adm-result" style="font-size:.8rem;text-align:center;color:rgba(216,234,245,.5)"></p>
+      </div>
+    </section>
+
+    <!-- CRAFT -->
+    <section id="s-craft" class="mf-sect">
+      <h1 class="pg-title">تصنيع السلاح</h1>
+      <p class="pg-sub">ارسم المسار بالضغط والسحب عبر جميع النقاط لتصنيع سلاحك</p>
+
+      <!-- ── WIKI PANEL ── -->
+      <div class="wiki-layout">
+        <!-- Body / Article -->
+        <div class="wiki-body">
+          <h2>Beretta M9</h2>
+          <span class="wbadge wbadge-crim"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> Criminal</span>
+          <span class="wbadge wbadge-semi"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Semi-Auto</span>
+          <div class="wiki-divider"></div>
+          <p>
+            المسدس الوطني لعرب فيرست — <strong style="color:var(--text)">Beretta M9</strong> هو مسدس شبه أوتوماتيكي إيطالي الصنع، يعمل بآلية قصور ذاتي ريكويل مقفل. يُعدّ من أكثر الأسلحة انتشاراً في العالم، صمّمته شركة Pietro Beretta عام 1985 ليحلّ محلّ مسدس M1911 القديم في الجيش الأمريكي.
+          </p>
+          <p>
+            في سيرفر عرب فيرست، يُمنح <strong style="color:var(--cyan)">Beretta M9</strong> حصرياً للمواطنين الذين أتمّوا دورة التصنيع السري — من التنقيب في الكهف وبناء الطاولة وصولاً إلى تتبّع مسار التجميع الدقيق. حامله يُصنَّف <span style="color:#fca5a5;font-weight:700">مجرماً مسلّحاً</span> ويحمل رتبة ديسكورد خاصة.
+          </p>
+        </div>
+
+        <!-- Infobox -->
+        <div class="wiki-ib">
+          <div class="wiki-ib-title">Beretta M9</div>
+          <div class="wiki-ib-subtitle">Semi-Automatic Pistol · إيطاليا / USA</div>
+
+          <!-- Blueprint weapon render -->
+          <div class="wiki-ib-render" style="padding:0;overflow:hidden;background:#010d1e;">
+            <svg viewBox="0 0 260 210" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;" aria-label="Beretta M9 blueprint">
+              <defs>
+                <pattern id="bp-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                  <path d="M10 0 L0 0 L0 10" stroke="rgba(0,180,255,.07)" stroke-width=".5" fill="none"/>
+                </pattern>
+                <marker id="arr" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+                  <path d="M0 0 L4 2 L0 4 Z" fill="rgba(0,180,255,.55)"/>
+                </marker>
+                <marker id="arr2" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto-start-reverse">
+                  <path d="M0 0 L4 2 L0 4 Z" fill="rgba(0,180,255,.55)"/>
+                </marker>
+                <filter id="glow-bp">
+                  <feGaussianBlur stdDeviation="1.5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+
+              <!-- Grid background -->
+              <rect width="260" height="210" fill="url(#bp-grid)"/>
+              <!-- Corner registration marks -->
+              <path d="M8 2 L2 2 L2 8" stroke="rgba(0,180,255,.4)" stroke-width="1" fill="none"/>
+              <path d="M252 2 L258 2 L258 8" stroke="rgba(0,180,255,.4)" stroke-width="1" fill="none"/>
+              <path d="M8 208 L2 208 L2 202" stroke="rgba(0,180,255,.4)" stroke-width="1" fill="none"/>
+              <path d="M252 208 L258 208 L258 202" stroke="rgba(0,180,255,.4)" stroke-width="1" fill="none"/>
+              <!-- Center crosshair -->
+              <line x1="125" y1="1" x2="135" y2="1" stroke="rgba(0,180,255,.25)" stroke-width=".7"/>
+              <line x1="130" y1="0" x2="130" y2="5" stroke="rgba(0,180,255,.25)" stroke-width=".7"/>
+              <!-- Title block -->
+              <text x="130" y="8" text-anchor="middle" font-family="monospace" font-size="4.5" fill="rgba(0,180,255,.45)" letter-spacing="1">BERETTA M9 — SIDE VIEW</text>
+
+              <!-- ── WEAPON BODY ── -->
+              <!-- Barrel outer -->
+              <rect x="140" y="74" width="95" height="11" rx="2" fill="#071526" stroke="#3ae0ff" stroke-width="1.2"/>
+              <!-- Barrel inner (rifling hint) -->
+              <rect x="142" y="76" width="91" height="7" rx="1" fill="none" stroke="rgba(0,180,255,.25)" stroke-width=".7"/>
+              <!-- Muzzle cap -->
+              <rect x="232" y="71" width="6" height="17" rx="1.5" fill="#071526" stroke="#3ae0ff" stroke-width="1.2"/>
+              <!-- Muzzle hole -->
+              <circle cx="235" cy="79.5" r="2.5" fill="none" stroke="rgba(0,180,255,.5)" stroke-width=".8"/>
+
+              <!-- Main slide -->
+              <path d="M68 61 L232 61 L238 67 L238 85 L140 85 L140 61 Z" fill="#071d30" stroke="#3ae0ff" stroke-width="1.4" stroke-linejoin="round" filter="url(#glow-bp)"/>
+              <!-- Open-top (Beretta signature) -->
+              <path d="M80 61 L80 50 L200 50 L200 61" fill="none" stroke="#3ae0ff" stroke-width="1.3" stroke-linejoin="round"/>
+              <!-- Slide top cap line -->
+              <line x1="80" y1="50" x2="200" y2="50" stroke="#3ae0ff" stroke-width="1.3"/>
+
+              <!-- Slide serrations -->
+              <line x1="72" y1="61" x2="72" y2="85" stroke="rgba(58,224,255,.3)" stroke-width="1"/>
+              <line x1="79" y1="61" x2="79" y2="85" stroke="rgba(58,224,255,.3)" stroke-width="1"/>
+              <line x1="86" y1="61" x2="86" y2="85" stroke="rgba(58,224,255,.3)" stroke-width="1"/>
+              <line x1="93" y1="61" x2="93" y2="85" stroke="rgba(58,224,255,.3)" stroke-width="1"/>
+
+              <!-- Rear sight -->
+              <rect x="108" y="44" width="12" height="5" rx=".8" fill="#071526" stroke="#3ae0ff" stroke-width="1"/>
+              <rect x="110" y="44" width="3" height="5" fill="rgba(58,224,255,.35)" rx=".3"/>
+              <rect x="116" y="44" width="3" height="5" fill="rgba(58,224,255,.35)" rx=".3"/>
+              <!-- Front sight -->
+              <rect x="222" y="47" width="4" height="8" rx=".8" fill="#3ae0ff" opacity=".8"/>
+
+              <!-- Hammer -->
+              <path d="M68 61 L61 55 L65 49 L75 57 L71 61 Z" fill="#071526" stroke="#3ae0ff" stroke-width="1.2" stroke-linejoin="round"/>
+              <circle cx="68" cy="61" r="2.5" fill="#071526" stroke="#3ae0ff" stroke-width="1"/>
+
+              <!-- Frame lower -->
+              <path d="M68 85 L232 85 L238 89 L238 99 L144 99 L144 85" fill="#071d30" stroke="#3ae0ff" stroke-width="1.2" stroke-linejoin="round"/>
+              <!-- Dust cover rail -->
+              <line x1="152" y1="88" x2="228" y2="88" stroke="rgba(58,224,255,.3)" stroke-width=".8"/>
+              <line x1="152" y1="92" x2="228" y2="92" stroke="rgba(58,224,255,.3)" stroke-width=".8"/>
+
+              <!-- Grip -->
+              <path d="M68 85 L104 85 L108 155 L56 155 L52 130 L68 85 Z" fill="#061220" stroke="#3ae0ff" stroke-width="1.4" stroke-linejoin="round"/>
+              <!-- Grip texture hatch -->
+              <line x1="59" y1="102" x2="102" y2="98"  stroke="rgba(58,224,255,.18)" stroke-width=".8"/>
+              <line x1="57" y1="112" x2="104" y2="108" stroke="rgba(58,224,255,.18)" stroke-width=".8"/>
+              <line x1="55" y1="122" x2="105" y2="118" stroke="rgba(58,224,255,.18)" stroke-width=".8"/>
+              <line x1="54" y1="132" x2="106" y2="128" stroke="rgba(58,224,255,.18)" stroke-width=".8"/>
+              <line x1="54" y1="142" x2="107" y2="138" stroke="rgba(58,224,255,.18)" stroke-width=".8"/>
+              <!-- Grip second texture direction -->
+              <line x1="59" y1="148" x2="59"  y2="98"  stroke="rgba(58,224,255,.08)" stroke-width=".8"/>
+              <line x1="70" y1="149" x2="68"  y2="98"  stroke="rgba(58,224,255,.08)" stroke-width=".8"/>
+              <line x1="82" y1="149" x2="80"  y2="98"  stroke="rgba(58,224,255,.08)" stroke-width=".8"/>
+              <line x1="93" y1="149" x2="92"  y2="100" stroke="rgba(58,224,255,.08)" stroke-width=".8"/>
+
+              <!-- Mag release -->
+              <circle cx="106" cy="92" r="3.5" fill="rgba(58,224,255,.2)" stroke="#3ae0ff" stroke-width="1"/>
+
+              <!-- Trigger guard -->
+              <path d="M103 96 L148 96 Q159 96 161 108 Q159 122 148 124 L103 124 Z" fill="#061220" stroke="#3ae0ff" stroke-width="1.3" stroke-linejoin="round"/>
+              <!-- Trigger -->
+              <path d="M128 100 L136 100 L139 116 L125 116 Z" fill="#3ae0ff" opacity=".6"/>
+
+              <!-- Safety lever -->
+              <path d="M124 68 L136 63 L139 68 L127 73 Z" fill="rgba(58,224,255,.35)" stroke="#3ae0ff" stroke-width=".8"/>
+
+              <!-- Magazine base -->
+              <rect x="54" y="153" width="55" height="7" rx="1.5" fill="#071526" stroke="#3ae0ff" stroke-width="1.2"/>
+
+              <!-- ── DIMENSION LINES ── -->
+              <!-- Overall length arrow -->
+              <line x1="52" y1="163" x2="238" y2="163" stroke="rgba(0,180,255,.45)" stroke-width=".8" marker-start="url(#arr2)" marker-end="url(#arr)"/>
+              <line x1="52"  y1="160" x2="52"  y2="167" stroke="rgba(0,180,255,.45)" stroke-width=".8"/>
+              <line x1="238" y1="160" x2="238" y2="167" stroke="rgba(0,180,255,.45)" stroke-width=".8"/>
+              <text x="145" y="171" text-anchor="middle" font-family="monospace" font-size="5" fill="rgba(0,180,255,.6)">217 mm</text>
+
+              <!-- Height arrow -->
+              <line x1="247" y1="44" x2="247" y2="162" stroke="rgba(0,180,255,.4)" stroke-width=".8" marker-start="url(#arr2)" marker-end="url(#arr)"/>
+              <line x1="244" y1="44"  x2="250" y2="44"  stroke="rgba(0,180,255,.4)" stroke-width=".8"/>
+              <line x1="244" y1="162" x2="250" y2="162" stroke="rgba(0,180,255,.4)" stroke-width=".8"/>
+              <text x="255" y="110" text-anchor="start" font-family="monospace" font-size="4.5" fill="rgba(0,180,255,.55)" transform="rotate(90,255,108)">137 mm</text>
+
+              <!-- ── CALLOUT LABELS ── -->
+              <!-- Barrel -->
+              <line x1="185" y1="80" x2="185" y2="175" stroke="rgba(0,180,255,.25)" stroke-width=".6" stroke-dasharray="2,2"/>
+              <text x="185" y="181" text-anchor="middle" font-family="monospace" font-size="4" fill="rgba(58,224,255,.55)">BARREL</text>
+
+              <!-- Slide -->
+              <line x1="120" y1="50" x2="35" y2="30" stroke="rgba(0,180,255,.25)" stroke-width=".6" stroke-dasharray="2,2"/>
+              <text x="22" y="28" text-anchor="middle" font-family="monospace" font-size="4" fill="rgba(58,224,255,.55)">SLIDE</text>
+
+              <!-- Grip -->
+              <line x1="75" y1="130" x2="25" y2="148" stroke="rgba(0,180,255,.25)" stroke-width=".6" stroke-dasharray="2,2"/>
+              <text x="16" y="155" text-anchor="middle" font-family="monospace" font-size="4" fill="rgba(58,224,255,.55)">GRIP</text>
+
+              <!-- Trigger -->
+              <line x1="132" y1="108" x2="178" y2="190" stroke="rgba(0,180,255,.25)" stroke-width=".6" stroke-dasharray="2,2"/>
+              <text x="178" y="196" text-anchor="middle" font-family="monospace" font-size="4" fill="rgba(58,224,255,.55)">TRIGGER</text>
+
+              <!-- Hammer -->
+              <line x1="64" y1="54" x2="24" y2="54" stroke="rgba(0,180,255,.25)" stroke-width=".6" stroke-dasharray="2,2"/>
+              <text x="16" y="57" text-anchor="middle" font-family="monospace" font-size="4" fill="rgba(58,224,255,.55)">HAMMER</text>
+
+              <!-- Scale bar -->
+              <rect x="10" y="200" width="20" height="3" fill="rgba(0,180,255,.3)"/>
+              <rect x="30" y="200" width="20" height="3" fill="rgba(0,180,255,.15)"/>
+              <text x="30" y="199" text-anchor="middle" font-family="monospace" font-size="3.5" fill="rgba(0,180,255,.4)">50mm</text>
+
+              <!-- Blueprint stamp -->
+              <rect x="175" y="188" width="75" height="16" rx="1.5" fill="none" stroke="rgba(0,180,255,.2)" stroke-width=".7"/>
+              <text x="212" y="195" text-anchor="middle" font-family="monospace" font-size="3.5" fill="rgba(0,180,255,.35)">ARAB FIRST · MFG-001</text>
+              <text x="212" y="201" text-anchor="middle" font-family="monospace" font-size="3.5" fill="rgba(0,180,255,.35)">CLASSIFIED / لا يُنشر</text>
+            </svg>
+          </div>
+
+          <!-- Stat bars -->
+          <div class="stat-bar-row">
+            <div class="stat-bar-lbl">Damage</div>
+            <div class="stat-bar-track"><div class="stat-bar-fill sbf-red" style="width:46%"></div></div>
+            <div class="stat-bar-num">46</div>
+          </div>
+          <div class="stat-bar-row">
+            <div class="stat-bar-lbl">Fire Rate</div>
+            <div class="stat-bar-track"><div class="stat-bar-fill sbf-cyan" style="width:55%"></div></div>
+            <div class="stat-bar-num">55</div>
+          </div>
+          <div class="stat-bar-row">
+            <div class="stat-bar-lbl">Range</div>
+            <div class="stat-bar-track"><div class="stat-bar-fill sbf-green" style="width:40%"></div></div>
+            <div class="stat-bar-num">40</div>
+          </div>
+          <div class="stat-bar-row">
+            <div class="stat-bar-lbl">Accuracy</div>
+            <div class="stat-bar-track"><div class="stat-bar-fill sbf-gold" style="width:68%"></div></div>
+            <div class="stat-bar-num">68</div>
+          </div>
+
+          <!-- Info table -->
+          <table>
+            <tr><td>Type</td><td>Semi-Automatic Pistol</td></tr>
+            <tr><td>Caliber</td><td>9×19mm Parabellum</td></tr>
+            <tr><td>Magazine</td><td>15+1 rounds</td></tr>
+            <tr><td>Fire Mode</td><td>DA/SA</td></tr>
+            <tr><td>Reload Time</td><td>~2.3 s</td></tr>
+            <tr><td>Weight</td><td>961 g (unloaded)</td></tr>
+            <tr><td>Length</td><td>217 mm</td></tr>
+            <tr><td>Origin</td><td>🇮🇹 Italy (1985)</td></tr>
+            <tr><td>In-game</td><td>Criminal Spawn / Craft</td></tr>
+          </table>
+
+          <!-- Tags -->
+          <div class="wiki-ib-cat">
+            <span class="wiki-cat-tag wct-pistol">Pistol</span>
+            <span class="wiki-cat-tag wct-semi">Semi-Auto</span>
+            <span class="wiki-cat-tag wct-9mm">9mm</span>
+            <span class="wiki-cat-tag wct-crim">Criminal</span>
+          </div>
+        </div>
+      </div>
+      <!-- ── END WIKI PANEL ── -->
+
+      <div class="pre-grid" id="pre-grid"></div>
+      <div class="canvas-wrap" id="canvas-wrap" style="display:none">
+        <canvas id="weapon-canvas" width="560" height="320"></canvas>
+      </div>
+      <div class="craft-hint" id="craft-hint" style="display:none">ابدأ من النقطة الخضراء واتبع المسار حتى النهاية</div>
+      <div class="craft-fail" id="craft-fail">لم تكمل المسار — حاول مرة أخرى</div>
+    </section>
+
+  </main>
+</div>
+
+<!-- BUY OVERLAY -->
+<div id="buy-ov" class="buy-ov hidden">
+  <div class="buy-box">
+    <div class="bico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+    <h3>شراء طاولة التصنيع</h3>
+    <p>سيتم خصم المبلغ من رصيدك مباشرةً. الطاولة دائمة وتبقى معك للأبد.</p>
+    <div class="buy-price">$6,000</div>
+    <div class="buy-btns">
+      <button class="btn-confirm" id="buy-btn" onclick="doBuyTable()">تأكيد الشراء</button>
+      <button class="btn-cancel" onclick="closeBuy()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div id="suc-ov" class="suc-ov hidden">
+  <div class="suc-box">
+    <div class="suc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+    <div class="suc-title">تم التصنيع!</div>
+    <div class="suc-sub">تم تصنيع Beretta M9 بنجاح. تحقق من ديسكورد للحصول على رتبتك الحصرية.</div>
+    <div class="suc-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> أسلحتي: <span id="suc-wcount">1</span></div>
+    <p style="margin-top:1rem;font-size:.8rem;color:var(--muted)">الطاولة استُهلكت في التصنيع — اشترِ طاولة جديدة للتصنيع مرة أخرى</p>
+    <div style="display:flex;gap:.75rem;margin-top:1.25rem;flex-wrap:wrap;justify-content:center">
+      <button class="btn-suc" style="background:linear-gradient(135deg,var(--cyan),#008faa);color:#030b14;margin-top:0;display:inline-flex;align-items:center;gap:.5rem" onclick="document.getElementById('suc-ov').classList.add('hidden');G('table')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg> اشترِ طاولة جديدة</button>
+      <button class="btn-suc" style="background:rgba(255,255,255,.08);color:var(--text);margin-top:0" onclick="document.getElementById('suc-ov').classList.add('hidden');G('home')">الرئيسية</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="tc" id="tc"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ── STATE ── */
+var S = {
+  user: null,
+  res: { steel:0, aluminum:0, plastic:0, iron:0, coal:0 },
+  lastMined: 0,
+  hasTable: false,
+  hasCrafted: false,
+  weaponCount: 0,
+  craftReq: { steel:5, aluminum:3, plastic:2, iron:5, coal:4 },
+  cdTimer: null,
+  quizPassed: false,
+  craftBusy: false,
+  canvasReady: false,
+};
+var pendingUser = '';
+
+/* ── API ── */
+function api(path, opts) {
+  opts = opts || {};
+  opts.credentials = 'include';
+  opts.headers = Object.assign({ 'Content-Type': 'application/json' }, opts.headers || {});
+  return fetch(path, opts).then(function(r) {
+    if (!r.ok) {
+      return r.json().catch(function(){ return {}; }).then(function(d) {
+        var e = new Error(d.message || 'Request failed');
+        e.status = r.status; e.data = d; throw e;
+      });
+    }
+    if (r.status === 204) return null;
+    return r.json();
+  });
+}
+
+/* ── TOAST ── */
+function toast(title, msg, type) {
+  var icons = { success:'✅', error:'❌', info:'ℹ️' };
+  var el = document.createElement('div');
+  el.className = 'tst ' + (type === 'success' ? 'suc' : type === 'error' ? 'err' : '');
+  el.innerHTML = '<div class="t-ico">'+(icons[type]||'💬')+'</div><div><div class="t-ttl">'+esc(title)+'</div>'+(msg?'<div class="t-msg">'+esc(msg)+'</div>':'')+'</div>';
+  document.getElementById('tc').appendChild(el);
+  setTimeout(function(){ el.remove(); }, 4500);
+}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ── VIEWS ── */
+function showView(id) {
+  ['vl','va','vapp'].forEach(function(v){ document.getElementById(v).classList.toggle('hidden', v!==id); });
+}
+
+/* ── INIT APP ── */
+function initApp(user) {
+  S.user = user;
+  var av1 = document.getElementById('su-av');
+  var av2 = document.getElementById('mb-av');
+  var avHtml = user.avatarUrl ? '<img src="'+esc(user.avatarUrl)+'" alt="" />' : (user.displayName||user.username||'?').substring(0,2).toUpperCase();
+  av1.innerHTML = avHtml; av2.innerHTML = avHtml;
+  document.getElementById('su-name').textContent = user.displayName || user.username;
+  fetchBalance();
+  showView('vapp');
+  refreshStatus();
+}
+
+function fetchBalance() {
+  api('/api/showroom/balance').then(function(d){
+    var b = d && d.balance != null ? '$'+Number(d.balance).toLocaleString('en-US') : '—';
+    document.getElementById('su-bal').textContent = 'الرصيد: '+b;
+    document.getElementById('mb-bal').textContent = 'الرصيد: '+b;
+  }).catch(function(){});
+}
+
+function doLogout() {
+  api('/api/auth/logout',{method:'POST'}).then(function(){ location.reload(); }).catch(function(){ location.reload(); });
+}
+
+/* ── AUTH STEPS ── */
+function setStep(n) {
+  document.getElementById('as1').classList.toggle('on', n===1);
+  document.getElementById('as2').classList.toggle('on', n===2);
+}
+function showErr(n, msg) {
+  var el = document.getElementById('ae'+n);
+  el.textContent = msg; el.classList.add('on');
+  setTimeout(function(){ el.classList.remove('on'); }, 5000);
+}
+function setupOtp() {
+  var row = document.getElementById('otp-row'); row.innerHTML = '';
+  for (var i=0;i<6;i++) {
+    var s = document.createElement('input');
+    s.type='text'; s.maxLength=1; s.className='otp-s'; s.setAttribute('inputmode','numeric');
+    s.addEventListener('input', function(e){
+      e.target.value = e.target.value.replace(/\D/g,'').slice(-1);
+      if (e.target.value && e.target.nextElementSibling) e.target.nextElementSibling.focus();
+      checkOtp();
+    });
+    s.addEventListener('keydown', function(e){
+      if (e.key==='Backspace' && !e.target.value && e.target.previousElementSibling) e.target.previousElementSibling.focus();
+    });
+    row.appendChild(s);
+  }
+}
+function getOtp() { return Array.from(document.querySelectorAll('.otp-s')).map(function(s){ return s.value; }).join(''); }
+function checkOtp() { document.getElementById('ab2').disabled = getOtp().length < 6; }
+function startOtpTimer(sec) {
+  var el = document.getElementById('otimer');
+  var end = Date.now() + sec*1000;
+  (function tick(){
+    var left = Math.ceil((end-Date.now())/1000);
+    if (left <= 0) { el.textContent = 'انتهت صلاحية الرمز. ارجع وأعد المحاولة.'; return; }
+    el.textContent = 'ينتهي خلال '+left+' ثانية';
+    setTimeout(tick, 1000);
+  })();
+}
+
+document.getElementById('ab1').addEventListener('click', function(){
+  var u = document.getElementById('au').value.trim();
+  if (!u) { showErr(1,'أدخل اسم المستخدم'); return; }
+  var btn = this; btn.disabled=true; btn.textContent='جارٍ الإرسال…';
+  api('/api/auth/request-code',{method:'POST',body:JSON.stringify({discordUsername:u})})
+    .then(function(d){ pendingUser = d.discordUsername||u; setupOtp(); startOtpTimer(d.expiresInSeconds||300); setStep(2); document.querySelector('.otp-s').focus(); })
+    .catch(function(e){ showErr(1, e.data&&e.data.message ? e.data.message : 'حدث خطأ في الإرسال'); })
+    .finally(function(){ btn.disabled=false; btn.textContent='إرسال رمز التحقق'; });
+});
+
+document.getElementById('ab2').addEventListener('click', function(){
+  var code = getOtp(); if (code.length<6) return;
+  var btn = this; btn.disabled=true; btn.textContent='جارٍ التحقق…';
+  api('/api/auth/verify-code',{method:'POST',body:JSON.stringify({discordUsername:pendingUser,code:code})})
+    .then(function(u){ initApp(u); })
+    .catch(function(e){ showErr(2, e.data&&e.data.message ? e.data.message : 'الرمز غير صحيح'); btn.disabled=false; btn.textContent='تحقق'; });
+});
+document.getElementById('abk').addEventListener('click', function(){ setStep(1); });
+document.getElementById('au').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('ab1').click(); });
+
+/* ── BOOT ── */
+(function boot(attempt){
+  api('/api/auth/me').then(function(u){ initApp(u); }).catch(function(e){
+    if (e.status===401||e.status===403) { showView('va'); }
+    else if (attempt < 3) { setTimeout(function(){ boot(attempt+1); }, 1500); }
+    else { showView('va'); }
+  });
+})(0);
+
+/* ── NAV ── */
+function G(sect) {
+  var all = ['home','mine','table','iphone','craft','transfer','weapons','admin'];
+  all.forEach(function(s){
+    var el = document.getElementById('s-'+s); if(el) el.classList.toggle('on', s===sect);
+    var sn = document.getElementById('sn-'+s); if(sn) sn.classList.toggle('on', s===sect||(sect==='iphone'&&s==='table'));
+    var mn = document.getElementById('mn-'+s); if(mn) mn.classList.toggle('on', s===sect||(sect==='iphone'&&s==='table'));
+  });
+  var adminEl = document.getElementById('s-admin');
+  if (adminEl) adminEl.classList.toggle('hidden', sect !== 'admin');
+  S.currentSection = sect;
+  if (sect==='mine')    loadMine();
+  if (sect==='table')   loadQuiz();
+  if (sect==='craft')   loadCraft();
+  if (sect==='iphone')  updateIphTime();
+  if (sect==='weapons') loadWeapons();
+}
+window.G = G;
+
+function clickTable() { if (S.hasTable) { toast('لديك طاولة بالفعل','','info'); return; } G('table'); }
+function clickCraft()  {
+  if (!S.hasTable) { toast('تحتاج طاولة أولاً','اشترِ طاولة من قسم الطاولة','error'); return; }
+  G('craft');
+}
+window.clickTable = clickTable;
+window.clickCraft = clickCraft;
+
+/* ── STATUS ── */
+function refreshStatus() {
+  return api('/api/manufacture/status').then(function(d){
+    S.res = d.resources || S.res;
+    S.lastMined = d.lastMinedAt || 0;
+    S.hasTable  = !!d.hasTable;
+    S.hasCrafted = !!d.hasCraftedWeapon;
+    S.weaponCount = d.weaponCount != null ? d.weaponCount : 0;
+    S.craftReq  = d.craftRequired || S.craftReq;
+    var cnt = document.getElementById('wp-count'); if(cnt) cnt.textContent = S.weaponCount;
+    var badge = document.getElementById('wp-badge'); if(badge) badge.style.display = S.weaponCount>0?'inline-flex':'none';
+    updateHome(); updateBadges();
+  }).catch(function(){});
+}
+
+function updateBadges() {
+  var tb = document.getElementById('nb-table');
+  var cb = document.getElementById('nb-craft');
+  var wb = document.getElementById('nb-weapons');
+  if (tb) { tb.textContent = S.hasTable ? '✓' : 'مقفل'; tb.className = 'nbadge '+(S.hasTable?'bok':'blck'); }
+  if (cb) { cb.textContent = S.hasTable ? 'جاهز' : 'مقفل'; cb.className = 'nbadge '+(S.hasTable?'bok':'blck'); }
+  if (wb) { wb.textContent = S.weaponCount || 0; wb.className = 'nbadge '+(S.weaponCount>0?'bok':'blck'); }
+}
+
+function updateHome() {
+  var r = S.res;
+  document.getElementById('h-st').textContent = r.steel||0;
+  document.getElementById('h-al').textContent = r.aluminum||0;
+  document.getElementById('h-pl').textContent = r.plastic||0;
+  document.getElementById('h-ir').textContent = r.iron||0;
+  document.getElementById('h-co').textContent = r.coal||0;
+  var wp = document.getElementById('h-wp'); if(wp) wp.textContent = S.weaponCount||0;
+
+  var ts = document.getElementById('ss-table'), tc2 = document.getElementById('sc-table');
+  var cs = document.getElementById('ss-craft'), cc  = document.getElementById('sc-craft');
+  if (S.hasTable) {
+    ts.textContent='✓ تملك الطاولة'; ts.className='sstatus ss-done';
+    tc2.classList.add('done'); tc2.classList.remove('lk');
+  } else {
+    ts.textContent='متاح →'; ts.className='sstatus ss-open';
+    tc2.classList.remove('done','lk');
+  }
+  if (!S.hasTable) {
+    cs.textContent='يتطلب الطاولة'; cs.className='sstatus ss-lk'; cc.classList.add('lk');
+  } else {
+    cs.textContent='جاهز للتصنيع →'; cs.className='sstatus ss-open'; cc.classList.remove('lk');
+  }
+}
+
+/* ── MINE ── */
+function loadMine() { updateResGrid(); updateMineBtn(); }
+
+function updateResGrid() {
+  var r = S.res;
+  document.getElementById('r-st').textContent = r.steel||0;
+  document.getElementById('r-al').textContent = r.aluminum||0;
+  document.getElementById('r-pl').textContent = r.plastic||0;
+  document.getElementById('r-ir').textContent = r.iron||0;
+  document.getElementById('r-co').textContent = r.coal||0;
+  // Req bar
+  var req = S.craftReq;
+  var items = [{lbl:'فولاذ',req:req.steel,have:r.steel},{lbl:'ألمنيوم',req:req.aluminum,have:r.aluminum},{lbl:'بلاستيك',req:req.plastic,have:r.plastic},{lbl:'حديد',req:req.iron,have:r.iron},{lbl:'فحم',req:req.coal,have:r.coal}];
+  document.getElementById('req-bar').innerHTML = items.map(function(it){
+    var m = (it.have||0) >= it.req;
+    return '<div class="req-chip '+(m?'met':'unm')+'">'+it.lbl+': '+(it.have||0)+'/'+it.req+'</div>';
+  }).join('');
+}
+
+function updateMineBtn() {
+  var btn = document.getElementById('mine-btn');
+  var cd  = document.getElementById('mine-cd');
+  var now = Date.now();
+  var cdMs = 10*60*1000;
+  var nextAt = S.lastMined + cdMs;
+  if (S.lastMined > 0 && now < nextAt) {
+    btn.disabled = true;
+    if (S.cdTimer) clearInterval(S.cdTimer);
+    S.cdTimer = setInterval(function(){
+      var left = Math.ceil((nextAt - Date.now())/1000);
+      if (left <= 0) { clearInterval(S.cdTimer); btn.disabled=false; cd.textContent=''; }
+      else { var m=Math.floor(left/60),s=left%60; cd.textContent='متاح خلال '+m+':'+(s<10?'0':'')+s; }
+    }, 1000);
+  } else { btn.disabled=false; cd.textContent=''; }
+}
+
+function doMine() {
+  var btn = document.getElementById('mine-btn'); btn.disabled = true;
+  var ax = document.getElementById('mineax'); ax.classList.add('sw');
+  setTimeout(function(){ ax.classList.remove('sw'); }, 2200);
+  api('/api/manufacture/mine',{method:'POST'}).then(function(d){
+    S.res = d.resources || S.res;
+    S.lastMined = d.lastMinedAt || Date.now();
+    updateResGrid(); updateMineBtn(); updateHome();
+    // Sparkles
+    var emojis = ['💎','⚡','✨','🔥','💫','🌟'];
+    for (var i=0;i<7;i++) {
+      (function(i){ setTimeout(function(){
+        var cave = document.getElementById('cave');
+        var el = document.createElement('div'); el.className='spark';
+        el.style.left=(15+Math.random()*70)+'%'; el.style.top=(35+Math.random()*35)+'%';
+        el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+        cave.appendChild(el); setTimeout(function(){ el.remove(); }, 1100);
+      }, i*130); })(i);
+    }
+    var g = d.gained||{}, parts=[];
+    if(g.steel)    parts.push('⚙️'+g.steel);
+    if(g.aluminum) parts.push('🪨'+g.aluminum);
+    if(g.plastic)  parts.push('🧴'+g.plastic);
+    if(g.iron)     parts.push('🔩'+g.iron);
+    if(g.coal)     parts.push('🖤'+g.coal);
+    toast('تم التنقيب!', parts.join('  '), 'success');
+  }).catch(function(e){
+    if (e.status===429 && e.data && e.data.nextAt) { S.lastMined = e.data.nextAt - 10*60*1000; updateMineBtn(); }
+    toast('فشل التنقيب', e.data&&e.data.message?e.data.message:'حاول مرة أخرى', 'error');
+    btn.disabled=false;
+  });
+}
+window.doMine = doMine;
+
+/* ── QUIZ ── */
+var QUIZ = [
+  {q:'ما المقصود بـ "بصمة الحمض النووي" في علم الجريمة؟',opts:['تحليل بصمات الأصابع','تحليل الحمض النووي للتعرف على الأشخاص','قراءة بصمة الأقدام','فحص آثار الأحذية'],ans:1},
+  {q:'ما أول ما يجب فعله عند وصول المحقق إلى مسرح الجريمة؟',opts:['البدء بالتحقيق فوراً','الاتصال بالصحافة','تأمين وعزل منطقة المسرح','جمع الأدلة المادية'],ans:2},
+  {q:'أي من الآتية يُعدّ دليلاً مادياً في التحقيقات الجنائية؟',opts:['شهادة شاهد عيان','بصمة إصبع على مسرح الجريمة','تقرير إخباري','اعتراف بدون توثيق'],ans:1},
+  {q:'ما الذي تُحدده تقنية "تحليل نمط البقع الدموية"؟',opts:['نوع فصيلة الدم','اتجاه ومصدر الإصابة','عمر الدم','هوية المصاب'],ans:1},
+  {q:'أي الأنواع التالية من الأدلة يصعب تزويرها أو التلاعب بها؟',opts:['شهادة الشهود','الوثائق الورقية','الأدلة الرقمية المشفرة','الاعترافات الشفهية'],ans:2},
+];
+var qIdx = 0;
+
+function loadQuiz() {
+  if (S.hasTable || S.quizPassed) { G('iphone'); return; }
+  qIdx = 0; renderQ();
+}
+
+function renderQ() {
+  var q = QUIZ[qIdx];
+  document.getElementById('qprog').innerHTML = QUIZ.map(function(_,i){
+    return '<div class="qstep '+(i<qIdx?'done':i===qIdx?'cur':'')+'"></div>';
+  }).join('');
+  document.getElementById('qnum').textContent = 'سؤال '+(qIdx+1)+' من '+QUIZ.length;
+  document.getElementById('qq').textContent = q.q;
+  var opts = document.getElementById('qopts'); opts.innerHTML='';
+  q.opts.forEach(function(opt,i){
+    var b = document.createElement('button'); b.className='qopt'; b.textContent=opt;
+    b.onclick = function(){ onAns(i); }; opts.appendChild(b);
+  });
+}
+
+function onAns(idx) {
+  var q = QUIZ[qIdx];
+  var opts = document.querySelectorAll('.qopt');
+  opts.forEach(function(o){ o.onclick=null; });
+  opts[idx].classList.add(idx===q.ans?'ok':'bad');
+  if (idx===q.ans) {
+    setTimeout(function(){
+      qIdx++;
+      if (qIdx >= QUIZ.length) { S.quizPassed=true; G('iphone'); updateIphTime(); }
+      else { renderQ(); }
+    }, 550);
+  } else {
+    opts[q.ans].classList.add('ok');
+    var card = document.getElementById('qcard'); card.classList.add('shake');
+    setTimeout(function(){
+      card.classList.remove('shake'); qIdx=0; renderQ();
+      toast('إجابة خاطئة','يجب الإجابة بشكل صحيح من البداية','error');
+    }, 1200);
+  }
+}
+
+/* ── IPHONE ── */
+function updateIphTime() {
+  var n = new Date();
+  document.getElementById('iph-time').textContent = n.getHours()+':'+(n.getMinutes()<10?'0':'')+n.getMinutes();
+}
+setInterval(updateIphTime, 30000);
+
+function startCall() {
+  document.getElementById('iph-contact').style.display='none';
+  document.getElementById('iph-calling').style.display='block';
+  document.getElementById('c-stat').textContent='جارٍ الاتصال...';
+  setTimeout(function(){
+    document.getElementById('c-stat').textContent='متصل...';
+    setTimeout(function(){
+      document.getElementById('iph-calling').style.display='none';
+      document.getElementById('iph-contact').style.display='flex';
+      document.getElementById('buy-ov').classList.remove('hidden');
+    }, 3000);
+  }, 2000);
+}
+function endCall() {
+  document.getElementById('iph-calling').style.display='none';
+  document.getElementById('iph-contact').style.display='flex';
+}
+function closeBuy() { document.getElementById('buy-ov').classList.add('hidden'); }
+function doBuyTable() {
+  var btn = document.getElementById('buy-btn'); btn.disabled=true; btn.textContent='جارٍ الشراء…';
+  api('/api/manufacture/buy-table',{method:'POST'}).then(function(){
+    S.hasTable=true; closeBuy(); updateHome(); updateBadges();
+    toast('تم الشراء!','حصلت على طاولة التصنيع بنجاح','success'); G('craft');
+  }).catch(function(e){
+    toast('فشل الشراء', e.data&&e.data.message?e.data.message:'تأكد من رصيدك','error');
+    btn.disabled=false; btn.textContent='تأكيد الشراء';
+  });
+}
+window.startCall=startCall; window.endCall=endCall; window.closeBuy=closeBuy; window.doBuyTable=doBuyTable;
+
+/* ── CRAFT ── */
+function loadCraft() {
+  var req=S.craftReq, r=S.res;
+  var SVG_TABLE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>';
+  var SVG_GEAR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+  var SVG_LAYERS='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>';
+  var SVG_BOX='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>';
+  var SVG_SUN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="19"/><line x1="5.64" y1="5.64" x2="4.22" y2="4.22"/><line x1="19.78" y1="19.78" x2="18.36" y2="18.36"/><line x1="5" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="19" y2="12"/><line x1="5.64" y1="18.36" x2="4.22" y2="19.78"/><line x1="19.78" y1="4.22" x2="18.36" y2="5.64"/><circle cx="12" cy="12" r="4"/></svg>';
+  var SVG_ZAP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>';
+  var items=[
+    {ico:SVG_TABLE,lbl:'طاولة التصنيع',req:1,have:S.hasTable?1:0},
+    {ico:SVG_GEAR,lbl:'فولاذ ×'+req.steel,req:req.steel,have:r.steel},
+    {ico:SVG_LAYERS,lbl:'ألمنيوم ×'+req.aluminum,req:req.aluminum,have:r.aluminum},
+    {ico:SVG_BOX,lbl:'بلاستيك ×'+req.plastic,req:req.plastic,have:r.plastic},
+    {ico:SVG_SUN,lbl:'حديد ×'+req.iron,req:req.iron,have:r.iron},
+    {ico:SVG_ZAP,lbl:'فحم ×'+req.coal,req:req.coal,have:r.coal},
+  ];
+  var allMet=true;
+  document.getElementById('pre-grid').innerHTML=items.map(function(it){
+    var m=(it.have||0)>=it.req; if(!m) allMet=false;
+    return '<div class="pre-item"><div class="pre-ico">'+it.ico+'</div><div><div class="pre-lbl">'+esc(it.lbl)+'</div><div class="pre-val '+(m?'ok':'bad')+'">'+(m?'✓ متوفر':'✗ ناقص')+'</div></div></div>';
+  }).join('');
+
+  var cw=document.getElementById('canvas-wrap'), ch=document.getElementById('craft-hint');
+  if (allMet) {
+    cw.style.display=''; ch.style.display='';
+    S.canvasReady = false;
+    initCanvas();
+  } else { cw.style.display='none'; ch.style.display='none'; }
+  document.getElementById('craft-fail').classList.remove('on');
+}
+
+var _rg, _dc;
+function initCanvas() {
+  if (S.canvasReady) { if(_rg)_rg(); if(_dc)_dc(); return; }
+  S.canvasReady = true;
+  var cv = document.getElementById('weapon-canvas');
+  var ctx = cv.getContext('2d');
+  var W=560, H=320;
+
+  // Gates positioned along the M9 silhouette outline
+  // Path: grip-left → hammer-top → slide-top-middle → muzzle-right → barrel-bottom → trigger-guard
+  var GATES=[
+    {x:62,  y:248, r:18, lbl:'START', passed:false},  // grip left side
+    {x:94,  y:102, r:14, lbl:null,   passed:false},   // hammer / slide top rear
+    {x:232, y:80,  r:14, lbl:null,   passed:false},   // slide open-top middle
+    {x:512, y:158, r:14, lbl:null,   passed:false},   // muzzle right side
+    {x:462, y:212, r:14, lbl:null,   passed:false},   // barrel / frame front-bottom
+    {x:182, y:252, r:18, lbl:'END',  passed:false},   // trigger guard
+  ];
+  var tracing=false, pts=[], gp=0;
+
+  function resetG(){ tracing=false; pts=[]; gp=0; GATES.forEach(function(g){g.passed=false;}); }
+  _rg = resetG;
+
+  function dist(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
+  function pos(e){
+    var rect=cv.getBoundingClientRect(), sx=W/rect.width, sy=H/rect.height;
+    var cx=e.touches?e.touches[0].clientX:e.clientX, cy=e.touches?e.touches[0].clientY:e.clientY;
+    return {x:(cx-rect.left)*sx, y:(cy-rect.top)*sy};
+  }
+
+  function drawGunSilhouette(){
+    ctx.save();
+    var sc = 'rgba(0,212,255,'; // stroke color base
+
+    // ── Grip ──
+    ctx.beginPath();
+    ctx.moveTo(55,272); ctx.lineTo(55,208); ctx.lineTo(98,208);
+    ctx.lineTo(118,272); ctx.closePath();
+    ctx.fillStyle='rgba(0,212,255,.055)'; ctx.fill();
+    ctx.strokeStyle=sc+'.16)'; ctx.lineWidth=1.4; ctx.stroke();
+    // grip texture lines
+    ctx.strokeStyle=sc+'.09)'; ctx.lineWidth=.9;
+    [[60,225,110,220],[58,237,112,232],[57,249,113,244],[57,261,114,256]].forEach(function(l){
+      ctx.beginPath(); ctx.moveTo(l[0],l[1]); ctx.lineTo(l[2],l[3]); ctx.stroke();
+    });
+    // magazine base plate
+    ctx.beginPath(); ctx.roundRect(50,270,72,9,2);
+    ctx.fillStyle='rgba(0,212,255,.08)'; ctx.fill();
+    ctx.strokeStyle=sc+'.18)'; ctx.lineWidth=1.3; ctx.stroke();
+
+    // ── Frame / lower receiver ──
+    ctx.beginPath();
+    ctx.moveTo(98,208);
+    ctx.lineTo(516,208);
+    ctx.lineTo(522,200); ctx.lineTo(522,158); ctx.lineTo(516,150);
+    ctx.lineTo(175,150);
+    // trigger guard curve
+    ctx.quadraticCurveTo(200,255, 122,255);
+    ctx.lineTo(98,208); ctx.closePath();
+    ctx.fillStyle='rgba(0,212,255,.05)'; ctx.fill();
+    ctx.strokeStyle=sc+'.16)'; ctx.lineWidth=1.4; ctx.stroke();
+    // rail lines on dust cover
+    ctx.strokeStyle=sc+'.09)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(200,154); ctx.lineTo(510,154); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(200,159); ctx.lineTo(510,159); ctx.stroke();
+    // trigger
+    ctx.beginPath();
+    ctx.moveTo(148,170); ctx.lineTo(162,170); ctx.lineTo(167,205); ctx.lineTo(144,205);
+    ctx.closePath();
+    ctx.fillStyle='rgba(0,212,255,.13)'; ctx.fill();
+    ctx.strokeStyle=sc+'.22)'; ctx.lineWidth=1.2; ctx.stroke();
+
+    // ── Main slide ──
+    // solid slide body (rear half)
+    ctx.beginPath();
+    ctx.moveTo(98,120); ctx.lineTo(98,150); ctx.lineTo(518,150);
+    ctx.lineTo(518,118); ctx.lineTo(355,118); ctx.lineTo(355,120); ctx.closePath();
+    ctx.fillStyle='rgba(0,212,255,.07)'; ctx.fill();
+    ctx.strokeStyle=sc+'.18)'; ctx.lineWidth=1.4; ctx.stroke();
+    // Beretta open-top (slide cutout — main feature)
+    ctx.beginPath();
+    ctx.moveTo(112,118); ctx.lineTo(112,85); ctx.lineTo(355,85); ctx.lineTo(355,118);
+    ctx.strokeStyle=sc+'.22)'; ctx.lineWidth=1.4; ctx.setLineDash([]); ctx.stroke();
+    // top cap line of open-top
+    ctx.beginPath(); ctx.moveTo(112,85); ctx.lineTo(355,85);
+    ctx.strokeStyle=sc+'.3)'; ctx.lineWidth=1.6; ctx.stroke();
+    // slide serrations
+    ctx.strokeStyle=sc+'.15)'; ctx.lineWidth=1.1;
+    [103,111,119,127,135].forEach(function(x){
+      ctx.beginPath(); ctx.moveTo(x,120); ctx.lineTo(x,150); ctx.stroke();
+    });
+    // rear sight U-notch
+    ctx.beginPath(); ctx.rect(140,79,22,8); ctx.roundRect&&ctx.roundRect(140,79,22,8,1);
+    ctx.fillStyle='rgba(0,212,255,.07)'; ctx.fill();
+    ctx.strokeStyle=sc+'.2)'; ctx.lineWidth=1.1; ctx.stroke();
+    ctx.beginPath(); ctx.rect(143,79,5,8); ctx.fillStyle='rgba(0,212,255,.18)'; ctx.fill();
+    ctx.beginPath(); ctx.rect(154,79,5,8); ctx.fillStyle='rgba(0,212,255,.18)'; ctx.fill();
+    // front sight
+    ctx.beginPath(); ctx.rect(503,73,7,12);
+    ctx.fillStyle='rgba(0,212,255,.22)'; ctx.fill();
+    ctx.strokeStyle=sc+'.3)'; ctx.lineWidth=1.1; ctx.stroke();
+    // safety/decocker lever
+    ctx.beginPath();
+    ctx.moveTo(168,130); ctx.lineTo(185,124); ctx.lineTo(189,131); ctx.lineTo(172,137);
+    ctx.closePath(); ctx.fillStyle='rgba(0,212,255,.15)'; ctx.fill();
+    ctx.strokeStyle=sc+'.22)'; ctx.lineWidth=1; ctx.stroke();
+    // mag release button
+    ctx.beginPath(); ctx.arc(138,145,5,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,212,255,.12)'; ctx.fill();
+    ctx.strokeStyle=sc+'.2)'; ctx.lineWidth=1.2; ctx.stroke();
+
+    // ── Hammer ──
+    ctx.beginPath();
+    ctx.moveTo(98,120); ctx.lineTo(88,110); ctx.lineTo(91,98); ctx.lineTo(106,108); ctx.lineTo(102,120);
+    ctx.closePath();
+    ctx.fillStyle='rgba(0,212,255,.07)'; ctx.fill();
+    ctx.strokeStyle=sc+'.2)'; ctx.lineWidth=1.4; ctx.stroke();
+    ctx.beginPath(); ctx.arc(98,120,3.5,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,212,255,.1)'; ctx.fill(); ctx.stroke();
+
+    // ── Muzzle cap ──
+    ctx.beginPath(); ctx.roundRect(518,115,10,80,2);
+    ctx.fillStyle='rgba(0,212,255,.07)'; ctx.fill();
+    ctx.strokeStyle=sc+'.2)'; ctx.lineWidth=1.4; ctx.stroke();
+    // muzzle bore circle
+    ctx.beginPath(); ctx.arc(523,155,5,0,Math.PI*2);
+    ctx.strokeStyle=sc+'.3)'; ctx.lineWidth=1.2; ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // Grid
+    ctx.strokeStyle='rgba(0,212,255,.045)'; ctx.lineWidth=1;
+    for(var gx=0;gx<W;gx+=40){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+    for(var gy=0;gy<H;gy+=40){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
+    // M9 gun silhouette guide
+    drawGunSilhouette();
+    // Dashed path guide between gates
+    ctx.beginPath(); ctx.moveTo(GATES[0].x,GATES[0].y);
+    GATES.forEach(function(g){ctx.lineTo(g.x,g.y);});
+    ctx.strokeStyle='rgba(0,212,255,.18)'; ctx.lineWidth=1.5; ctx.setLineDash([5,7]); ctx.stroke(); ctx.setLineDash([]);
+    // Trace
+    if(pts.length>1){
+      ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y);
+      pts.forEach(function(p){ctx.lineTo(p.x,p.y);});
+      ctx.strokeStyle='rgba(0,212,255,.85)'; ctx.lineWidth=3; ctx.shadowBlur=10; ctx.shadowColor='rgba(0,212,255,.5)'; ctx.stroke(); ctx.shadowBlur=0;
+    }
+    // Gates
+    GATES.forEach(function(g,i){
+      ctx.beginPath(); ctx.arc(g.x,g.y,g.r,0,Math.PI*2);
+      var col = g.passed?'#22c55e':(i===gp?'#00d4ff':'rgba(0,212,255,.4)');
+      ctx.shadowBlur=g.passed?14:7; ctx.shadowColor=col;
+      ctx.fillStyle=g.passed?'rgba(34,197,94,.2)':'rgba(0,212,255,.08)';
+      ctx.strokeStyle=col; ctx.lineWidth=2.5; ctx.fill(); ctx.stroke(); ctx.shadowBlur=0;
+      if(g.lbl){ ctx.fillStyle=col; ctx.font='bold 10px Arial'; ctx.textAlign='center'; ctx.fillText(g.lbl,g.x,g.y+g.r+14); }
+    });
+  }
+  _dc = draw;
+
+  function onDown(e){ e.preventDefault(); var p=pos(e); if(dist(p,GATES[0])<=GATES[0].r+22){resetG();tracing=true;pts=[p];GATES[0].passed=true;gp=1;document.getElementById('craft-fail').classList.remove('on');} draw(); }
+  function onMove(e){ e.preventDefault(); if(!tracing)return; var p=pos(e); pts.push(p); if(gp<GATES.length){var ng=GATES[gp];if(dist(p,ng)<=ng.r+22){ng.passed=true;gp++;if(gp>=GATES.length){tracing=false;draw();onComplete();return;}}} draw(); }
+  function onUp(e){ e.preventDefault(); if(tracing&&gp<GATES.length){tracing=false;draw();document.getElementById('craft-fail').classList.add('on');setTimeout(function(){resetG();draw();},1800);} }
+
+  cv.addEventListener('mousedown',onDown); cv.addEventListener('mousemove',onMove); cv.addEventListener('mouseup',onUp);
+  cv.addEventListener('touchstart',onDown,{passive:false}); cv.addEventListener('touchmove',onMove,{passive:false}); cv.addEventListener('touchend',onUp,{passive:false});
+  draw();
+}
+
+function onComplete(){
+  if(S.craftBusy) return; S.craftBusy=true;
+  api('/api/manufacture/craft-weapon',{method:'POST'}).then(function(d){
+    S.hasTable = false;
+    S.craftBusy = false;
+    S.weaponCount = d && d.weaponCount != null ? d.weaponCount : (S.weaponCount||0)+1;
+    var wc = document.getElementById('suc-wcount'); if(wc) wc.textContent = S.weaponCount;
+    document.getElementById('suc-ov').classList.remove('hidden');
+    updateHome(); updateBadges();
+  }).catch(function(e){
+    S.craftBusy=false;
+    toast('فشل التصنيع', e.data&&e.data.message?e.data.message:'حدث خطأ','error');
+    loadCraft();
+  });
+}
+
+/* ── TRANSFER RESOURCES ── */
+function doTransferResources() {
+  var username = (document.getElementById('tr-username').value||'').trim();
+  var steel    = Number(document.getElementById('tr-steel').value)||0;
+  var aluminum = Number(document.getElementById('tr-aluminum').value)||0;
+  var plastic  = Number(document.getElementById('tr-plastic').value)||0;
+  var iron     = Number(document.getElementById('tr-iron').value)||0;
+  var coal     = Number(document.getElementById('tr-coal').value)||0;
+  var res = document.getElementById('tr-result');
+  res.className = 'tr-result';
+  if (!username) { res.textContent='أدخل اسم المستخدم'; res.className='tr-result err'; return; }
+  if (!steel && !aluminum && !plastic && !iron && !coal) { res.textContent='أدخل كمية واحدة على الأقل'; res.className='tr-result err'; return; }
+  var btn = document.getElementById('tr-btn'); btn.disabled=true;
+  api('/api/manufacture/transfer-resources',{method:'POST',body:JSON.stringify({targetUsername:username,steel:steel,aluminum:aluminum,plastic:plastic,iron:iron,coal:coal})})
+  .then(function(d){
+    S.res = d.resources || S.res;
+    updateHome(); updateResGrid();
+    res.textContent='✅ تم إرسال الموارد لـ '+username+' بنجاح';
+    res.className='tr-result ok';
+    ['tr-steel','tr-aluminum','tr-plastic','tr-iron','tr-coal'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  }).catch(function(e){
+    res.textContent='❌ '+(e.data&&e.data.message?e.data.message:'فشل التحويل');
+    res.className='tr-result err';
+  }).finally(function(){ btn.disabled=false; });
+}
+window.doTransferResources = doTransferResources;
+
+/* ── TRANSFER WEAPON ── */
+function doTransferWeapon() {
+  var username = (document.getElementById('wp-username').value||'').trim();
+  var qty = Number(document.getElementById('wp-qty').value)||1;
+  var res = document.getElementById('wp-result');
+  res.className='tr-result';
+  if (!username) { res.textContent='أدخل اسم المستخدم'; res.className='tr-result err'; return; }
+  if ((S.weaponCount||0) < qty) { res.textContent='لا تملك عدداً كافياً من الأسلحة'; res.className='tr-result err'; return; }
+  var btn = document.getElementById('wp-btn'); btn.disabled=true;
+  api('/api/manufacture/transfer-weapon',{method:'POST',body:JSON.stringify({targetUsername:username,count:qty})})
+  .then(function(d){
+    S.weaponCount = d.weaponCount != null ? d.weaponCount : Math.max(0,(S.weaponCount||0)-qty);
+    updateHome(); updateBadges(); loadWeapons();
+    res.textContent='✅ تم إرسال '+qty+' سلاح لـ '+username+' بنجاح';
+    res.className='tr-result ok';
+    document.getElementById('wp-username').value='';
+  }).catch(function(e){
+    res.textContent='❌ '+(e.data&&e.data.message?e.data.message:'فشل التحويل');
+    res.className='tr-result err';
+  }).finally(function(){ btn.disabled=false; });
+}
+window.doTransferWeapon = doTransferWeapon;
+
+/* ── LOAD WEAPONS ── */
+function loadWeapons() {
+  api('/api/manufacture/my-weapons').then(function(d){
+    S.weaponCount = d.weaponCount || 0;
+    var cnt = document.getElementById('wp-count'); if(cnt) cnt.textContent = S.weaponCount;
+    var badge = document.getElementById('wp-badge'); if(badge) badge.style.display = S.weaponCount>0?'inline-flex':'none';
+    updateHome(); updateBadges();
+  }).catch(function(){});
+}
+window.loadWeapons = loadWeapons;
+
+window.doLogout=doLogout;
+
+/* ── ADMIN PANEL ── */
+var ADMIN_USERS_FE = ['n16q'];
+
+function isAdmin(user) { return user && ADMIN_USERS_FE.includes(user.username); }
+
+function setupAdmin(user) {
+  if (!isAdmin(user)) return;
+  // Show admin nav button
+  var nav = document.getElementById('mf-nav');
+  if (nav) {
+    var ab = document.createElement('button');
+    ab.id = 'mn-admin'; ab.className = 'nav-btn';
+    ab.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> <span>الأدمن</span>';
+    ab.onclick = function() { G('admin'); };
+    nav.appendChild(ab);
+  }
+
+  // Setup give button
+  var giveBtn = document.getElementById('adm-give-btn');
+  if (giveBtn) {
+    giveBtn.addEventListener('click', function() {
+      var username = (document.getElementById('adm-username').value || '').trim();
+      var steel    = Number(document.getElementById('adm-steel').value)    || 0;
+      var aluminum = Number(document.getElementById('adm-aluminum').value) || 0;
+      var plastic  = Number(document.getElementById('adm-plastic').value)  || 0;
+      var iron     = Number(document.getElementById('adm-iron').value)     || 0;
+      var coal     = Number(document.getElementById('adm-coal').value)     || 0;
+      if (!username) { toast('خطأ','أدخل اسم المستخدم','error'); return; }
+      if (!steel && !aluminum && !plastic && !iron && !coal) { toast('خطأ','أدخل كمية لمادة واحدة على الأقل','error'); return; }
+      giveBtn.disabled = true; giveBtn.textContent = 'جاري المنح…';
+      var res = document.getElementById('adm-result');
+      res.textContent = '';
+      api('/api/manufacture/admin-give', {
+        method: 'POST',
+        body: JSON.stringify({ targetUsername: username, steel: steel, aluminum: aluminum, plastic: plastic, iron: iron, coal: coal })
+      }).then(function(d) {
+        var given = d.given || {};
+        toast('تم المنح', 'تم منح الموارد لـ ' + username + ' بنجاح', 'success');
+        res.textContent = '✅ تم: ' + (given.steel||0) + ' فولاذ، ' + (given.aluminum||0) + ' ألمنيوم، ' + (given.plastic||0) + ' بلاستيك، ' + (given.iron||0) + ' حديد، ' + (given.coal||0) + ' فحم';
+        res.style.color = '#22c55e';
+        document.getElementById('adm-username').value = '';
+        ['steel','aluminum','plastic','iron','coal'].forEach(function(r){ document.getElementById('adm-'+r).value = ''; });
+      }).catch(function(e) {
+        toast('فشل المنح', e.data&&e.data.message ? e.data.message : 'حدث خطأ', 'error');
+        res.textContent = '❌ ' + (e.data&&e.data.message ? e.data.message : 'فشل');
+        res.style.color = '#ef4444';
+      }).finally(function() {
+        giveBtn.disabled = false; giveBtn.textContent = 'منح الموارد';
+      });
+    });
+  }
+}
+
+// Hook into initApp
+var _origInit = initApp;
+initApp = function(user) {
+  _origInit(user);
+  setupAdmin(user);
+};
+
+})();
+</script>
+</body>
+</html>

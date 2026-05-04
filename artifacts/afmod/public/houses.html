@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>السكن الرسمي | عرب فيرست</title>
+    <meta name="description" content="تملّك مسكنك الرسمي في عرب فيرست" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="السكن الرسمي | عرب فيرست" />
+    <meta property="og:description" content="المشاريع السكنية الرسمية في عرب فيرست — AFMOD Ministry of Logistics" />
+    <meta property="og:image" content="/afmod-logo.png" />
+    <meta property="og:site_name" content="Arab First" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="السكن الرسمي | عرب فيرست" />
+    <meta name="twitter:description" content="تملّك مسكنك الرسمي في عرب فيرست" />
+    <meta name="twitter:image" content="/afmod-logo.png" />
+    <link rel="icon" type="image/png" href="afmod-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen"><div class="spinner"></div></div>
+    <div id="page" class="view hidden">
+      <div id="watermark" class="watermark"></div>
+      <div class="texture-overlay"></div>
+      <header class="site-header" id="site-header"></header>
+      <main class="main-content">
+        <section class="container dashboard-section">
+          <div class="dashboard-header">
+            <div>
+              <div class="dashboard-title-row">
+                <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/>
+                  <path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/>
+                  <path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/>
+                </svg>
+                <h2>السكن الرسمي المعتمد</h2>
+              </div>
+              <p class="dashboard-description">المشاريع السكنية المعتمدة من وزارة اللوجستيك. اختر وحدتك وأتمّ الشراء عبر البوابة الرسمية.</p>
+            </div>
+            <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
+              <div class="dashboard-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>
+                </svg>
+                <span>معروض رسمي • <span id="houses-count">0</span> فئات سكنية</span>
+              </div>
+            </div>
+          </div>
+          <div id="houses-grid" class="houses-grid"></div>
+
+          <!-- ── قسم الإيجار ── -->
+          <div style="margin-top:3rem">
+            <div class="dashboard-header" style="margin-bottom:1.25rem">
+              <div>
+                <div class="dashboard-title-row">
+                  <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                  </svg>
+                  <h2>بيوت للإيجار</h2>
+                </div>
+                <p class="dashboard-description">بيوت يعرضها مواطنون للإيجار اليومي. اختر المدة وادفع مباشرة من رصيدك.</p>
+              </div>
+              <div class="dashboard-badge" style="cursor:pointer" id="refresh-listings-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                <span>تحديث</span>
+              </div>
+            </div>
+            <div id="rentals-loading" style="display:flex;align-items:center;gap:.75rem;padding:2rem 0;color:rgba(216,234,245,.45);font-size:.88rem">
+              <div style="width:22px;height:22px;border-radius:50%;border:2px solid rgba(212,175,55,.15);border-top-color:#d4af37;animation:spin .9s linear infinite;flex-shrink:0"></div>
+              جاري تحميل العروض…
+            </div>
+            <div id="rentals-empty" class="hidden" style="padding:2rem;text-align:center;color:rgba(216,234,245,.35);font-size:.88rem;background:rgba(255,255,255,.02);border:1px dashed rgba(212,175,55,.12);border-radius:14px">
+              لا توجد بيوت معروضة للإيجار حالياً.<br><span style="font-size:.78rem;margin-top:.4rem;display:block">يمكنك عرض بيتك للإيجار من صفحة ممتلكاتي.</span>
+            </div>
+            <div id="rentals-grid" class="houses-grid hidden"></div>
+          </div>
+
+          <div class="dashboard-notice">
+            <img src="navy-marble.png" alt="" class="dashboard-notice-bg" />
+            <div class="dashboard-notice-content">
+              <h3>إجراءات الشراء والتخصيص</h3>
+              <p>جميع الأسعار المعروضة نهائية وبعملة المدينة الرسمية. عند إتمام الشراء، تُسجَّل الوحدة باسم المواطن لمدة الإقامة الكاملة.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer"><div class="container footer-content"><img src="afmod-logo.png" alt="AFMOD Seal" class="footer-logo" /><p class="footer-line-en">ARAB FIRST — MINISTRY OF LOGISTICS</p><p class="footer-line-ar">© 2026 Arab First — جميع الحقوق محفوظة</p></div></footer>
+    </div>
+
+    <!-- House dialog -->
+    <div id="gallery-dialog" class="dialog-overlay hidden" role="dialog" aria-modal="true">
+      <div class="dialog-content">
+        <button id="dialog-close" class="dialog-close" aria-label="إغلاق">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="dialog-scroll">
+          <div class="dialog-header">
+            <div class="dialog-header-row">
+              <div class="dialog-header-text">
+                <span id="dialog-tier" class="dialog-tier-badge"></span>
+                <h2 id="dialog-title" class="dialog-title"></h2>
+                <p id="dialog-subtitle" class="dialog-subtitle"></p>
+              </div>
+              <div class="dialog-price" dir="ltr">
+                <div id="dialog-price" class="dialog-price-amount"></div>
+                <div class="dialog-price-label">Acquisition Price</div>
+              </div>
+            </div>
+          </div>
+          <div class="dialog-body">
+            <div id="dialog-desc-wrapper" class="hidden" style="background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.15);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1rem"><p id="dialog-desc" style="margin:0;font-size:.85rem;color:rgba(216,234,245,.75);line-height:1.7;font-family:Cairo,sans-serif"></p></div>
+            <div class="dialog-stats">
+              <div class="dialog-stat"><div class="dialog-stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>العنوان</span></div><div id="dialog-address" class="dialog-stat-value" style="font-size:.78rem"></div></div>
+              <div class="dialog-stat"><div class="dialog-stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>المواقع</span></div><div id="dialog-locations" class="dialog-stat-value"></div></div>
+              <div class="dialog-stat"><div class="dialog-stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v3"/><path d="M2 13h20v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z"/><path d="M6 13V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/></svg><span>غرف النوم</span></div><div id="dialog-bedrooms" class="dialog-stat-value"></div></div>
+              <div class="dialog-stat"><div class="dialog-stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-2 0l-1 1a1.5 1.5 0 0 0 0 2L6 9"/><line x1="22" y1="12" x2="2" y2="12"/><path d="M4 12v3a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4v-3"/></svg><span>دورات المياه</span></div><div id="dialog-bathrooms" class="dialog-stat-value"></div></div>
+              <div class="dialog-stat"><div class="dialog-stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg><span>عدد الوحدات</span></div><div id="dialog-units" class="dialog-stat-value"></div></div>
+            </div>
+            <div id="dialog-exterior-wrapper" class="hidden"><h3 class="dialog-section-title"><span class="title-bar"></span>المزايا الخارجية</h3><p id="dialog-exterior" style="font-size:.82rem;color:rgba(216,234,245,.65);margin:.4rem 0 1rem;line-height:1.6;font-family:Cairo,sans-serif"></p></div>
+            <div><h3 class="dialog-section-title"><span class="title-bar"></span>المرافق والمزايا الداخلية</h3><div id="dialog-amenities" class="dialog-amenities"></div></div>
+            <div id="dialog-notes-wrapper" class="dialog-notes hidden"><p id="dialog-notes"></p></div>
+            <div><h3 class="dialog-section-title"><span class="title-bar"></span>المعرض المصور</h3><div id="dialog-gallery" class="dialog-gallery"></div></div>
+            <div class="dialog-buy-row">
+              <div class="dialog-buy-price-wrap"><span class="dialog-buy-price-label">سعر الاقتناء</span><span id="dialog-buy-price" class="dialog-buy-price"></span></div>
+              <button id="dialog-buy-btn" class="btn-primary dialog-buy-btn"><span class="btn-label">شراء الوحدة السكنية</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rent Dialog -->
+    <div id="rent-dialog" class="dialog-overlay hidden" role="dialog" aria-modal="true">
+      <div class="dialog-content" style="max-width:480px">
+        <button id="rent-dialog-close" class="dialog-close" aria-label="إغلاق">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="dialog-scroll">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(212,175,55,.12)">
+            <div id="rd-icon" style="width:60px;height:60px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);border:1px solid rgba(212,175,55,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.8rem">🏠</div>
+            <div>
+              <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;color:#d4af37;text-transform:uppercase;margin-bottom:.2rem">استئجار</div>
+              <div id="rd-name" style="font-size:1.1rem;font-weight:900;color:#fff"></div>
+              <div id="rd-owner" style="font-size:.78rem;color:rgba(216,234,245,.45);margin-top:.1rem"></div>
+            </div>
+          </div>
+
+          <div style="background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.14);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.25rem">
+            <div style="font-size:.75rem;color:rgba(216,234,245,.5);margin-bottom:.25rem">السعر اليومي</div>
+            <div id="rd-daily" style="font-size:1.3rem;font-weight:900;color:#d4af37"></div>
+          </div>
+
+          <div style="margin-bottom:1.25rem">
+            <label style="display:block;font-size:.8rem;color:rgba(216,234,245,.6);font-weight:600;margin-bottom:.5rem">عدد الأيام</label>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <button id="rd-days-minus" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(212,175,55,.2);background:rgba(212,175,55,.08);color:#d4af37;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center">−</button>
+              <div id="rd-days-display" style="font-size:1.5rem;font-weight:900;color:#fff;min-width:40px;text-align:center">1</div>
+              <button id="rd-days-plus" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(212,175,55,.2);background:rgba(212,175,55,.08);color:#d4af37;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center">+</button>
+              <span style="font-size:.82rem;color:rgba(216,234,245,.45)">يوم (الحد الأقصى 30)</span>
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.12);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between">
+            <div style="font-size:.82rem;color:rgba(216,234,245,.55)">الإجمالي</div>
+            <div id="rd-total" style="font-size:1.25rem;font-weight:900;color:#22c55e"></div>
+          </div>
+
+          <div id="rd-notes-wrap" class="hidden" style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);border-radius:8px;padding:.7rem 1rem;margin-bottom:1.25rem;font-size:.8rem;color:rgba(216,234,245,.7)">
+            <span style="color:#00d4ff;font-weight:700">ملاحظة: </span><span id="rd-notes"></span>
+          </div>
+
+          <button id="rd-confirm-btn" class="btn-primary" style="width:100%;justify-content:center;padding:.7rem">
+            <span id="rd-confirm-label">تأكيد الاستئجار</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="shared.js"></script>
+    <script src="houses.js"></script>
+    <script>
+    (function () {
+      var TIER_CLASS = {"اقتصادي":"tier-economy","متوسط":"tier-medium","فاخر":"tier-luxury","حصري":"tier-exclusive"};
+      var e = window.escText, ea = window.escAttr, fp = window.formatPrice;
+      var currentHouse = null;
+      var ownedHouseIds = {};
+
+      function featureRow(svg, text) { return '<div class="house-card-feature">' + svg + '<span>' + e(text) + '</span></div>'; }
+      var iLoc  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+      var iBed  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v3"/><path d="M2 13h20v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z"/><path d="M6 13V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/></svg>';
+      var iBath = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-2 0l-1 1a1.5 1.5 0 0 0 0 2L6 9"/><line x1="22" y1="12" x2="2" y2="12"/><path d="M4 12v3a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4v-3"/></svg>';
+
+      function renderHouses(houses) {
+        var grid = document.getElementById("houses-grid");
+        document.getElementById("houses-count").textContent = houses.length;
+        grid.innerHTML = "";
+        houses.forEach(function (house, i) {
+          var card = document.createElement("div");
+          card.className = "house-card"; card.style.animationDelay = (i*0.07)+"s";
+          var isOwned = ownedHouseIds[house.id];
+          var ownedBadge = isOwned ? '<div class="house-rental-badge owned-badge">أنت تملك هذه الفئة</div>' : "";
+          card.innerHTML =
+            '<div class="house-card-image-wrap">' +
+              '<img src="' + ea(house.cover) + '" alt="' + ea(house.nameAr) + '" loading="lazy" referrerpolicy="no-referrer" onerror="window.__afmodImageFallback(this)" />' +
+              '<div class="house-card-image-overlay"></div>' +
+              '<div class="house-card-tier"><span class="tier-badge ' + (TIER_CLASS[house.tier]||"tier-economy") + '">' + e(house.tier) + '</span></div>' +
+              ownedBadge +
+              '<div class="house-card-bottom"><div class="house-card-price"><div class="house-card-price-label">Price</div><div class="house-card-price-amount">' + e(fp(house.price)) + '</div></div><div class="house-card-units">' + e(house.units + " وحدة") + '</div></div>' +
+            '</div>' +
+            '<div class="house-card-body">' +
+              '<h3 class="house-card-name">' + e(house.nameAr) + '</h3>' +
+              '<p class="house-card-name-en">' + e(house.nameEn) + '</p>' +
+              (house.addressAr ? '<p style="font-size:.72rem;color:#d4af37;margin:.1rem 0 .5rem;font-family:Cairo,sans-serif">📍 ' + e(house.addressAr) + '</p>' : '') +
+              (house.descriptionAr ? '<p style="font-size:.78rem;color:rgba(216,234,245,.6);margin:0 0 .6rem;line-height:1.55;font-family:Cairo,sans-serif">' + e(house.descriptionAr) + '</p>' : '') +
+              '<div class="house-card-features">' + featureRow(iLoc, house.locationsAr) + featureRow(iBed, house.bedroomsAr) + featureRow(iBath, house.bathroomsAr) + '</div>' +
+              '<button class="btn-secondary" type="button"><span>عرض التفاصيل والمعرض</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>' +
+            '</div>';
+          card.querySelector("button").addEventListener("click", function () { openDialog(house); });
+          grid.appendChild(card);
+        });
+      }
+
+      function openDialog(house) {
+        currentHouse = house;
+        document.getElementById("dialog-tier").textContent = house.tier;
+        document.getElementById("dialog-tier").className = "dialog-tier-badge " + (TIER_CLASS[house.tier]||"tier-economy");
+        document.getElementById("dialog-title").textContent = house.nameAr;
+        document.getElementById("dialog-subtitle").textContent = house.nameEn;
+        document.getElementById("dialog-price").textContent = fp(house.price);
+        var dw = document.getElementById("dialog-desc-wrapper"), dd = document.getElementById("dialog-desc");
+        if (house.descriptionAr) { dd.textContent = house.descriptionAr; dw.classList.remove("hidden"); } else { dw.classList.add("hidden"); }
+        document.getElementById("dialog-address").textContent = house.addressAr || "—";
+        document.getElementById("dialog-locations").textContent = house.locationsAr;
+        document.getElementById("dialog-bedrooms").textContent = house.bedroomsAr;
+        document.getElementById("dialog-bathrooms").textContent = house.bathroomsAr;
+        document.getElementById("dialog-units").textContent = house.units + " وحدة";
+        var ew = document.getElementById("dialog-exterior-wrapper"), ep = document.getElementById("dialog-exterior");
+        if (house.exteriorFeaturesAr) { ep.textContent = house.exteriorFeaturesAr; ew.classList.remove("hidden"); } else { ew.classList.add("hidden"); }
+        var am = document.getElementById("dialog-amenities");
+        am.innerHTML = (house.amenitiesAr||[]).map(function (a) { return '<span class="amenity-tag">' + e(a) + '</span>'; }).join("");
+        var nw = document.getElementById("dialog-notes-wrapper"), nn = document.getElementById("dialog-notes");
+        if (house.notesAr) { nn.textContent = house.notesAr; nw.classList.remove("hidden"); } else { nw.classList.add("hidden"); }
+        var gal = document.getElementById("dialog-gallery");
+        gal.innerHTML = (house.gallery||[]).map(function (item) { return '<img src="'+ea(item.url||item)+'" alt="'+e(item.captionAr||"")+'" loading="lazy" referrerpolicy="no-referrer" onerror="window.__afmodImageFallback(this)" />'; }).join("");
+        document.getElementById("dialog-buy-price").textContent = fp(house.price);
+        var buyBtn = document.getElementById("dialog-buy-btn");
+        buyBtn.querySelector(".btn-label").textContent = "شراء الوحدة السكنية";
+        buyBtn.disabled = false;
+        document.getElementById("gallery-dialog").classList.remove("hidden");
+      }
+
+      document.getElementById("dialog-close").addEventListener("click", function () { document.getElementById("gallery-dialog").classList.add("hidden"); });
+      document.getElementById("gallery-dialog").addEventListener("click", function (ev) { if (ev.target === this) this.classList.add("hidden"); });
+
+      document.getElementById("dialog-buy-btn").addEventListener("click", function () {
+        if (!currentHouse) return;
+        if (!currentUser) {
+          window.location.href = "ministry.html";
+          return;
+        }
+        var btn = this;
+        btn.disabled = true; btn.querySelector(".btn-label").textContent = "جاري المعالجة...";
+        function reset() { try { btn.disabled = false; btn.querySelector(".btn-label").textContent = "شراء الوحدة السكنية"; } catch(ex) {} }
+        window.afApi.buyHouse(currentHouse.id).then(
+          function () {
+            try { window.afToast("تم الشراء", "تم تسجيل " + currentHouse.nameAr + " باسمك بنجاح.", "success"); } catch(ex) {}
+            ownedHouseIds[currentHouse.id] = true;
+            document.getElementById("gallery-dialog").classList.add("hidden");
+            renderHouses(window.HOUSES || []);
+          },
+          function (err) {
+            var msg = "تعذّر إتمام الشراء.";
+            if (err && err.status === 402) msg = "الرصيد غير كافٍ.";
+            else if (err && err.status === 409) msg = "هذه الوحدة مملوكة بالفعل.";
+            else if (err && err.status === 503) msg = "البوت غير متصل.";
+            try { window.afToast("فشل الشراء", msg, "error"); } catch(ex) {}
+          }
+        ).then(reset, reset);
+      });
+
+      var currentUser = null;
+
+      // ── Rental listings ──────────────────────────────────────────────────
+      var rentDialogListing = null;
+      var rentDialogDays = 1;
+
+      function updateRentTotal() {
+        if (!rentDialogListing) return;
+        var total = Number(rentDialogListing.daily_price) * rentDialogDays;
+        document.getElementById("rd-days-display").textContent = rentDialogDays;
+        document.getElementById("rd-total").textContent = fp(total);
+      }
+
+      document.getElementById("rd-days-minus").addEventListener("click", function () {
+        if (rentDialogDays > 1) { rentDialogDays--; updateRentTotal(); }
+      });
+      document.getElementById("rd-days-plus").addEventListener("click", function () {
+        if (rentDialogDays < 30) { rentDialogDays++; updateRentTotal(); }
+      });
+
+      function openRentDialog(listing) {
+        rentDialogListing = listing;
+        rentDialogDays = 1;
+        var houseData = (window.HOUSES || []).find(function (h) { return h.id === listing.house_id; });
+        var houseName = houseData ? houseData.nameAr : listing.house_id;
+        var houseImg  = houseData ? houseData.cover : "";
+        document.getElementById("rd-name").textContent = houseName;
+        document.getElementById("rd-owner").textContent = "المالك: " + (listing.owner_display_name || listing.owner_username || "—");
+        document.getElementById("rd-daily").textContent = fp(Number(listing.daily_price)) + " / يوم";
+        var iconEl = document.getElementById("rd-icon");
+        if (houseImg) {
+          iconEl.innerHTML = '<img src="'+ea(houseImg)+'" alt="" style="width:100%;height:100%;object-fit:cover" referrerpolicy="no-referrer" onerror="window.__afmodImageFallback(this)" />';
+        } else {
+          iconEl.textContent = "🏠";
+        }
+        var notes = listing.notes || "";
+        if (notes) {
+          document.getElementById("rd-notes").textContent = notes;
+          document.getElementById("rd-notes-wrap").classList.remove("hidden");
+        } else {
+          document.getElementById("rd-notes-wrap").classList.add("hidden");
+        }
+        document.getElementById("rd-confirm-label").textContent = "تأكيد الاستئجار";
+        document.getElementById("rd-confirm-btn").disabled = false;
+        updateRentTotal();
+        document.getElementById("rent-dialog").classList.remove("hidden");
+      }
+
+      document.getElementById("rent-dialog-close").addEventListener("click", function () {
+        document.getElementById("rent-dialog").classList.add("hidden");
+      });
+      document.getElementById("rent-dialog").addEventListener("click", function (ev) {
+        if (ev.target === this) this.classList.add("hidden");
+      });
+
+      document.getElementById("rd-confirm-btn").addEventListener("click", function () {
+        if (!rentDialogListing) return;
+        if (!currentUser) { window.location.href = "ministry.html"; return; }
+        var btn = this;
+        btn.disabled = true;
+        document.getElementById("rd-confirm-label").textContent = "جاري المعالجة…";
+        window.afApi.houseRent({
+          houseId: rentDialogListing.house_id,
+          ownerUserId: rentDialogListing.owner_user_id,
+          days: rentDialogDays
+        }).then(function (data) {
+          document.getElementById("rent-dialog").classList.add("hidden");
+          var houseData = (window.HOUSES || []).find(function (h) { return h.id === rentDialogListing.house_id; });
+          var name = houseData ? houseData.nameAr : rentDialogListing.house_id;
+          window.afToast("تم الاستئجار", "استأجرت " + name + " لمدة " + rentDialogDays + " يوم بمبلغ " + fp(Number(data.totalCost)) + ".", "success");
+          loadListings();
+        }).catch(function (err) {
+          var msg = "تعذّر إتمام الاستئجار.";
+          if (err && err.status === 402) msg = "الرصيد غير كافٍ.";
+          else if (err && err.status === 404) msg = "هذا العرض لم يعد متاحاً.";
+          else if (err && err.status === 503) msg = "البوت غير متصل.";
+          window.afToast("فشل الاستئجار", msg, "error");
+          btn.disabled = false;
+          document.getElementById("rd-confirm-label").textContent = "تأكيد الاستئجار";
+        });
+      });
+
+      function renderRentalCard(listing) {
+        var houseData = (window.HOUSES || []).find(function (h) { return h.id === listing.house_id; });
+        var card = document.createElement("div");
+        card.className = "house-card";
+        var imgSrc = houseData ? houseData.cover : "";
+        var nameAr = houseData ? houseData.nameAr : listing.house_id;
+        var tier   = houseData ? houseData.tier : "";
+        var tierCls = {"اقتصادي":"tier-economy","متوسط":"tier-medium","فاخر":"tier-luxury","حصري":"tier-exclusive"}[tier] || "tier-economy";
+        var isMyListing = currentUser && currentUser.id === listing.owner_user_id;
+
+        card.innerHTML =
+          '<div class="house-card-image-wrap">' +
+            (imgSrc ? '<img src="'+ea(imgSrc)+'" alt="'+ea(nameAr)+'" loading="lazy" referrerpolicy="no-referrer" onerror="window.__afmodImageFallback(this)" />' : '') +
+            '<div class="house-card-image-overlay"></div>' +
+            (tier ? '<div class="house-card-tier"><span class="tier-badge '+tierCls+'">'+e(tier)+'</span></div>' : '') +
+            '<div class="house-card-bottom">' +
+              '<div class="house-card-price"><div class="house-card-price-label">يومياً</div><div class="house-card-price-amount">'+e(fp(Number(listing.daily_price)))+'</div></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="house-card-body">' +
+            '<h3 class="house-card-name">'+e(nameAr)+'</h3>' +
+            '<p class="house-card-name-en">'+(houseData ? e(houseData.nameEn) : '')+'</p>' +
+            '<p style="font-size:.78rem;color:rgba(216,234,245,.45);margin:.1rem 0 .7rem">المالك: '+e(listing.owner_display_name || listing.owner_username || "—")+'</p>' +
+            (listing.notes ? '<p style="font-size:.75rem;color:rgba(0,212,255,.75);margin-bottom:.7rem;line-height:1.5">'+e(listing.notes)+'</p>' : '') +
+            (isMyListing
+              ? '<div class="house-rental-badge owned-badge">بيتك المعروض</div>'
+              : '<button class="btn-primary" type="button" style="width:100%;justify-content:center;margin-top:.25rem">استئجار ←</button>'
+            ) +
+          '</div>';
+
+        if (!isMyListing) {
+          card.querySelector(".btn-primary").addEventListener("click", function () {
+            if (!currentUser) { window.location.href = "ministry.html"; return; }
+            openRentDialog(listing);
+          });
+        }
+        return card;
+      }
+
+      function loadListings() {
+        document.getElementById("rentals-loading").style.display = "flex";
+        document.getElementById("rentals-grid").classList.add("hidden");
+        document.getElementById("rentals-empty").classList.add("hidden");
+        window.afApi.houseListings().then(function (data) {
+          document.getElementById("rentals-loading").style.display = "none";
+          var listings = data.listings || [];
+          if (!listings.length) {
+            document.getElementById("rentals-empty").classList.remove("hidden");
+            return;
+          }
+          var grid = document.getElementById("rentals-grid");
+          grid.innerHTML = "";
+          listings.forEach(function (l) { grid.appendChild(renderRentalCard(l)); });
+          grid.classList.remove("hidden");
+        }).catch(function () {
+          document.getElementById("rentals-loading").style.display = "none";
+          document.getElementById("rentals-empty").classList.remove("hidden");
+        });
+      }
+
+      document.getElementById("refresh-listings-btn").addEventListener("click", loadListings);
+
+      function initPage(user) {
+        currentUser = user;
+        document.getElementById("loading-screen").classList.add("hidden");
+        document.getElementById("page").classList.remove("hidden");
+        window.afRenderHeader(user, "houses");
+        if (user) {
+          window.afRenderWatermark(user);
+          window.afApi.houseOwned().then(function(d) {
+            (d && d.owned || []).forEach(function(row) { ownedHouseIds[row.house_id] = true; });
+          }).catch(function() {}).then(function() {
+            renderHouses(window.HOUSES || []);
+          });
+        } else {
+          renderHouses(window.HOUSES || []);
+        }
+        loadListings();
+      }
+
+      window.afApi.me().then(
+        function(user) { initPage(user); },
+        function() { initPage(null); }
+      );
+    })();
+    </script>
+  </body>
+</html>
