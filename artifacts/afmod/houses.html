@@ -372,7 +372,28 @@
         var nameAr = houseData ? houseData.nameAr : listing.house_id;
         var tier   = houseData ? houseData.tier : "";
         var tierCls = {"اقتصادي":"tier-economy","متوسط":"tier-medium","فاخر":"tier-luxury","حصري":"tier-exclusive"}[tier] || "tier-economy";
-        var isMyListing = currentUser && currentUser.id === listing.owner_user_id;
+        var isMyListing   = currentUser && currentUser.id === listing.owner_user_id;
+        var activeBookings = Number(listing.active_bookings) || 0;
+        var isOccupied     = activeBookings > 0;
+
+        // Format remaining time for occupied listing
+        var occupiedLabel = "مؤجر حالياً";
+        if (isOccupied && listing.active_expires_at) {
+          var msLeft = Number(listing.active_expires_at) - Date.now();
+          if (msLeft > 0) {
+            var daysLeft = Math.ceil(msLeft / 86400000);
+            occupiedLabel = "مؤجر · ينتهي بعد " + daysLeft + " يوم";
+          }
+        }
+
+        var actionHtml;
+        if (isMyListing) {
+          actionHtml = '<div class="house-rental-badge owned-badge">بيتك المعروض</div>';
+        } else if (isOccupied) {
+          actionHtml = '<div class="house-rental-badge" style="background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:.45rem .9rem;font-size:.8rem;font-weight:700;text-align:center">🔒 '+e(occupiedLabel)+'</div>';
+        } else {
+          actionHtml = '<button class="btn-primary" type="button" style="width:100%;justify-content:center;margin-top:.25rem">استئجار ←</button>';
+        }
 
         card.innerHTML =
           '<div class="house-card-image-wrap">' +
@@ -388,13 +409,10 @@
             '<p class="house-card-name-en">'+(houseData ? e(houseData.nameEn) : '')+'</p>' +
             '<p style="font-size:.78rem;color:rgba(216,234,245,.45);margin:.1rem 0 .7rem">المالك: '+e(listing.owner_display_name || listing.owner_username || "—")+'</p>' +
             (listing.notes ? '<p style="font-size:.75rem;color:rgba(0,212,255,.75);margin-bottom:.7rem;line-height:1.5">'+e(listing.notes)+'</p>' : '') +
-            (isMyListing
-              ? '<div class="house-rental-badge owned-badge">بيتك المعروض</div>'
-              : '<button class="btn-primary" type="button" style="width:100%;justify-content:center;margin-top:.25rem">استئجار ←</button>'
-            ) +
+            actionHtml +
           '</div>';
 
-        if (!isMyListing) {
+        if (!isMyListing && !isOccupied) {
           card.querySelector(".btn-primary").addEventListener("click", function () {
             if (!currentUser) { window.location.href = "ministry.html"; return; }
             openRentDialog(listing);

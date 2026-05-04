@@ -143,6 +143,18 @@ router.post("/marketplace/buy/:id", async (req, res) => {
     const qty   = Number(l.quantity);
     const now   = Date.now();
 
+    // Verify seller still owns the property (house / business) before proceeding
+    if (l.item_type === "house") {
+      const houseId = String(l.item_name);
+      const owns = await rawQuery(`SELECT 1 FROM house_ownership WHERE house_id=$1 AND owner_user_id=$2`, [houseId, String(l.seller_user_id)]);
+      if (!owns[0]) return res.status(409).json({ error: "no_longer_owned", message: "البائع لم يعد يملك هذا البيت" });
+    }
+    if (l.item_type === "business") {
+      const bizId = String(l.item_name).split("|")[0];
+      const owns = await rawQuery(`SELECT 1 FROM business_state WHERE business_id=$1 AND user_id=$2`, [bizId, String(l.seller_user_id)]);
+      if (!owns[0]) return res.status(409).json({ error: "no_longer_owned", message: "البائع لم يعد يملك هذا المشروع" });
+    }
+
     // Bot balance transfer buyer → seller
     const transfer = await botTransfer(user.id, String(l.seller_user_id), price, `مزادي #${listingId}`);
 
@@ -159,6 +171,37 @@ router.post("/marketplace/buy/:id", async (req, res) => {
        String(l.item_type), String(l.item_name), qty, price,
        transfer.pending ? "pending" : "ok", now]
     );
+
+    // Transfer house ownership
+    if (l.item_type === "house") {
+      const houseId = String(l.item_name);
+      await rawQuery(`DELETE FROM house_ownership WHERE house_id=$1`, [houseId]);
+      await rawQuery(
+        `INSERT INTO house_ownership (house_id, owner_user_id, owner_username, purchased_at) VALUES ($1,$2,$3,$4)`,
+        [houseId, user.id, user.username, now]
+      );
+      // Also remove any active rental listing since new owner takes over
+      await rawQuery(`UPDATE house_rental_listings SET is_available=false WHERE house_id=$1 AND owner_user_id=$2`, [houseId, String(l.seller_user_id)]);
+    }
+
+    // Transfer business ownership
+    if (l.item_type === "business") {
+      const parts = String(l.item_name).split("|");
+      const bizId   = parts[0];
+      const bizType = parts[1] || "";
+      const bizRows = await rawQuery(`SELECT * FROM business_state WHERE business_id=$1 AND user_id=$2`, [bizId, String(l.seller_user_id)]);
+      if (bizRows[0]) {
+        const biz = bizRows[0];
+        await rawQuery(`DELETE FROM business_state WHERE business_id=$1 AND user_id=$2`, [bizId, String(l.seller_user_id)]);
+        await rawQuery(
+          `INSERT INTO business_state (user_id, business_id, business_type, inventory_pct, last_refill_at, accumulated_profit)
+           VALUES ($1,$2,$3,$4,$5,0)
+           ON CONFLICT (user_id, business_id, business_type)
+           DO UPDATE SET inventory_pct=$4, last_refill_at=$5, accumulated_profit=0`,
+          [user.id, bizId, biz.business_type || bizType, biz.inventory_pct ?? 100, now]
+        );
+      }
+    }
 
     // Credit item to buyer (resources / weapons)
     if (l.item_type === "resource" && RESOURCE_NAMES.includes(String(l.item_name))) {

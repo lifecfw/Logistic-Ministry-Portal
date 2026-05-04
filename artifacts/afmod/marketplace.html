@@ -580,8 +580,10 @@ function loadUserProperties(){
     S.userProps=d;
     var props=[];
     var photoMap={houses:'https://wiki.erlc.fun/images/5/5d/Neighborhood.png',cars:'https://wiki.erlc.fun/images/1/1a/Patrol_Car.png',gasStations:'https://wiki.erlc.fun/images/3/3b/Gas_Station.png',groceries:'https://wiki.erlc.fun/images/8/8f/Grocery_Store.png',barbers:'https://wiki.erlc.fun/images/4/47/Barber_Shop.png',cafes:'https://wiki.erlc.fun/images/2/28/Coffee_Shop.png',bakeries:'https://wiki.erlc.fun/images/6/61/Bakery.png'};
-    ['houses','cars','gasStations','groceries','barbers','cafes','bakeries'].forEach(function(cat){(d[cat]||[]).forEach(function(it){props.push({type:'property',cat:cat,data:it,imgUrl:photoMap[cat]});});});
-    document.getElementById('props-grid').innerHTML=props.length?props.map(function(p){var imgSrc=p.data.image||p.imgUrl;return '<div style="cursor:pointer;border:2px solid var(--border);border-radius:8px;padding:.75rem;background:var(--p2);transition:all .2s" onclick="selectItem(\'property\',\''+esc(p.data.id)+'\',\''+esc(p.data.name)+'\',1,\''+esc(imgSrc)+'\')"><img src="'+esc(imgSrc)+'" alt="" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:.5rem;background:var(--p3)" onerror="this.src=\''+p.imgUrl+'\'"><div style="font-size:.65rem;color:var(--muted);text-align:center">'+esc(p.data.name.substring(0,15))+'</div><div style="font-size:.75rem;font-weight:600;color:var(--text);margin-top:.3rem;text-align:center">اختار</div></div>';}).join(''):'<div style="grid-column:1/-1;color:var(--muted);font-size:.75rem;text-align:center;padding:1rem">—</div>';
+    var btypeMap={houses:'house',cars:'car',gasStations:'gas',groceries:'grocery',barbers:'barber',cafes:'cafe',bakeries:'bakery',mexicans:'mexican',burgers:'burger',rickjohns:'rickjohns',apparels:'apparel',dollars:'dollar',tools:'tools',markets:'market',jewels:'jewels',guns:'guns',banks:'bank'};
+    var allCats=['houses','cars','gasStations','groceries','barbers','cafes','bakeries','mexicans','burgers','rickjohns','apparels','dollars','tools','markets','jewels','guns','banks'];
+    allCats.forEach(function(cat){(d[cat]||[]).forEach(function(it){props.push({type:'property',cat:cat,btype:btypeMap[cat]||cat,data:it,imgUrl:photoMap[cat]||photoMap.gasStations});});});
+    document.getElementById('props-grid').innerHTML=props.length?props.map(function(p){var imgSrc=p.data.image||p.imgUrl;var displayName=p.data.name||p.data.id||'';return '<div style="cursor:pointer;border:2px solid var(--border);border-radius:8px;padding:.75rem;background:var(--p2);transition:all .2s" onclick="selectItem(\'property\',\''+esc(p.data.id)+'\',\''+esc(displayName)+'\',1,\''+esc(imgSrc)+'\',\''+esc(p.btype)+'\')"><img src="'+esc(imgSrc)+'" alt="" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:.5rem;background:var(--p3)" onerror="this.src=\''+p.imgUrl+'\'"><div style="font-size:.65rem;color:var(--muted);text-align:center">'+esc(displayName.substring(0,15))+'</div><div style="font-size:.75rem;font-weight:600;color:var(--text);margin-top:.3rem;text-align:center">اختار</div></div>';}).join(''):'<div style="grid-column:1/-1;color:var(--muted);font-size:.75rem;text-align:center;padding:1rem">—</div>';
     
     var resList=['steel','aluminum','plastic','iron','coal'];
     var resLabelMap={steel:'فولاذ',aluminum:'ألمنيوم',plastic:'بلاستيك',iron:'حديد',coal:'فحم'};
@@ -594,8 +596,8 @@ function loadUserProperties(){
   }).catch(function(){});
 }
 
-function selectItem(type,id,name,available,image){
-  S.selectedItem={type:type,id:id,name:name,available:available,image:image};
+function selectItem(type,id,name,available,image,btype){
+  S.selectedItem={type:type,id:id,name:name,available:available,image:image,btype:btype||''};
   var imgHtml=image?'<img src="'+esc(image)+'" alt="" style="width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:.75rem">':'';
   document.getElementById('listing-panel').innerHTML='<button onclick="backToSelection()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.2rem;margin-bottom:1rem">← رجوع</button><div style="margin-bottom:1.5rem;padding:.75rem;background:var(--p2);border-radius:8px">'+imgHtml+'<div style="font-size:.7rem;color:var(--muted)">العنصر المختار</div><div style="font-size:.95rem;font-weight:700;color:var(--text);margin-top:.25rem">'+esc(name)+(available>1?' (متوفر: '+available+')':'')+'</div><div style="font-size:.7rem;color:var(--muted);margin-top:.25rem">'+( available>1?'الكمية: حد أقصى '+available:'الكمية: 1')+'</div></div><div class="form-row"><label class="form-lbl">السعر الكلي ($)</label><input class="form-inp" id="f-price" type="number" min="1" max="999999999" placeholder="0" /></div><div class="form-row"><label class="form-lbl">وصف (اختياري)</label><textarea class="form-inp" id="f-desc" maxlength="300" placeholder="معلومات إضافية…" style="min-height:80px"></textarea></div><button class="btn-submit" id="btn-list" onclick="doList()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>نشر الإعلان</button><div class="form-result" id="list-result"></div>';
   document.getElementById('items-selection').classList.add('hidden');
@@ -736,7 +738,12 @@ function doList(){
 
   var itemType,itemName,qty;
   if(S.selectedItem.type==='property'){
-    itemType='other';itemName=S.selectedItem.name;qty=1;
+    var btype=S.selectedItem.btype||'';
+    if(btype==='house'){
+      itemType='house';itemName=S.selectedItem.id;qty=1;
+    }else{
+      itemType='business';itemName=S.selectedItem.id+'|'+btype;qty=1;
+    }
   }else if(S.selectedItem.type==='resource'){
     itemType='resource';itemName=S.selectedItem.id;qty=S.selectedItem.available;
   }else if(S.selectedItem.type==='weapon'){
