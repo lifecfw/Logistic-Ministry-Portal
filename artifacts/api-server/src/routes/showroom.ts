@@ -172,12 +172,59 @@ router.post("/showroom/buy-gas-station", async (req, res) => {
 router.get("/showroom/my-properties", async (req, res) => {
   const user = requireUser(req, res);
   if (!user) return;
-  const result = await getFromBot(`/afmod/my-properties/${user.userId}`);
-  if (!result.ok) {
-    res.status(result.status).json({ error: "bot_error", message: "message" in result ? result.message : "Failed" });
-    return;
+
+  // Try bot first; if unavailable, build from portal DB
+  const botResult = await getFromBot(`/afmod/my-properties/${user.userId}`);
+  if (botResult.ok && botResult.data && typeof botResult.data === "object") {
+    const d = botResult.data as Record<string, unknown>;
+    // If bot returned meaningful data, use it
+    if (Array.isArray(d.houses) || Array.isArray(d.cars) || Array.isArray(d.gasStations)) {
+      res.json(d);
+      return;
+    }
   }
-  res.json(result.data);
+
+  // Fallback: build response from portal database
+  const sql = getSql();
+  const now = Date.now();
+
+  const [houseRows, bizRows] = await Promise.all([
+    sql`SELECT house_id, purchased_at FROM house_ownership WHERE owner_user_id = ${user.userId} ORDER BY purchased_at DESC`,
+    sql`SELECT business_id, business_type FROM business_state WHERE user_id = ${user.userId} ORDER BY last_refill_at DESC`,
+  ]);
+
+  const houses = houseRows.map(r => ({
+    id: String(r.house_id),
+    name: String(r.house_id),
+    boughtAt: new Date(Number(r.purchased_at)).toISOString(),
+  }));
+
+  const byType: Record<string, { id: string; name: string }[]> = {};
+  for (const row of bizRows) {
+    const t = String(row.business_type);
+    if (!byType[t]) byType[t] = [];
+    byType[t].push({ id: String(row.business_id), name: String(row.business_id) });
+  }
+
+  res.json({
+    houses,
+    cars:        [],
+    gasStations: byType["gas"]       || [],
+    groceries:   byType["grocery"]   || [],
+    barbers:     byType["barber"]    || [],
+    cafes:       byType["cafe"]      || [],
+    bakeries:    byType["bakery"]    || [],
+    mexicans:    byType["mexican"]   || [],
+    burgers:     byType["burger"]    || [],
+    rickjohns:   byType["rickjohns"] || [],
+    apparels:    byType["apparel"]   || [],
+    dollars:     byType["dollar"]    || [],
+    tools:       byType["tools"]     || [],
+    markets:     byType["market"]    || [],
+    jewels:      byType["jewels"]    || [],
+    guns:        byType["guns"]      || [],
+    banks:       byType["bank"]      || [],
+  });
 });
 
 // ── Buy grocery store ────────────────────────────────────────────────────────

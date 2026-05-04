@@ -61,14 +61,21 @@ router.get("/house/my-listing", async (req, res) => {
 // ── GET /house/listings ──────────────────────────────────────────────────────
 router.get("/house/listings", async (req, res) => {
   const sql = getSql();
+  const now = Date.now();
+  // Show listings that are available OR that have an active booking (so renters can see them)
   const listings = await sql`
     SELECT hrl.*,
-      COUNT(hrb.id) FILTER (WHERE hrb.is_active AND hrb.expires_at > ${Date.now()}) AS active_bookings
+      COUNT(hrb.id) FILTER (WHERE hrb.is_active AND hrb.expires_at > ${now}) AS active_bookings,
+      MAX(hrb.expires_at) FILTER (WHERE hrb.is_active AND hrb.expires_at > ${now}) AS active_expires_at
     FROM house_rental_listings hrl
     LEFT JOIN house_rental_bookings hrb ON hrb.listing_id = hrl.id
     WHERE hrl.is_available = true
+       OR EXISTS (
+         SELECT 1 FROM house_rental_bookings hrb2
+         WHERE hrb2.listing_id = hrl.id AND hrb2.is_active = true AND hrb2.expires_at > ${now}
+       )
     GROUP BY hrl.id
-    ORDER BY hrl.updated_at DESC
+    ORDER BY hrl.is_available DESC, hrl.updated_at DESC
   `;
   res.json({ listings });
 });
