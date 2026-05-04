@@ -158,6 +158,17 @@ router.get("/business/state", async (req, res) => {
   const sql = getSql();
   const now = Date.now();
 
+  // Check if another user already owns this business
+  const [otherOwner] = await sql`
+    SELECT user_id FROM business_state
+    WHERE business_id = ${businessId} AND business_type = ${type} AND user_id != ${user.id}
+    LIMIT 1
+  `;
+  if (otherOwner) {
+    res.status(409).json({ error: "already_owned", message: "هذا المشروع مملوك من قِبَل شخص آخر" });
+    return;
+  }
+
   await sql`
     INSERT INTO business_state
       (user_id, business_id, business_type, inventory_pct, last_refill_at, last_sync_at, weekly_bonus_at)

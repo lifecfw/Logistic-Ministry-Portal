@@ -92,6 +92,19 @@ router.post("/showroom/buy-house", async (req, res) => {
   const houseId = typeof req.body?.houseId === "string" ? req.body.houseId : "";
   const price   = Number(req.body?.price) || 0;
   if (!houseId) { res.status(400).json({ error: "bad_request", message: "houseId is required" }); return; }
+
+  // Check if house is already owned by someone else
+  const sql = getSql();
+  const [existingOwner] = await sql`SELECT owner_user_id FROM house_ownership WHERE house_id = ${houseId} LIMIT 1`;
+  if (existingOwner && existingOwner.owner_user_id !== user.userId) {
+    res.status(409).json({ error: "already_owned", message: "هذا البيت مملوك بالفعل لشخص آخر" });
+    return;
+  }
+  if (existingOwner && existingOwner.owner_user_id === user.userId) {
+    res.status(409).json({ error: "already_yours", message: "أنت تملك هذا البيت بالفعل" });
+    return;
+  }
+
   const result = await forwardToBot("/afmod/buy-house", {
     houseId, userId: user.userId, username: user.username, displayName: user.displayName,
   });
@@ -139,6 +152,9 @@ router.post("/showroom/buy-gas-station", async (req, res) => {
   const stationId = typeof req.body?.stationId === "string" ? req.body.stationId : "";
   const price     = Number(req.body?.price) || 0;
   if (!stationId) { res.status(400).json({ error: "bad_request", message: "stationId is required" }); return; }
+  const sqlDb = getSql();
+  const [gasOther] = await sqlDb`SELECT user_id FROM business_state WHERE business_id=${stationId} AND business_type='gas' AND user_id!=${user.userId} LIMIT 1`;
+  if (gasOther) { res.status(409).json({ error: "already_owned", message: "هذه المحطة مملوكة بالفعل لشخص آخر" }); return; }
   const result = await forwardToBot("/afmod/buy-gas-station", {
     stationId, userId: user.userId, username: user.username, displayName: user.displayName,
   });
@@ -146,6 +162,8 @@ router.post("/showroom/buy-gas-station", async (req, res) => {
     res.status(result.status).json({ error: "bot_error", message: ("message" in result && result.message) || "Bot rejected the purchase" });
     return;
   }
+  const now = Date.now();
+  await sqlDb`INSERT INTO business_state (user_id,business_id,business_type,inventory_pct,last_refill_at,last_sync_at,weekly_bonus_at) VALUES (${user.userId},${stationId},'gas',100,${now},${now},${now}) ON CONFLICT (user_id,business_id,business_type) DO NOTHING`;
   if (price > 0) await creditBankOwner(price, `شراء محطة وقود: ${stationId}`);
   res.json({ ok: true, ...(result.data || {}) });
 });
@@ -169,6 +187,9 @@ router.post("/showroom/buy-grocery", async (req, res) => {
   const stationId = typeof req.body?.stationId === "string" ? req.body.stationId : "";
   const price     = Number(req.body?.price) || 0;
   if (!stationId) { res.status(400).json({ error: "bad_request", message: "stationId is required" }); return; }
+  const sqlDb = getSql();
+  const [grocOther] = await sqlDb`SELECT user_id FROM business_state WHERE business_id=${stationId} AND business_type='grocery' AND user_id!=${user.userId} LIMIT 1`;
+  if (grocOther) { res.status(409).json({ error: "already_owned", message: "هذه البقالة مملوكة بالفعل لشخص آخر" }); return; }
   const result = await forwardToBot("/afmod/buy-grocery", {
     stationId, userId: user.userId, username: user.username, displayName: user.displayName,
   });
@@ -176,6 +197,8 @@ router.post("/showroom/buy-grocery", async (req, res) => {
     res.status(result.status).json({ error: "bot_error", message: ("message" in result && result.message) || "Bot rejected the purchase" });
     return;
   }
+  const now = Date.now();
+  await sqlDb`INSERT INTO business_state (user_id,business_id,business_type,inventory_pct,last_refill_at,last_sync_at,weekly_bonus_at) VALUES (${user.userId},${stationId},'grocery',100,${now},${now},${now}) ON CONFLICT (user_id,business_id,business_type) DO NOTHING`;
   if (price > 0) await creditBankOwner(price, `شراء بقالة: ${stationId}`);
   res.json({ ok: true, ...(result.data || {}) });
 });
@@ -187,6 +210,9 @@ router.post("/showroom/buy-barber", async (req, res) => {
   const shopId = typeof req.body?.shopId === "string" ? req.body.shopId : "";
   const price  = Number(req.body?.price) || 0;
   if (!shopId) { res.status(400).json({ error: "bad_request", message: "shopId is required" }); return; }
+  const sqlDb = getSql();
+  const [barberOther] = await sqlDb`SELECT user_id FROM business_state WHERE business_id=${shopId} AND business_type='barber' AND user_id!=${user.userId} LIMIT 1`;
+  if (barberOther) { res.status(409).json({ error: "already_owned", message: "هذا الصالون مملوك بالفعل لشخص آخر" }); return; }
   const result = await forwardToBot("/afmod/buy-barber", {
     shopId, userId: user.userId, username: user.username, displayName: user.displayName,
   });
@@ -194,6 +220,8 @@ router.post("/showroom/buy-barber", async (req, res) => {
     res.status(result.status).json({ error: "bot_error", message: ("message" in result && result.message) || "Bot rejected the purchase" });
     return;
   }
+  const now = Date.now();
+  await sqlDb`INSERT INTO business_state (user_id,business_id,business_type,inventory_pct,last_refill_at,last_sync_at,weekly_bonus_at) VALUES (${user.userId},${shopId},'barber',100,${now},${now},${now}) ON CONFLICT (user_id,business_id,business_type) DO NOTHING`;
   if (price > 0) await creditBankOwner(price, `شراء صالون حلاقة: ${shopId}`);
   res.json({ ok: true, ...(result.data || {}) });
 });
@@ -209,6 +237,9 @@ router.post("/showroom/buy-business", async (req, res) => {
   if (!shopId || !VALID.includes(businessType)) {
     res.status(400).json({ error: "bad_request", message: "shopId and valid businessType are required" }); return;
   }
+  const sqlDb = getSql();
+  const [bizOther] = await sqlDb`SELECT user_id FROM business_state WHERE business_id=${shopId} AND business_type=${businessType} AND user_id!=${user.userId} LIMIT 1`;
+  if (bizOther) { res.status(409).json({ error: "already_owned", message: "هذا المشروع مملوك بالفعل لشخص آخر" }); return; }
   const result = await forwardToBot("/afmod/buy-business", {
     shopId, businessType, userId: user.userId, username: user.username, displayName: user.displayName,
   });
@@ -217,20 +248,18 @@ router.post("/showroom/buy-business", async (req, res) => {
     return;
   }
 
+  const now = Date.now();
+  // Record ownership immediately so no one else can claim it
+  await sqlDb`INSERT INTO business_state (user_id,business_id,business_type,inventory_pct,last_refill_at,last_sync_at,weekly_bonus_at) VALUES (${user.userId},${shopId},${businessType},100,${now},${now},${now}) ON CONFLICT (user_id,business_id,business_type) DO NOTHING`;
+
   // If bank was purchased, record the new owner
   if (businessType === "bank") {
     try {
-      const sql = getSql();
-      const now = Date.now();
-      await sql`
-        INSERT INTO bank_owner (user_id, username, display_name, purchased_at)
-        VALUES (${user.userId}, ${user.username}, ${user.displayName}, ${now})
-      `;
+      await sqlDb`INSERT INTO bank_owner (user_id, username, display_name, purchased_at) VALUES (${user.userId}, ${user.username}, ${user.displayName}, ${now})`;
     } catch (err) {
       logger.warn({ err }, "Failed to record bank owner");
     }
   } else if (price > 0) {
-    // Non-bank business purchases go to bank owner
     await creditBankOwner(price, `شراء مشروع (${businessType}): ${shopId}`);
   }
 
