@@ -346,6 +346,9 @@
                 <div class="popup-stat"><span class="popup-stat-val" id="popup-treasury" style="color:var(--gold);font-size:.8rem"></span><span class="popup-stat-lbl">الخزينة</span></div>
                 <div class="popup-stat"><span class="popup-stat-val" id="popup-sprays"></span><span class="popup-stat-lbl">مناطق</span></div>
               </div>
+              <div id="popup-admin-spray" style="display:none;margin-top:.7rem">
+                <button id="popup-delete-spray-btn" style="width:100%;background:linear-gradient(135deg,#ef4444,#c0392b);color:#fff;border:none;border-radius:8px;padding:.5rem .9rem;font-family:var(--font);font-size:.83rem;font-weight:700;cursor:pointer">🗑 حذف هذه النقطة</button>
+              </div>
             </div>
           </div>
         </div>
@@ -643,7 +646,7 @@
 (function(){
 "use strict";
 var ADMIN_NAME="n16q";
-var CUR=null,IS_ADMIN=false,MY_GANG_ID=null,MY_ROLE=null,MY_GANG_DATA=null;
+var CUR=null,IS_ADMIN=false,MY_GANG_ID=null,MY_ROLE=null,MY_GANG_DATA=null,CLICKED_SPRAY=null;
 var ALL_GANGS=[],PENDING_SPRAY=null,MAP_LOADED=false;
 var LOGO_IMAGES={};
 var CURRENT_LOGO_B64=null;
@@ -1341,9 +1344,11 @@ $('spray-canvas').addEventListener('click',function(e){
   });
 
   if(clickedGang){
+    CLICKED_SPRAY=clickedSpray;
     showGangPopup(clickedGang,e.clientX,e.clientY);
     return;
   }
+  CLICKED_SPRAY=null;
 
   // Normal spray placement
   var canSpray=IS_ADMIN||(MY_GANG_ID&&(MY_ROLE==='president'));
@@ -1376,6 +1381,13 @@ function showGangPopup(gang,clientX,clientY){
   $('popup-treasury').textContent=fmt(gang.treasury||0);
   $('popup-sprays').textContent=(gang.sprays||[]).length+'/3';
 
+  var adminSprayEl=$('popup-admin-spray');
+  if(IS_ADMIN&&CLICKED_SPRAY){
+    adminSprayEl.style.display='block';
+  } else {
+    adminSprayEl.style.display='none';
+  }
+
   // Position popup near click
   var container=$('map-container');
   var cRect=container.getBoundingClientRect();
@@ -1389,7 +1401,26 @@ function showGangPopup(gang,clientX,clientY){
   popup.classList.add('show');
 }
 
-$('popup-close-btn').addEventListener('click',function(){$('gang-popup').classList.remove('show');POPUP_GANG=null;});
+$('popup-close-btn').addEventListener('click',function(){$('gang-popup').classList.remove('show');POPUP_GANG=null;CLICKED_SPRAY=null;});
+
+$('popup-delete-spray-btn').addEventListener('click',function(){
+  if(!POPUP_GANG||!CLICKED_SPRAY)return;
+  var btn=this;
+  btn.disabled=true;
+  btn.textContent='جاري الحذف…';
+  api('/gangs/'+POPUP_GANG.id+'/spray/'+CLICKED_SPRAY.id,{method:'DELETE'})
+    .then(function(){
+      toast('تم حذف نقطة الرش ✓','ok');
+      $('gang-popup').classList.remove('show');
+      POPUP_GANG=null;CLICKED_SPRAY=null;
+      loadAllGangsData().then(drawSprayOverlay);
+    })
+    .catch(function(e){
+      toast((e&&e.message)||'تعذّر حذف النقطة','err');
+      btn.disabled=false;
+      btn.textContent='🗑 حذف هذه النقطة';
+    });
+});
 $('spray-canvas').addEventListener('mousemove',function(e){
   var rect=this.getBoundingClientRect();
   var px=(e.clientX-rect.left)/rect.width,py=(e.clientY-rect.top)/rect.height;

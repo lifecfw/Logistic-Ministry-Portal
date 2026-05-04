@@ -80,7 +80,7 @@ router.post("/house/set-rental", async (req, res) => {
   const { houseId, dailyPrice, isAvailable, notes } = req.body as Record<string, unknown>;
 
   const housePrice = HOUSE_PRICES[String(houseId || "")];
-  if (!housePrice) { res.status(400).json({ error: "invalid_house" }); return; }
+  if (!housePrice) { res.status(400).json({ error: "invalid_house", message: "نوع البيت غير صحيح، تأكد من الرابط" }); return; }
 
   const dp = Number(dailyPrice);
   const minP = Math.floor(housePrice * 0.10);
@@ -93,7 +93,7 @@ router.post("/house/set-rental", async (req, res) => {
 
   const sql = getSql();
   const [owned] = await sql`SELECT id FROM house_ownership WHERE house_id=${String(houseId)} AND owner_user_id=${user.id}`;
-  if (!owned) { res.status(403).json({ error: "not_owner", message: "لا تملك هذا البيت" }); return; }
+  if (!owned) { res.status(403).json({ error: "not_owner", message: "هذا البيت غير مسجّل باسمك في قاعدة البيانات. يجب شراؤه عبر البوابة الرسمية أولاً" }); return; }
 
   const now = Date.now();
   await sql`
@@ -121,7 +121,7 @@ router.get("/house/state", async (req, res) => {
 
   const sql = getSql();
   const [owned] = await sql`SELECT id FROM house_ownership WHERE house_id=${houseId} AND owner_user_id=${user.id}`;
-  if (!owned) { res.status(403).json({ error: "not_owner" }); return; }
+  if (!owned) { res.status(403).json({ error: "not_owner", message: "هذا البيت غير مسجّل باسمك. يجب شراؤه عبر البوابة الرسمية أولاً" }); return; }
 
   await sql`
     INSERT INTO house_rental_state (house_id, owner_user_id, accumulated_profit)

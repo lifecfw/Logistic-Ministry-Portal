@@ -46,6 +46,11 @@ export default defineConfig({
         "house-map":     path.resolve(import.meta.dirname, "house-map.html"),
         marketplace:     path.resolve(import.meta.dirname, "marketplace.html"),
         gangs:           path.resolve(import.meta.dirname, "gangs.html"),
+        cafes:           path.resolve(import.meta.dirname, "cafes.html"),
+        restaurants:     path.resolve(import.meta.dirname, "restaurants.html"),
+        bank:            path.resolve(import.meta.dirname, "bank.html"),
+        stores:          path.resolve(import.meta.dirname, "stores.html"),
+        twitter:         path.resolve(import.meta.dirname, "twitter.html"),
       },
       output: {
         entryFileNames: "assets/[name]-[hash].js",
