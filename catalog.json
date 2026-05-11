@@ -1,0 +1,725 @@
+{
+  "cars": [
+    {
+      "id": "chevlon-captain-2009",
+      "nameEn": "Chevlon Captain 2009",
+      "price": 118500,
+      "body": "Sedan",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "vellfire-prima-2009",
+      "nameEn": "Vellfire Prima 2009",
+      "price": 178500,
+      "body": "Sedan",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "elysion-slick-2014",
+      "nameEn": "Elysion Slick 2014",
+      "price": 190000,
+      "body": "Sedan",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "navara-imperium-2020",
+      "nameEn": "Navara Imperium 2020",
+      "price": 225000,
+      "body": "Sedan",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "leland-lts-2010",
+      "nameEn": "Leland LTS 2010",
+      "price": 275000,
+      "body": "Sedan",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "sentinel-platinum-1968",
+      "nameEn": "Sentinel Platinum 1968",
+      "price": 324500,
+      "body": "Sedan",
+      "tier": "متوسط"
+    },
+    {
+      "id": "chryslus-champion-2005",
+      "nameEn": "Chryslus Champion 2005",
+      "price": 430000,
+      "body": "Sedan",
+      "tier": "متوسط"
+    },
+    {
+      "id": "bullhorn-prancer-2011",
+      "nameEn": "Bullhorn Prancer 2011",
+      "price": 459900,
+      "body": "Sedan",
+      "tier": "متوسط"
+    },
+    {
+      "id": "celestial-type-6-2023",
+      "nameEn": "Celestial Type-6 2023",
+      "price": 467800,
+      "body": "Sedan",
+      "tier": "متوسط"
+    },
+    {
+      "id": "bullhorn-prancer-2015",
+      "nameEn": "Bullhorn Prancer 2015",
+      "price": 485000,
+      "body": "Sedan",
+      "tier": "متوسط"
+    },
+    {
+      "id": "bullhorn-prancer-widebody-2020",
+      "nameEn": "Bullhorn Prancer Widebody 2020",
+      "price": 1050000,
+      "body": "Sedan",
+      "tier": "فاخر"
+    },
+    {
+      "id": "stuttgart-vierturig-2021",
+      "nameEn": "Stuttgart Vierturig 2021",
+      "price": 1620000,
+      "body": "Sedan",
+      "tier": "فاخر"
+    },
+    {
+      "id": "averon-rs3-2020",
+      "nameEn": "Averon RS3 2020",
+      "price": 1690000,
+      "body": "Sedan",
+      "tier": "فاخر"
+    },
+    {
+      "id": "leland-lts5-v-blackwing-2023",
+      "nameEn": "Leland LTS5-V Blackwing 2023",
+      "price": 2550000,
+      "body": "Sedan",
+      "tier": "فاخر"
+    },
+    {
+      "id": "falcon-coupe-1934",
+      "nameEn": "Falcon Coupe 1934",
+      "price": 245000,
+      "body": "Coupe",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "falcon-coupe-hotrod-1934",
+      "nameEn": "Falcon Coupe Hotrod 1934",
+      "price": 289000,
+      "body": "Coupe",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "chevlon-corbeta-c2-1967",
+      "nameEn": "Chevlon Corbeta C2 1967",
+      "price": 290000,
+      "body": "Coupe",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "vellfire-runabout-1984",
+      "nameEn": "Vellfire Runabout 1984",
+      "price": 390000,
+      "body": "Coupe",
+      "tier": "متوسط"
+    },
+    {
+      "id": "arrow-phoenix-nationals-1977",
+      "nameEn": "Arrow Phoenix Nationals 1977",
+      "price": 470000,
+      "body": "Coupe",
+      "tier": "متوسط"
+    },
+    {
+      "id": "bullhorn-prancer-1969",
+      "nameEn": "Bullhorn Prancer 1969",
+      "price": 485000,
+      "body": "Coupe",
+      "tier": "متوسط"
+    },
+    {
+      "id": "bullhorn-determinator-2008",
+      "nameEn": "Bullhorn Determinator 2008",
+      "price": 490000,
+      "body": "Coupe",
+      "tier": "متوسط"
+    },
+    {
+      "id": "falcon-stallion-350-1969",
+      "nameEn": "Falcon Stallion 350 1969",
+      "price": 506660,
+      "body": "Coupe",
+      "tier": "متوسط"
+    },
+    {
+      "id": "chevlon-amigo-sport-2016",
+      "nameEn": "Chevlon Amigo Sport 2016",
+      "price": 552500,
+      "body": "Coupe",
+      "tier": "متوسط"
+    },
+    {
+      "id": "chevlon-amigo-lzr-2011",
+      "nameEn": "Chevlon Amigo LZR 2011",
+      "price": 585000,
+      "body": "Coupe",
+      "tier": "متوسط"
+    },
+    {
+      "id": "chevlon-corbeta-x08-2014",
+      "nameEn": "Chevlon Corbeta X08 2014",
+      "price": 960000,
+      "body": "Coupe",
+      "tier": "فاخر"
+    },
+    {
+      "id": "bullhorn-determinator-sfp-fury-2022",
+      "nameEn": "Bullhorn Determinator SFP Fury 2022",
+      "price": 995000,
+      "body": "Coupe",
+      "tier": "فاخر"
+    },
+    {
+      "id": "bullhorn-determinator-sfp-blackjack-widebody-2022",
+      "nameEn": "Bullhorn Determinator SFP Blackjack Widebody 2022",
+      "price": 1249990,
+      "body": "Coupe",
+      "tier": "فاخر"
+    },
+    {
+      "id": "averon-s5-2010",
+      "nameEn": "Averon S5 2010",
+      "price": 1327950,
+      "body": "Coupe",
+      "tier": "فاخر"
+    },
+    {
+      "id": "falcon-stallion-350-2015",
+      "nameEn": "Falcon Stallion 350 2015",
+      "price": 1390000,
+      "body": "Coupe",
+      "tier": "فاخر"
+    },
+    {
+      "id": "bkm-risen-roadster-2020",
+      "nameEn": "BKM Risen Roadster 2020",
+      "price": 1642950,
+      "body": "Coupe",
+      "tier": "فاخر"
+    },
+    {
+      "id": "navara-horizon-2013",
+      "nameEn": "Navara Horizon 2013",
+      "price": 1985000,
+      "body": "Coupe",
+      "tier": "فاخر"
+    },
+    {
+      "id": "vellfire-pioneer-2019",
+      "nameEn": "Vellfire Pioneer 2019",
+      "price": 1998200,
+      "body": "Coupe",
+      "tier": "فاخر"
+    },
+    {
+      "id": "chevlon-corbeta-tz-2014",
+      "nameEn": "Chevlon Corbeta TZ 2014",
+      "price": 3500000,
+      "body": "Coupe",
+      "tier": "حصري"
+    },
+    {
+      "id": "chevlon-corbeta-8-2023",
+      "nameEn": "Chevlon Corbeta 8 2023",
+      "price": 4100000,
+      "body": "Coupe",
+      "tier": "حصري"
+    },
+    {
+      "id": "takeo-experience-2021",
+      "nameEn": "Takeo Experience 2021",
+      "price": 4750000,
+      "body": "Coupe",
+      "tier": "حصري"
+    },
+    {
+      "id": "falcon-heritage-2021",
+      "nameEn": "Falcon Heritage 2021",
+      "price": 6209000,
+      "body": "Coupe",
+      "tier": "حصري"
+    },
+    {
+      "id": "averon-r8-2017",
+      "nameEn": "Averon R8 2017",
+      "price": 6500000,
+      "body": "Coupe",
+      "tier": "حصري"
+    },
+    {
+      "id": "surrey-650s-2016",
+      "nameEn": "Surrey 650S 2016",
+      "price": 8900000,
+      "body": "Coupe",
+      "tier": "حصري"
+    },
+    {
+      "id": "strugatti-ettore-2020",
+      "nameEn": "Strugatti Ettore 2020",
+      "price": 15000000,
+      "body": "Coupe",
+      "tier": "حصري"
+    },
+    {
+      "id": "chevlon-camion-2002",
+      "nameEn": "Chevlon Camion 2002",
+      "price": 89000,
+      "body": "SUV",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "overland-apache-1995",
+      "nameEn": "Overland Apache 1995",
+      "price": 99500,
+      "body": "SUV",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "falcon-traveller-2003",
+      "nameEn": "Falcon Traveller 2003",
+      "price": 125000,
+      "body": "SUV",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "falcon-scavenger-security-2013",
+      "nameEn": "Falcon Scavenger Security 2013",
+      "price": 150000,
+      "body": "SUV",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "chevlon-camion-2008",
+      "nameEn": "Chevlon Camion 2008",
+      "price": 280500,
+      "body": "SUV",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "chevlon-camion-2018",
+      "nameEn": "Chevlon Camion 2018",
+      "price": 345000,
+      "body": "SUV",
+      "tier": "متوسط"
+    },
+    {
+      "id": "falcon-scavenger-2016",
+      "nameEn": "Falcon Scavenger 2016",
+      "price": 397000,
+      "body": "SUV",
+      "tier": "متوسط"
+    },
+    {
+      "id": "chevlon-revver-2005",
+      "nameEn": "Chevlon Revver 2005",
+      "price": 400000,
+      "body": "SUV",
+      "tier": "متوسط"
+    },
+    {
+      "id": "overland-apache-2011",
+      "nameEn": "Overland Apache 2011",
+      "price": 420000,
+      "body": "SUV",
+      "tier": "متوسط"
+    },
+    {
+      "id": "overland-buckaroo-2018",
+      "nameEn": "Overland Buckaroo 2018",
+      "price": 427000,
+      "body": "SUV",
+      "tier": "متوسط"
+    },
+    {
+      "id": "vellfire-riptide-2020",
+      "nameEn": "Vellfire Riptide 2020",
+      "price": 452000,
+      "body": "SUV",
+      "tier": "متوسط"
+    },
+    {
+      "id": "chevlon-camion-2021",
+      "nameEn": "Chevlon Camion 2021",
+      "price": 495000,
+      "body": "SUV",
+      "tier": "متوسط"
+    },
+    {
+      "id": "falcon-estallion-2024",
+      "nameEn": "Falcon eStallion 2024",
+      "price": 510000,
+      "body": "SUV",
+      "tier": "متوسط"
+    },
+    {
+      "id": "falcon-rampage-bigfoot-2-door-2021",
+      "nameEn": "Falcon Rampage Bigfoot 2-Door 2021",
+      "price": 650000,
+      "body": "SUV",
+      "tier": "متوسط"
+    },
+    {
+      "id": "averon-anodic-2024",
+      "nameEn": "Averon Anodic 2024",
+      "price": 699900,
+      "body": "SUV",
+      "tier": "متوسط"
+    },
+    {
+      "id": "bullhorn-pueblo-2018",
+      "nameEn": "Bullhorn Pueblo 2018",
+      "price": 795000,
+      "body": "SUV",
+      "tier": "متوسط"
+    },
+    {
+      "id": "overland-apache-sfp-2020",
+      "nameEn": "Overland Apache SFP 2020",
+      "price": 920000,
+      "body": "SUV",
+      "tier": "فاخر"
+    },
+    {
+      "id": "leland-vault-2020",
+      "nameEn": "Leland Vault 2020",
+      "price": 1249000,
+      "body": "SUV",
+      "tier": "فاخر"
+    },
+    {
+      "id": "falcon-rampage-beast-2021",
+      "nameEn": "Falcon Rampage Beast 2021",
+      "price": 1295000,
+      "body": "SUV",
+      "tier": "فاخر"
+    },
+    {
+      "id": "ferdinand-jalapeno-turbo-2022",
+      "nameEn": "Ferdinand Jalapeno Turbo 2022",
+      "price": 1450000,
+      "body": "SUV",
+      "tier": "فاخر"
+    },
+    {
+      "id": "bkm-munich-2020",
+      "nameEn": "BKM Munich 2020",
+      "price": 1560000,
+      "body": "SUV",
+      "tier": "فاخر"
+    },
+    {
+      "id": "terrain-traveller-2022",
+      "nameEn": "Terrain Traveller 2022",
+      "price": 1590000,
+      "body": "SUV",
+      "tier": "فاخر"
+    },
+    {
+      "id": "averon-q8-2022",
+      "nameEn": "Averon Q8 2022",
+      "price": 1900000,
+      "body": "SUV",
+      "tier": "فاخر"
+    },
+    {
+      "id": "stuttgart-landschaft-2022",
+      "nameEn": "Stuttgart Landschaft 2022",
+      "price": 2490000,
+      "body": "SUV",
+      "tier": "فاخر"
+    },
+    {
+      "id": "vellfire-evertt-1995",
+      "nameEn": "Vellfire Evertt 1995",
+      "price": 145000,
+      "body": "Truck",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "chevlon-l-15-1981",
+      "nameEn": "Chevlon L/15 1981",
+      "price": 167000,
+      "body": "Truck",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "mail-truck",
+      "nameEn": "Mail Truck",
+      "price": 180000,
+      "body": "Truck",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "chevlon-landslide-2007",
+      "nameEn": "Chevlon Landslide 2007",
+      "price": 195000,
+      "body": "Truck",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "chevlon-inferno-1981",
+      "nameEn": "Chevlon Inferno 1981",
+      "price": 199750,
+      "body": "Truck",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "chevlon-l-35-extended-1981",
+      "nameEn": "Chevlon L/35 Extended 1981",
+      "price": 249000,
+      "body": "Truck",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "bullhorn-bh15-2009",
+      "nameEn": "Bullhorn BH15 2009",
+      "price": 305000,
+      "body": "Truck",
+      "tier": "متوسط"
+    },
+    {
+      "id": "navara-boundary-2022",
+      "nameEn": "Navara Boundary 2022",
+      "price": 459900,
+      "body": "Truck",
+      "tier": "متوسط"
+    },
+    {
+      "id": "bank-truck",
+      "nameEn": "Bank Truck",
+      "price": 470000,
+      "body": "Truck",
+      "tier": "متوسط"
+    },
+    {
+      "id": "chevlon-platoro-2019",
+      "nameEn": "Chevlon Platoro 2019",
+      "price": 590000,
+      "body": "Truck",
+      "tier": "متوسط"
+    },
+    {
+      "id": "three-guys-food-truck",
+      "nameEn": "Three Guys Food Truck",
+      "price": 599000,
+      "body": "Truck",
+      "tier": "متوسط"
+    },
+    {
+      "id": "la-mesa-food-truck",
+      "nameEn": "La Mesa Food Truck",
+      "price": 599000,
+      "body": "Truck",
+      "tier": "متوسط"
+    },
+    {
+      "id": "vellfire-prairie-2022",
+      "nameEn": "Vellfire Prairie 2022",
+      "price": 600000,
+      "body": "Truck",
+      "tier": "متوسط"
+    },
+    {
+      "id": "celestial-truckatron-2024",
+      "nameEn": "Celestial Truckatron 2024",
+      "price": 1799500,
+      "body": "Truck",
+      "tier": "فاخر"
+    },
+    {
+      "id": "chevlon-commuter-van-2006",
+      "nameEn": "Chevlon Commuter Van 2006",
+      "price": 250000,
+      "body": "Industrial",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "chevlon-news-van-2006",
+      "nameEn": "Chevlon News Van 2006",
+      "price": 310000,
+      "body": "Industrial",
+      "tier": "متوسط"
+    },
+    {
+      "id": "farm-tractor-5100m",
+      "nameEn": "Farm Tractor 5100M",
+      "price": 350000,
+      "body": "Industrial",
+      "tier": "متوسط"
+    },
+    {
+      "id": "garbage-truck",
+      "nameEn": "Garbage Truck",
+      "price": 479000,
+      "body": "Industrial",
+      "tier": "متوسط"
+    },
+    {
+      "id": "fuel-tanker",
+      "nameEn": "Fuel Tanker",
+      "price": 550000,
+      "body": "Industrial",
+      "tier": "متوسط"
+    },
+    {
+      "id": "mail-van",
+      "nameEn": "Mail Van",
+      "price": 650000,
+      "body": "Industrial",
+      "tier": "متوسط"
+    },
+    {
+      "id": "front-loader-tractor",
+      "nameEn": "Front Loader Tractor",
+      "price": 650000,
+      "body": "Industrial",
+      "tier": "متوسط"
+    },
+    {
+      "id": "dump-truck",
+      "nameEn": "Dump Truck",
+      "price": 650000,
+      "body": "Industrial",
+      "tier": "متوسط"
+    },
+    {
+      "id": "forklift",
+      "nameEn": "Forklift",
+      "price": 650000,
+      "body": "Industrial",
+      "tier": "متوسط"
+    },
+    {
+      "id": "front-loader-garbage-truck",
+      "nameEn": "Front-Loader Garbage Truck",
+      "price": 790000,
+      "body": "Industrial",
+      "tier": "متوسط"
+    },
+    {
+      "id": "shuttle-bus",
+      "nameEn": "Shuttle Bus",
+      "price": 870000,
+      "body": "Industrial",
+      "tier": "فاخر"
+    },
+    {
+      "id": "metro-transit-bus",
+      "nameEn": "Metro Transit Bus",
+      "price": 3940000,
+      "body": "Bus",
+      "tier": "حصري"
+    },
+    {
+      "id": "lawn-mower",
+      "nameEn": "Lawn Mower",
+      "price": 29000,
+      "body": "ATV",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "4-wheeler",
+      "nameEn": "4-Wheeler",
+      "price": 135000,
+      "body": "ATV",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "falcon-scavenger-taxi-2020",
+      "nameEn": "Falcon Scavenger Taxi 2020",
+      "price": 190000,
+      "body": "Car",
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "leland-limo-2018",
+      "nameEn": "Leland Limo 2018",
+      "price": 950000,
+      "body": "Car",
+      "tier": "فاخر"
+    }
+  ],
+  "houses": [
+    {
+      "id": "single-trailer",
+      "nameEn": "Single Trailer",
+      "nameAr": "مقطورة فردية",
+      "price": 12000,
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "log-cabin",
+      "nameEn": "Log Cabin",
+      "nameAr": "كوخ خشبي",
+      "price": 13000,
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "double-trailer",
+      "nameEn": "Double Trailer",
+      "nameAr": "مقطورة مزدوجة",
+      "price": 14000,
+      "tier": "اقتصادي"
+    },
+    {
+      "id": "small-house",
+      "nameEn": "Small House",
+      "nameAr": "منزل صغير",
+      "price": 14800,
+      "tier": "متوسط"
+    },
+    {
+      "id": "medium-house",
+      "nameEn": "Medium House",
+      "nameAr": "منزل متوسط",
+      "price": 19000,
+      "tier": "فاخر"
+    },
+    {
+      "id": "large-house",
+      "nameEn": "Large House",
+      "nameAr": "منزل كبير",
+      "price": 26000,
+      "tier": "حصري"
+    }
+  ],
+  "gasStations": [
+    {
+      "id": "city-gas",
+      "nameEn": "City Gas Station",
+      "nameAr": "محطة المدينة",
+      "price": 12000000,
+      "groceryPrice": 3500000,
+      "hasGrocery": true
+    },
+    {
+      "id": "county-gas",
+      "nameEn": "County Gas Station",
+      "nameAr": "محطة المقاطعة",
+      "price": 10000000,
+      "groceryPrice": 3000000,
+      "hasGrocery": true
+    },
+    {
+      "id": "springfield-gas",
+      "nameEn": "Springfield Gas Station",
+      "nameAr": "محطة سبرينغفيلد",
+      "price": 10500000,
+      "groceryPrice": 3100000,
+      "hasGrocery": true
+    }
+  ]
+}

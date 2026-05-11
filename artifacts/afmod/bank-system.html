@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>البنك الشخصي | عرب فيرست</title>
+    <link rel="icon" type="image/png" href="afmod-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body { background: #0a0f1a; min-height: 100dvh; }
+
+      .bs-page { max-width: 440px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+      /* ── iPhone mockup ── */
+      .phone-shell {
+        position: relative;
+        width: 100%;
+        max-width: 360px;
+        margin: 0 auto 2rem;
+        background: #0b1220;
+        border-radius: 44px;
+        border: 2px solid rgba(212,175,55,0.18);
+        box-shadow:
+          0 0 0 6px rgba(212,175,55,0.06),
+          0 30px 80px rgba(0,0,0,0.7),
+          inset 0 1px 0 rgba(255,255,255,0.06);
+        overflow: hidden;
+        padding-bottom: 24px;
+      }
+      .phone-notch {
+        width: 110px; height: 28px;
+        background: #0b1220;
+        margin: 0 auto;
+        border-radius: 0 0 18px 18px;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        position: relative; z-index: 2;
+      }
+      .phone-notch-dot { width: 10px; height: 10px; background: #1a2438; border-radius: 50%; }
+      .phone-notch-pill { width: 56px; height: 7px; background: #1a2438; border-radius: 99px; }
+      .phone-screen { padding: 0 0 1rem; }
+
+      /* Status bar */
+      .phone-status {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 6px 22px 0;
+        font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.7);
+      }
+      .phone-status-icons { display: flex; gap: 4px; align-items: center; }
+
+      /* App header */
+      .phone-app-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 20px 0;
+      }
+      .phone-app-title { font-size: 1.45rem; font-weight: 900; color: #fff; }
+      .phone-app-subtitle { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 1px; }
+      .phone-logo-wrap { width: 38px; height: 38px; border-radius: 10px; overflow: hidden; background: rgba(212,175,55,0.12); border: 1px solid rgba(212,175,55,0.2); display: flex; align-items: center; justify-content: center; }
+      .phone-logo-wrap img { width: 30px; height: 30px; object-fit: contain; }
+
+      /* Balance card */
+      .balance-card {
+        margin: 18px 16px 0;
+        background: linear-gradient(135deg, #1a2e18 0%, #0d2010 40%, #162d13 100%);
+        border: 1px solid rgba(34,197,94,0.2);
+        border-radius: 20px;
+        padding: 20px;
+        position: relative; overflow: hidden;
+      }
+      .balance-card::before {
+        content: ""; position: absolute; top: -40px; right: -40px;
+        width: 120px; height: 120px;
+        background: radial-gradient(circle, rgba(34,197,94,0.15) 0%, transparent 70%);
+      }
+      .balance-card-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); letter-spacing: 0.06em; font-weight: 600; text-transform: uppercase; }
+      .balance-card-amount {
+        font-size: 2.2rem; font-weight: 900; color: #22c55e;
+        line-height: 1.1; margin: 6px 0 2px;
+        font-variant-numeric: tabular-nums;
+      }
+      .balance-card-amount.loading { opacity: 0.4; animation: blink 1s ease-in-out infinite; }
+      @keyframes blink { 0%,100%{opacity:0.4} 50%{opacity:0.8} }
+      .balance-card-sub { font-size: 0.72rem; color: rgba(255,255,255,0.4); }
+      .balance-refresh-btn {
+        position: absolute; top: 16px; left: 16px;
+        background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.25);
+        border-radius: 8px; width: 32px; height: 32px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: background .15s;
+      }
+      .balance-refresh-btn:hover { background: rgba(34,197,94,0.22); }
+      .balance-refresh-btn svg { width: 15px; height: 15px; stroke: #22c55e; }
+      .balance-refresh-btn.spinning svg { animation: spin 0.8s linear infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* Quick actions row */
+      .quick-actions {
+        display: flex; gap: 10px;
+        margin: 14px 16px 0;
+      }
+      .quick-btn {
+        flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+        background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 14px; padding: 14px 8px; cursor: pointer;
+        transition: background .15s, border-color .15s;
+      }
+      .quick-btn:hover { background: rgba(212,175,55,0.08); border-color: rgba(212,175,55,0.2); }
+      .quick-btn.active { background: rgba(212,175,55,0.12); border-color: rgba(212,175,55,0.3); }
+      .quick-btn-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+      .quick-btn-icon.green { background: rgba(34,197,94,0.15); }
+      .quick-btn-icon.gold { background: rgba(212,175,55,0.15); }
+      .quick-btn-icon svg { width: 18px; height: 18px; }
+      .quick-btn-icon.green svg { stroke: #22c55e; }
+      .quick-btn-icon.gold svg { stroke: #d4af37; }
+      .quick-btn-label { font-size: 0.7rem; font-weight: 700; color: rgba(255,255,255,0.75); }
+
+      /* Panels */
+      .panel { margin: 14px 16px 0; display: none; }
+      .panel.active { display: block; }
+
+      .panel-title { font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 12px; }
+
+      .field-row { margin-bottom: 12px; }
+      .field-lbl { display: block; font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 5px; font-weight: 600; }
+      .field-inp {
+        width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px; color: #e8e2d8; font-size: 0.9rem; padding: 0.6rem 0.9rem;
+        font-family: inherit; outline: none; transition: border-color .15s; box-sizing: border-box;
+        direction: ltr; text-align: right;
+      }
+      .field-inp:focus { border-color: rgba(212,175,55,0.4); }
+      .field-inp::placeholder { color: rgba(255,255,255,0.25); direction: rtl; text-align: right; }
+
+      .btn-send {
+        width: 100%; padding: 0.75rem; border: none; border-radius: 14px;
+        background: linear-gradient(135deg, #d4af37, #b8942e);
+        color: #0a0800; font-size: 0.9rem; font-weight: 800;
+        cursor: pointer; font-family: inherit; transition: opacity .15s;
+        display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      }
+      .btn-send:disabled { opacity: 0.45; cursor: not-allowed; }
+      .btn-send:hover:not(:disabled) { opacity: 0.88; }
+
+      /* Transfer result */
+      .transfer-result {
+        margin-top: 10px; padding: 10px 14px; border-radius: 10px;
+        font-size: 0.82rem; font-weight: 600; display: none;
+      }
+      .transfer-result.ok { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: #22c55e; }
+      .transfer-result.err { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: #ef4444; }
+
+      /* History */
+      .history-list { display: flex; flex-direction: column; gap: 2px; }
+      .history-item {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 14px; background: rgba(255,255,255,0.03);
+        border-radius: 12px;
+      }
+      .history-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
+      .history-icon.in { background: rgba(34,197,94,0.12); }
+      .history-icon.out { background: rgba(239,68,68,0.1); }
+      .history-info { flex: 1; min-width: 0; }
+      .history-desc { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .history-time { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-top: 1px; }
+      .history-amount { font-size: 0.88rem; font-weight: 800; flex-shrink: 0; }
+      .history-amount.in { color: #22c55e; }
+      .history-amount.out { color: #ef4444; }
+      .history-empty { padding: 1.5rem; text-align: center; font-size: 0.82rem; color: rgba(255,255,255,0.3); }
+
+      /* Home indicator */
+      .phone-home { height: 22px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 5px; }
+      .phone-home-bar { width: 100px; height: 4px; background: rgba(255,255,255,0.25); border-radius: 99px; }
+
+      /* Error banner */
+      .err-banner { margin: 12px 16px 0; padding: 10px 14px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); border-radius: 12px; font-size: 0.8rem; color: #ef4444; display: none; }
+
+      /* Loading spinner */
+      .bs-spinner { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.1); border-top-color: #d4af37; animation: spin .8s linear infinite; margin: 1.5rem auto; display: block; }
+    </style>
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen">
+      <img src="afmod-logo.png" alt="AFMOD" class="loading-logo" />
+      <div class="loading-spinner"></div>
+    </div>
+
+    <div id="page" class="page-wrap hidden">
+      <div id="header-mount"></div>
+      <div id="watermark-mount"></div>
+
+      <div class="bs-page">
+        <!-- iPhone Shell -->
+        <div class="phone-shell">
+          <!-- Notch -->
+          <div class="phone-notch">
+            <div class="phone-notch-dot"></div>
+            <div class="phone-notch-pill"></div>
+            <div class="phone-notch-dot"></div>
+          </div>
+          <div class="phone-screen">
+            <!-- Status bar -->
+            <div class="phone-status">
+              <span id="bs-time">12:00</span>
+              <div class="phone-status-icons">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px"><rect x="2" y="7" width="20" height="11" rx="2"/><path d="M22 11V9"/></svg>
+              </div>
+            </div>
+
+            <!-- App header -->
+            <div class="phone-app-header">
+              <div>
+                <div class="phone-app-title">البنك</div>
+                <div class="phone-app-subtitle" id="bs-username">@—</div>
+              </div>
+              <div class="phone-logo-wrap">
+                <img src="afmod-logo.png" alt="AF" />
+              </div>
+            </div>
+
+            <!-- Error -->
+            <div class="err-banner" id="err-banner">تعذّر الاتصال بالبوت. تأكد من تشغيل البوت ثم أعد المحاولة.</div>
+
+            <!-- Balance card -->
+            <div class="balance-card">
+              <div class="balance-card-label">رصيدك في اللعبة</div>
+              <div class="balance-card-amount loading" id="bs-balance">جاري التحميل...</div>
+              <div class="balance-card-sub" id="bs-balance-sub">Arab First City</div>
+              <button class="balance-refresh-btn" id="balance-refresh-btn" title="تحديث الرصيد">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              </button>
+            </div>
+
+            <!-- Quick actions -->
+            <div class="quick-actions">
+              <button class="quick-btn" id="qbtn-transfer" onclick="showPanel('transfer')">
+                <div class="quick-btn-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+                <div class="quick-btn-label">تحويل</div>
+              </button>
+              <button class="quick-btn" id="qbtn-history" onclick="showPanel('history')">
+                <div class="quick-btn-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                <div class="quick-btn-label">السجل</div>
+              </button>
+            </div>
+
+            <!-- Transfer panel -->
+            <div class="panel" id="panel-transfer">
+              <div class="panel-title">تحويل رصيد</div>
+              <div class="field-row">
+                <label class="field-lbl" for="tf-to">إلى (اسم المستخدم في الديسكورد)</label>
+                <input class="field-inp" id="tf-to" type="text" placeholder="@username" dir="ltr" autocomplete="off" />
+              </div>
+              <div class="field-row">
+                <label class="field-lbl" for="tf-amount">المبلغ ($)</label>
+                <input class="field-inp" id="tf-amount" type="number" min="1" step="1" placeholder="0" />
+              </div>
+              <div class="field-row">
+                <label class="field-lbl" for="tf-note">ملاحظة (اختياري)</label>
+                <input class="field-inp" id="tf-note" type="text" maxlength="80" placeholder="سبب التحويل..." />
+              </div>
+              <button class="btn-send" id="tf-submit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                إرسال التحويل
+              </button>
+              <div class="transfer-result" id="tf-result"></div>
+            </div>
+
+            <!-- History panel -->
+            <div class="panel" id="panel-history">
+              <div class="panel-title">سجل المعاملات</div>
+              <div class="history-list" id="history-list">
+                <div class="bs-spinner"></div>
+              </div>
+            </div>
+
+          </div>
+          <div class="phone-home"><div class="phone-home-bar"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="shared.js"></script>
+    <script>
+    (function () {
+      var fp = window.formatPrice;
+
+      // Clock
+      function updateClock() {
+        var now = new Date();
+        var h = now.getHours().toString().padStart(2, "0");
+        var m = now.getMinutes().toString().padStart(2, "0");
+        document.getElementById("bs-time").textContent = h + ":" + m;
+      }
+      updateClock(); setInterval(updateClock, 30000);
+
+      function showPanel(name) {
+        document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("active"); });
+        document.querySelectorAll(".quick-btn").forEach(function (b) { b.classList.remove("active"); });
+        if (name) {
+          var panel = document.getElementById("panel-" + name);
+          if (panel) panel.classList.add("active");
+          var btn = document.getElementById("qbtn-" + name);
+          if (btn) btn.classList.add("active");
+        }
+        if (name === "history") loadHistory();
+      }
+      window.showPanel = showPanel;
+
+      function loadBalance(silent) {
+        var el = document.getElementById("bs-balance");
+        var refreshBtn = document.getElementById("balance-refresh-btn");
+        if (!silent) { el.className = "balance-card-amount loading"; el.textContent = "جاري التحميل..."; }
+        refreshBtn.classList.add("spinning");
+        document.getElementById("err-banner").style.display = "none";
+        window.afApi.bankBalance().then(function (d) {
+          el.className = "balance-card-amount";
+          el.textContent = fp(d.balance || 0);
+          document.getElementById("bs-balance-sub").textContent = d.username || "Arab First City";
+        }).catch(function (err) {
+          el.className = "balance-card-amount loading";
+          el.textContent = "—";
+          if (err && err.status === 503) document.getElementById("err-banner").style.display = "block";
+          else el.textContent = "تعذّر التحميل";
+        }).then(function () { refreshBtn.classList.remove("spinning"); });
+      }
+
+      document.getElementById("balance-refresh-btn").addEventListener("click", function () { loadBalance(false); });
+
+      function loadHistory() {
+        var list = document.getElementById("history-list");
+        list.innerHTML = '<div class="bs-spinner"></div>';
+        window.afApi.bankHistory().then(function (rows) {
+          if (!rows.length) { list.innerHTML = '<div class="history-empty">لا توجد معاملات بعد</div>'; return; }
+          list.innerHTML = "";
+          rows.forEach(function (r) {
+            var isIn = r.direction === "in";
+            var item = document.createElement("div"); item.className = "history-item";
+            var d = new Date(r.transferredAt);
+            var dateStr = d.toLocaleDateString("ar-SA") + " " + d.toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" });
+            item.innerHTML =
+              '<div class="history-icon ' + (isIn ? "in" : "out") + '">' + (isIn ? "⬇" : "⬆") + '</div>' +
+              '<div class="history-info">' +
+                '<div class="history-desc">' + (r.note || (isIn ? "استلام من " + (r.fromUsername || "—") : "تحويل لـ " + (r.toUsername || "—"))) + '</div>' +
+                '<div class="history-time">' + dateStr + '</div>' +
+              '</div>' +
+              '<div class="history-amount ' + (isIn ? "in" : "out") + '">' + (isIn ? "+" : "−") + fp(Math.abs(r.amount)) + '</div>';
+            list.appendChild(item);
+          });
+        }).catch(function () { list.innerHTML = '<div class="history-empty">تعذّر تحميل السجل</div>'; });
+      }
+
+      var tfSubmit = document.getElementById("tf-submit");
+      var tfResult = document.getElementById("tf-result");
+      tfSubmit.addEventListener("click", function () {
+        var to = document.getElementById("tf-to").value.trim().replace(/^@/, "");
+        var amt = parseInt(document.getElementById("tf-amount").value, 10);
+        var note = document.getElementById("tf-note").value.trim();
+        if (!to) { showResult("err", "أدخل اسم المستخدم"); return; }
+        if (!amt || amt < 1) { showResult("err", "أدخل مبلغاً صحيحاً"); return; }
+        tfSubmit.disabled = true; tfSubmit.textContent = "جاري الإرسال...";
+        tfResult.style.display = "none";
+        window.afApi.bankTransfer({ toUsername: to, amount: amt, note: note || null }).then(function (d) {
+          showResult("ok", "✓ تم تحويل " + fp(amt) + " لـ @" + to + " بنجاح");
+          document.getElementById("tf-to").value = "";
+          document.getElementById("tf-amount").value = "";
+          document.getElementById("tf-note").value = "";
+          loadBalance(true);
+        }).catch(function (err) {
+          var msg = "تعذّر التحويل";
+          if (err && err.status === 404) msg = "المستخدم غير موجود";
+          else if (err && err.status === 402) msg = "رصيدك غير كافٍ";
+          else if (err && err.status === 503) msg = "البوت غير متصل حالياً";
+          else if (err && err.message) msg = err.message;
+          showResult("err", msg);
+        }).then(function () { tfSubmit.disabled = false; tfSubmit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> إرسال التحويل'; });
+      });
+
+      function showResult(type, msg) {
+        tfResult.className = "transfer-result " + type;
+        tfResult.textContent = msg;
+        tfResult.style.display = "block";
+      }
+
+      window.afCheckAuth(function (user) {
+        document.getElementById("loading-screen").classList.add("hidden");
+        document.getElementById("page").classList.remove("hidden");
+        window.afRenderHeader(user, "bank-system");
+        window.afRenderWatermark(user);
+        document.getElementById("bs-username").textContent = "@" + (user.username || "—");
+        loadBalance(false);
+        showPanel("transfer");
+      });
+    })();
+    </script>
+  </body>
+</html>

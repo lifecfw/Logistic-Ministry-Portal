@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>المحلات التجارية | عرب فيرست</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="المحلات التجارية | عرب فيرست" />
+    <meta property="og:description" content="المحلات التجارية الرسمية في عرب فيرست — AFMOD" />
+    <meta property="og:image" content="/afmod-logo.png" />
+    <link rel="icon" type="image/png" href="afmod-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen"><div class="spinner"></div></div>
+    <div id="page" class="view hidden">
+      <div id="watermark" class="watermark"></div>
+      <div class="texture-overlay"></div>
+      <header class="site-header" id="site-header"></header>
+      <main class="main-content">
+        <section class="container dashboard-section">
+          <div class="dashboard-header">
+            <div>
+              <div class="dashboard-title-row">
+                <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                  <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
+                  <path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2 2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/>
+                </svg>
+                <h2>المحلات التجارية الرسمية</h2>
+              </div>
+              <p class="dashboard-description">ستة محلات تجارية متنوعة في ليبرتي كاونتي — من الأزياء إلى المجوهرات والأدوات. استثمر وادر مشروعك من البوابة الرسمية.</p>
+            </div>
+            <div class="dashboard-badge dashboard-badge-green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+              <span>معروض رسمي • <span id="stores-count">0</span> محلات</span>
+            </div>
+          </div>
+          <div id="stores-grid" class="gas-grid-full"></div>
+        </section>
+      </main>
+      <footer class="site-footer"><div class="container footer-content"><img src="afmod-logo.png" alt="AFMOD Seal" class="footer-logo" /><p class="footer-line-en">ARAB FIRST — MINISTRY OF LOGISTICS</p><p class="footer-line-ar">© 2026 Arab First — جميع الحقوق محفوظة</p></div></footer>
+    </div>
+    <div id="toast-container" class="toast-container"></div>
+    <script src="shared.js"></script>
+    <script>
+    (function () {
+      var e = window.escText, ea = window.escAttr, fp = window.formatPrice;
+
+      var STORES = [
+        {
+          id: "city-apparel", type: "apparel",
+          nameAr: "ليبرتي أباريل", nameEn: "Liberty Apparel",
+          image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/c/c1/LibertyApparel2024.png/revision/latest?cb=20240813212543",
+          locationAr: "شارع ميبل — سبرينغفيلد", hoursAr: "٩ صباحاً — ١٠ مساءً",
+          badge: "👕 ملابس",
+          servicesAr: ["ملابس رجالية", "ملابس نسائية", "ملابس أطفال", "ملابس رياضية", "إكسسوارات", "ماركات عالمية"],
+          supplyAr: ["تشكيلة صيفية", "تشكيلة شتوية", "جينز وبنطلونات", "قمصان وبلوزات", "أحذية وحقائب", "علب هدايا"],
+          price: 5_500_000, profitAr: "15K — 25K يومياً",
+          notesAr: "متجر الأزياء الأول في المدينة. زبائن دائمون من جميع الأعمار. موسم التخفيضات يضاعف الأرباح."
+        },
+        {
+          id: "city-jewels", type: "jewels",
+          nameAr: "فاميلي جوولز", nameEn: "Family Jewels",
+          image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/b/b7/FamilyJewelsExterior2022.png/revision/latest?cb=20220917204201",
+          locationAr: "شارع الاستقلال — حي الفاخر", hoursAr: "١٠ صباحاً — ٨ مساءً",
+          badge: "💎 مجوهرات",
+          servicesAr: ["ذهب وألماس", "خواتم وعقود", "أساور فاخرة", "ساعات فاخرة", "هدايا خطوبة", "صيانة وتلميع"],
+          supplyAr: ["مجوهرات ذهبية", "مجوهرات فضية", "أحجار كريمة", "علب عرض فاخرة", "معدات صيانة", "مواد تلميع"],
+          price: 8_000_000, profitAr: "20K — 40K يومياً",
+          notesAr: "متجر المجوهرات الأكثر شهرة في المدينة. المناسبات والأعياد تُضاعف مبيعاته بشكل كبير."
+        },
+        {
+          id: "city-guns", type: "guns",
+          nameAr: "ليبرتي للأسلحة والذخيرة", nameEn: "Liberty Guns & Ammo",
+          image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/5/57/LibertyGuns%26Ammo.jpeg/revision/latest?cb=20230701222723",
+          locationAr: "شارع فيرفاكس — حي الشرق", hoursAr: "٨ صباحاً — ٩ مساءً",
+          badge: "🔫 أسلحة",
+          servicesAr: ["أسلحة مرخّصة", "ذخيرة وأعيرة", "معدات حماية", "منظار وإكسسوارات", "صيانة الأسلحة", "تراخيص رسمية"],
+          supplyAr: ["صناديق ذخيرة", "مسدسات مرخّصة", "بنادق رياضية", "صناديق حفظ آمنة", "معدات تنظيف", "ملحقات الأسلحة"],
+          price: 6_000_000, profitAr: "20K — 35K يومياً",
+          notesAr: "المتجر الرسمي الوحيد للأسلحة المرخّصة. طلب مستمر من المواطنين ورجال الأمن."
+        },
+        {
+          id: "city-tools", type: "tools",
+          nameAr: "متجر الأدوات", nameEn: "Tool Store",
+          image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/4/4c/ToolStore23.jpeg/revision/latest?cb=20230805224946",
+          locationAr: "شارع فيرفاكس — المنطقة الصناعية", hoursAr: "٧ صباحاً — ٧ مساءً",
+          badge: "🔧 أدوات",
+          servicesAr: ["أدوات كهربائية", "أدوات يدوية", "مواد بناء", "سباكة وكهرباء", "دهانات وطلاء", "معدات سلامة"],
+          supplyAr: ["أدوات بناء", "دهانات متنوعة", "لوازم سباكة", "لوازم كهرباء", "معدات حماية", "أدوات قياس"],
+          price: 4_000_000, profitAr: "15K — 28K يومياً",
+          notesAr: "متجر الأدوات الرئيسي في المدينة. المقاولون والحرفيون زبائن دائمون. الطلب مرتفع عند المشاريع."
+        },
+        {
+          id: "city-dollar", type: "dollar",
+          nameAr: "متجر الدولار", nameEn: "Dollar Store",
+          image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/9/9d/DollarStore2024.png/revision/latest?cb=20240813211541",
+          locationAr: "شارع أوك فالي — سبرينغفيلد", hoursAr: "٨ صباحاً — ١٠ مساءً",
+          badge: "💲 دولار ستور",
+          servicesAr: ["منتجات منزلية", "مواد تنظيف", "قرطاسية ومكتبية", "سناكس وحلويات", "مستلزمات مطبخ", "ديكور بأسعار مناسبة"],
+          supplyAr: ["بضاعة منزلية", "مواد تنظيف", "قرطاسية متنوعة", "وجبات خفيفة", "شموع وديكور", "مستلزمات حمام"],
+          price: 2_500_000, profitAr: "12K — 22K يومياً",
+          notesAr: "الأرخص ثمناً والأعلى طلباً. قاعدة زبائن واسعة من ذوي الدخل المتوسط. دخل يومي منتظم."
+        },
+        {
+          id: "city-market", type: "market",
+          nameAr: "السوق الريفي", nameEn: "Country Market",
+          image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/a/a4/CountryMarket.jpeg/revision/latest?cb=20230621183857",
+          locationAr: "شارع ميبل ٩٠٨١ — ريف سبرينغفيلد", hoursAr: "٦ صباحاً — ٨ مساءً",
+          badge: "🌾 سوق ريفي",
+          servicesAr: ["خضار وفواكه طازجة", "منتجات ألبان", "عسل ومربى محلي", "خبز ريفي", "لحوم طازجة", "بيض ودواجن"],
+          supplyAr: ["خضروات موسمية", "فواكه طازجة", "منتجات ألبان", "لحوم ودواجن", "عسل طبيعي", "بيض طازج"],
+          price: 3_000_000, profitAr: "12K — 22K يومياً",
+          notesAr: "سوق الطازج الأول في المنطقة الريفية. الزبائن يفضلون منتجاته المحلية عالية الجودة."
+        }
+      ];
+
+      function renderStores(list) {
+        var grid = document.getElementById("stores-grid");
+        document.getElementById("stores-count").textContent = list.length;
+        grid.innerHTML = "";
+        list.forEach(function (sh, i) {
+          var card = document.createElement("div");
+          card.className = "gas-card-full"; card.style.animationDelay = (i*0.1)+"s";
+          var svcsHtml = sh.servicesAr.map(function(s){return '<span class="grocery-item-tag">'+e(s)+'</span>';}).join("");
+          var supplyHtml = sh.supplyAr.map(function(s){return '<span class="grocery-item-tag" style="opacity:.75">'+e(s)+'</span>';}).join("");
+          card.innerHTML =
+            '<div class="gas-full-image-wrap"><img src="'+ea(sh.image)+'" alt="'+ea(sh.nameAr)+'" loading="lazy" referrerpolicy="no-referrer" onerror="window.__afmodImageFallback(this)" /><div class="gas-full-image-overlay"></div><div class="gas-full-image-badge"><span class="grocery-main-badge">'+e(sh.badge)+'</span></div></div>'+
+            '<div class="gas-full-body">'+
+              '<div class="gas-full-header"><div><h3 class="gas-full-name">'+e(sh.nameAr)+'</h3><p class="gas-full-name-en">'+e(sh.nameEn)+'</p></div><div class="gas-full-price-badge">'+e(fp(sh.price))+'</div></div>'+
+              '<div class="gas-full-details">'+
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><div><strong>الموقع</strong><span>'+e(sh.locationAr)+'</span></div></div>'+
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div><strong>ساعات العمل</strong><span>'+e(sh.hoursAr)+'</span></div></div>'+
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><div><strong>الدخل اليومي المتوقع</strong><span>'+e(sh.profitAr)+'</span></div></div>'+
+              '</div>'+
+              '<div class="grocery-items-section"><h4>الخدمات والمنتجات</h4><div class="grocery-items-wrap">'+svcsHtml+'</div></div>'+
+              '<div class="grocery-items-section" style="margin-top:.75rem"><h4>المخزون القابل للشراء</h4><div class="grocery-items-wrap">'+supplyHtml+'</div></div>'+
+              (sh.notesAr?'<p class="gas-card-notes">'+e(sh.notesAr)+'</p>':'')+
+              '<div class="gas-card-buy-row"><button class="btn-gas-grocery btn-buy-store" type="button" data-id="'+ea(sh.id)+'" data-type="'+ea(sh.type)+'"><span class="btn-label">شراء '+e(sh.nameAr)+'</span><span class="btn-gas-grocery-price">'+e(fp(sh.price))+'</span></button></div>'+
+            '</div>';
+          card.querySelector(".btn-buy-store").addEventListener("click", function(){
+            var btn=this; btn.disabled=true; btn.querySelector(".btn-label").textContent="جاري الإرسال...";
+            window.afApi.buyBusiness(sh.type, sh.id).then(function(){
+              window.afToast("تم الشراء","تم تسجيل "+sh.nameAr+" باسمك بنجاح.","success");
+            }).catch(function(err){
+              var msg="تعذّر إتمام الشراء.";
+              if(err&&err.status===402) msg="الرصيد غير كافٍ.";
+              else if(err&&err.status===409) msg="هذا المحل مملوك بالفعل.";
+              else if(err&&err.status===503) msg="البوت غير متصل.";
+              window.afToast("فشل الشراء",msg,"error");
+            }).then(function(){btn.disabled=false;btn.querySelector(".btn-label").textContent="شراء "+sh.nameAr;});
+          });
+          grid.appendChild(card);
+        });
+      }
+
+      window.afCheckAuth(function(user){
+        document.getElementById("loading-screen").classList.add("hidden");
+        document.getElementById("page").classList.remove("hidden");
+        window.afRenderHeader(user,"stores");
+        window.afRenderWatermark(user);
+        renderStores(STORES);
+      });
+    })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>المطاعم | عرب فيرست</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="المطاعم | عرب فيرست" />
+    <meta property="og:description" content="المطاعم الرسمية في عرب فيرست — AFMOD" />
+    <meta property="og:image" content="/afmod-logo.png" />
+    <link rel="icon" type="image/png" href="afmod-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen"><div class="spinner"></div></div>
+    <div id="page" class="view hidden">
+      <div id="watermark" class="watermark"></div>
+      <div class="texture-overlay"></div>
+      <header class="site-header" id="site-header"></header>
+      <main class="main-content">
+        <section class="container dashboard-section">
+          <div class="dashboard-header">
+            <div>
+              <div class="dashboard-title-row">
+                <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+                </svg>
+                <h2>المطاعم الرسمية</h2>
+              </div>
+              <p class="dashboard-description">المطاعم المرخّصة في مدينة ليبرتي كاونتي. امتلك مطعمك وأدر مخزونه وحقق أرباحاً يومية ثابتة.</p>
+            </div>
+            <div class="dashboard-badge dashboard-badge-green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+              <span>معروض رسمي • <span id="rest-count">0</span> مطاعم</span>
+            </div>
+          </div>
+          <div id="rest-grid" class="gas-grid-full"></div>
+        </section>
+      </main>
+      <footer class="site-footer"><div class="container footer-content"><img src="afmod-logo.png" alt="AFMOD Seal" class="footer-logo" /><p class="footer-line-en">ARAB FIRST — MINISTRY OF LOGISTICS</p><p class="footer-line-ar">© 2026 Arab First — جميع الحقوق محفوظة</p></div></footer>
+    </div>
+    <div id="toast-container" class="toast-container"></div>
+    <script src="shared.js"></script>
+    <script>
+    (function () {
+      var e = window.escText, ea = window.escAttr, fp = window.formatPrice;
+
+      var RESTAURANTS = [
+        {
+          id: "city-mexican", type: "mexican",
+          nameAr: "مطعم لا ميسا المكسيكي", nameEn: "La Mesa Mexican Restaurant",
+          image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/1/12/LaMesa.jpeg/revision/latest?cb=20230904152643",
+          locationAr: "شارع سازرن — المدينة الجنوبية", hoursAr: "١١ صباحاً — ١٢ منتصف الليل",
+          badge: "🌮 مكسيكي",
+          servicesAr: ["تاكو وبوريتو", "فاجيتا وكيساديا", "غواكامولي", "ناتشوز وتورتيلا", "مشروبات مكسيكية", "حلويات تقليدية"],
+          supplyAr: ["تورتيلا وخبز", "لحم بقري ودجاج", "جبن مكسيكي", "سالسا وصلصات", "أرز بالتوابل", "فاصولياء وذرة"],
+          price: 4_500_000, profitAr: "20K — 35K يومياً",
+          notesAr: "أشهر مطعم مكسيكي في المدينة. يعمل أيام العطل بكثافة عالية. عائد استثماري ممتاز."
+        },
+        {
+          id: "city-burger", type: "burger",
+          nameAr: "ثري غايز برقر", nameEn: "Three Guys Burgers and Fries",
+          image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/d/d6/ThreeGuys.PNG/revision/latest?cb=20221008175350",
+          locationAr: "شارع مين — وسط المدينة", hoursAr: "١٠ صباحاً — ١ صباحاً",
+          badge: "🍔 برقر",
+          servicesAr: ["برقر كلاسيك وفاخر", "بطاطس وفرايز", "هوت دوغ", "ميلك شيك", "وجبات عائلية", "توصيل للسيارات"],
+          supplyAr: ["أقراص لحم برقر", "خبز برقر", "شرائح جبن", "خس وطماطم", "كاتشب وصلصات", "زيت قلي"],
+          price: 4_000_000, profitAr: "18K — 30K يومياً",
+          notesAr: "أسرع مطعم في ليبرتي. الزبائن دائمون والطلب مستمر ليلاً ونهاراً. يشمل شاحنة طعام متنقلة."
+        },
+        {
+          id: "city-rickjohns", type: "rickjohns",
+          nameAr: "مطعم ريك وجون", nameEn: "Rick and John's",
+          image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/8/8d/RickandJohns.jpeg/revision/latest?cb=20230630171718",
+          locationAr: "شارع ميبل — سبرينغفيلد", hoursAr: "١١ صباحاً — ١١ مساءً",
+          badge: "🥩 مشاوي",
+          servicesAr: ["مشاوي وستيك", "بطاطس محشية", "سلطات متنوعة", "شوربة يومية", "وجبات غداء", "حلويات محلية"],
+          supplyAr: ["لحوم طازجة", "خضار وسلطات", "صلصات وتوابل", "خبز محلي", "مشروبات باردة", "مستلزمات مطبخ"],
+          price: 3_800_000, profitAr: "15K — 28K يومياً",
+          notesAr: "مطعم عائلي بطابع محلي في سبرينغفيلد. زبائن ثابتون من السكان المحليين. مثالي للاستثمار طويل الأمد."
+        }
+      ];
+
+      function renderRestaurants(list) {
+        var grid = document.getElementById("rest-grid");
+        document.getElementById("rest-count").textContent = list.length;
+        grid.innerHTML = "";
+        list.forEach(function (sh, i) {
+          var card = document.createElement("div");
+          card.className = "gas-card-full"; card.style.animationDelay = (i*0.1)+"s";
+          var svcsHtml = sh.servicesAr.map(function(s){return '<span class="grocery-item-tag">'+e(s)+'</span>';}).join("");
+          var supplyHtml = sh.supplyAr.map(function(s){return '<span class="grocery-item-tag" style="opacity:.75">'+e(s)+'</span>';}).join("");
+          card.innerHTML =
+            '<div class="gas-full-image-wrap"><img src="'+ea(sh.image)+'" alt="'+ea(sh.nameAr)+'" loading="lazy" referrerpolicy="no-referrer" onerror="window.__afmodImageFallback(this)" /><div class="gas-full-image-overlay"></div><div class="gas-full-image-badge"><span class="grocery-main-badge">'+e(sh.badge)+'</span></div></div>'+
+            '<div class="gas-full-body">'+
+              '<div class="gas-full-header"><div><h3 class="gas-full-name">'+e(sh.nameAr)+'</h3><p class="gas-full-name-en">'+e(sh.nameEn)+'</p></div><div class="gas-full-price-badge">'+e(fp(sh.price))+'</div></div>'+
+              '<div class="gas-full-details">'+
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><div><strong>الموقع</strong><span>'+e(sh.locationAr)+'</span></div></div>'+
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div><strong>ساعات العمل</strong><span>'+e(sh.hoursAr)+'</span></div></div>'+
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><div><strong>الدخل اليومي المتوقع</strong><span>'+e(sh.profitAr)+'</span></div></div>'+
+              '</div>'+
+              '<div class="grocery-items-section"><h4>القائمة والخدمات</h4><div class="grocery-items-wrap">'+svcsHtml+'</div></div>'+
+              '<div class="grocery-items-section" style="margin-top:.75rem"><h4>المخزون القابل للشراء</h4><div class="grocery-items-wrap">'+supplyHtml+'</div></div>'+
+              (sh.notesAr?'<p class="gas-card-notes">'+e(sh.notesAr)+'</p>':'')+
+              '<div class="gas-card-buy-row"><button class="btn-gas-grocery btn-buy-rest" type="button" data-id="'+ea(sh.id)+'" data-type="'+ea(sh.type)+'"><span class="btn-label">شراء '+e(sh.nameAr)+'</span><span class="btn-gas-grocery-price">'+e(fp(sh.price))+'</span></button></div>'+
+            '</div>';
+          card.querySelector(".btn-buy-rest").addEventListener("click", function(){
+            var btn=this; btn.disabled=true; btn.querySelector(".btn-label").textContent="جاري الإرسال...";
+            window.afApi.buyBusiness(sh.type, sh.id).then(function(){
+              window.afToast("تم الشراء","تم تسجيل "+sh.nameAr+" باسمك بنجاح.","success");
+            }).catch(function(err){
+              var msg="تعذّر إتمام الشراء.";
+              if(err&&err.status===402) msg="الرصيد غير كافٍ.";
+              else if(err&&err.status===409) msg="هذا المطعم مملوك بالفعل.";
+              else if(err&&err.status===503) msg="البوت غير متصل.";
+              window.afToast("فشل الشراء",msg,"error");
+            }).then(function(){btn.disabled=false;btn.querySelector(".btn-label").textContent="شراء "+sh.nameAr;});
+          });
+          grid.appendChild(card);
+        });
+      }
+
+      window.afCheckAuth(function(user){
+        document.getElementById("loading-screen").classList.add("hidden");
+        document.getElementById("page").classList.remove("hidden");
+        window.afRenderHeader(user,"restaurants");
+        window.afRenderWatermark(user);
+        renderRestaurants(RESTAURANTS);
+      });
+    })();
+    </script>
+  </body>
+</html>

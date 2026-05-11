@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>محلات البقالة | عرب فيرست</title>
+    <meta name="description" content="إدارة محلات البقالة في عرب فيرست" />
+    <!-- Open Graph / Embed -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="محلات البقالة | عرب فيرست" />
+    <meta property="og:description" content="إدارة محلات البقالة الرسمية في عرب فيرست — AFMOD Ministry of Logistics" />
+    <meta property="og:image" content="/afmod-logo.png" />
+    <meta property="og:site_name" content="Arab First" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="محلات البقالة | عرب فيرست" />
+    <meta name="twitter:description" content="إدارة محلات البقالة في عرب فيرست" />
+    <meta name="twitter:image" content="/afmod-logo.png" />
+    <link rel="icon" type="image/png" href="afmod-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen"><div class="spinner"></div></div>
+    <div id="page" class="view hidden">
+      <div id="watermark" class="watermark"></div>
+      <div class="texture-overlay"></div>
+      <header class="site-header" id="site-header"></header>
+      <main class="main-content">
+        <section class="container dashboard-section">
+          <div class="dashboard-header">
+            <div>
+              <div class="dashboard-title-row">
+                <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+                <h2>محلات البقالة الرسمية</h2>
+              </div>
+              <p class="dashboard-description">محلات البقالة التابعة لمحطات الوقود في مدينة العرب الأولى. كل بقالة مشروع مستقل يمكن شراؤه بصورة منفصلة عن المحطة، ويمنحك حق إدارة المبيعات والإيرادات.</p>
+            </div>
+            <div class="dashboard-badge dashboard-badge-green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>
+              </svg>
+              <span>معروض رسمي • <span id="grocery-count">0</span> محلات</span>
+            </div>
+          </div>
+          <div id="grocery-grid" class="gas-grid-full"></div>
+        </section>
+      </main>
+      <footer class="site-footer"><div class="container footer-content"><img src="afmod-logo.png" alt="AFMOD Seal" class="footer-logo" /><p class="footer-line-en">ARAB FIRST — MINISTRY OF LOGISTICS</p><p class="footer-line-ar">© 2026 Arab First — جميع الحقوق محفوظة</p></div></footer>
+    </div>
+    <div id="toast-container" class="toast-container"></div>
+    <script src="shared.js"></script>
+    <script src="gas-stations.js"></script>
+    <script>
+    (function () {
+      var e = window.escText, ea = window.escAttr, fp = window.formatPrice;
+      var GROCERY_ITEMS = [
+        "مياه معبأة", "مشروبات غازية", "وجبات خفيفة", "حلويات", "خبز وأفران", "منتجات الألبان", "معلبات غذائية", "مستلزمات سيارات"
+      ];
+
+      function renderGrocery(stations) {
+        var groceries = stations.filter(function (s) { return s.hasGrocery; });
+        var grid = document.getElementById("grocery-grid");
+        document.getElementById("grocery-count").textContent = groceries.length;
+        grid.innerHTML = "";
+        groceries.forEach(function (st, i) {
+          var card = document.createElement("div");
+          card.className = "gas-card-full grocery-card-full"; card.style.animationDelay = (i*0.1)+"s";
+          var itemsHtml = GROCERY_ITEMS.map(function (item) { return '<span class="grocery-item-tag">'+e(item)+'</span>'; }).join("");
+          card.innerHTML =
+            '<div class="gas-full-image-wrap grocery-image-wrap">' +
+              '<img src="'+ea(st.groceryImage || st.image)+'" alt="بقالة '+ea(st.nameAr)+'" loading="lazy" referrerpolicy="no-referrer" onerror="window.__afmodImageFallback(this)" />' +
+              '<div class="gas-full-image-overlay grocery-overlay-full"></div>' +
+              '<div class="gas-full-image-badge"><span class="grocery-main-badge">🛒 بقالة</span></div>' +
+              '<div class="grocery-station-label">تابع لـ: '+e(st.nameAr)+'</div>' +
+            '</div>' +
+            '<div class="gas-full-body">' +
+              '<div class="gas-full-header">' +
+                '<div>' +
+                  '<h3 class="gas-full-name">بقالة '+e(st.nameAr)+'</h3>' +
+                  '<p class="gas-full-name-en">'+e(st.nameEn)+' — Grocery Store</p>' +
+                '</div>' +
+                '<div class="gas-full-price-badge grocery-price-badge">'+e(fp(st.groceryPrice))+'</div>' +
+              '</div>' +
+              '<div class="gas-full-details">' +
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><div><strong>الموقع</strong><span>'+e(st.locationAr)+'</span></div></div>' +
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div><strong>ساعات العمل</strong><span>٢٤ ساعة — ٧ أيام في الأسبوع</span></div></div>' +
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><div><strong>نوع المشروع</strong><span>بقالة مرفقة بمحطة وقود — مستقلة إدارياً</span></div></div>' +
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/><path d="M12 12v5"/><path d="M9.5 12v5"/><path d="M14.5 12v5"/></svg><div><strong>المحطة الأصلية</strong><span>'+e(st.nameAr)+' ('+e(st.nameEn)+')</span></div></div>' +
+              '</div>' +
+              '<div class="grocery-items-section"><h4>المنتجات المتوفرة</h4><div class="grocery-items-wrap">'+itemsHtml+'</div></div>' +
+              (st.notesAr ? '<p class="gas-card-notes">'+e(st.notesAr)+'</p>' : '') +
+              '<div class="gas-card-buy-row">' +
+                '<button class="btn-gas-grocery btn-buy-grocery" type="button" data-id="'+ea(st.id)+'">' +
+                  '<span class="btn-label">شراء مشروع البقالة</span>' +
+                  '<span class="btn-gas-grocery-price">'+e(fp(st.groceryPrice))+'</span>' +
+                '</button>' +
+              '</div>' +
+            '</div>';
+          card.querySelector(".btn-buy-grocery").addEventListener("click", function () {
+            var btn = this; btn.disabled = true; btn.querySelector(".btn-label").textContent = "جاري الإرسال...";
+            window.afApi.buyGrocery(st.id).then(function () {
+              window.afToast("تم الشراء", "تم تسجيل بقالة " + st.nameAr + " باسمك بنجاح.", "success");
+            }).catch(function (err) {
+              var msg = "تعذّر إتمام الشراء.";
+              if (err.status === 402) msg = "الرصيد غير كافٍ.";
+              else if (err.status === 409) msg = "هذه البقالة مملوكة بالفعل.";
+              else if (err.status === 503) msg = "البوت غير متصل.";
+              window.afToast("فشل الشراء", msg, "error");
+            }).then(function () { btn.disabled = false; btn.querySelector(".btn-label").textContent = "شراء مشروع البقالة"; });
+          });
+          grid.appendChild(card);
+        });
+      }
+
+      window.afCheckAuth(function (user) {
+        document.getElementById("loading-screen").classList.add("hidden");
+        document.getElementById("page").classList.remove("hidden");
+        window.afRenderHeader(user, "grocery");
+        window.afRenderWatermark(user);
+        renderGrocery(window.GAS_STATIONS || []);
+      });
+    })();
+    </script>
+  </body>
+</html>

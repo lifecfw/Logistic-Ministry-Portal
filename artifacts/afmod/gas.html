@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>محطات الوقود | عرب فيرست</title>
+    <meta name="description" content="إدارة محطات الوقود في عرب فيرست" />
+    <!-- Open Graph / Embed -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="محطات الوقود | عرب فيرست" />
+    <meta property="og:description" content="إدارة محطات الوقود الرسمية في عرب فيرست — AFMOD Ministry of Logistics" />
+    <meta property="og:image" content="/afmod-logo.png" />
+    <meta property="og:site_name" content="Arab First" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="محطات الوقود | عرب فيرست" />
+    <meta name="twitter:description" content="إدارة محطات الوقود في عرب فيرست" />
+    <meta name="twitter:image" content="/afmod-logo.png" />
+    <link rel="icon" type="image/png" href="afmod-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen"><div class="spinner"></div></div>
+    <div id="page" class="view hidden">
+      <div id="watermark" class="watermark"></div>
+      <div class="texture-overlay"></div>
+      <header class="site-header" id="site-header"></header>
+      <main class="main-content">
+        <section class="container dashboard-section">
+          <div class="dashboard-header">
+            <div>
+              <div class="dashboard-title-row">
+                <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="22" x2="15" y2="22"/><line x1="4" y1="9" x2="14" y2="9"/>
+                  <path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/>
+                  <path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2v0a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/>
+                </svg>
+                <h2>محطات الوقود المعتمدة</h2>
+              </div>
+              <p class="dashboard-description">محطات الوقود الثلاث الرسمية في مدينة العرب الأولى. الأسعار موحّدة من الوزارة، والخدمة ذاتية على مدار الساعة. شراء المحطة يمنحك حق إدارة الوقود وإيراداته.</p>
+            </div>
+            <div class="dashboard-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>
+              </svg>
+              <span>معروض رسمي • <span id="gas-count">0</span> محطات</span>
+            </div>
+          </div>
+          <div id="gas-grid" class="gas-grid-full"></div>
+        </section>
+      </main>
+      <footer class="site-footer"><div class="container footer-content"><img src="afmod-logo.png" alt="AFMOD Seal" class="footer-logo" /><p class="footer-line-en">ARAB FIRST — MINISTRY OF LOGISTICS</p><p class="footer-line-ar">© 2026 Arab First — جميع الحقوق محفوظة</p></div></footer>
+    </div>
+    <div id="toast-container" class="toast-container"></div>
+    <script src="shared.js"></script>
+    <script src="gas-stations.js"></script>
+    <script>
+    (function () {
+      var e = window.escText, ea = window.escAttr, fp = window.formatPrice;
+
+      function renderGas(stations) {
+        var grid = document.getElementById("gas-grid");
+        document.getElementById("gas-count").textContent = stations.length;
+        grid.innerHTML = "";
+        stations.forEach(function (st, i) {
+          var card = document.createElement("div");
+          card.className = "gas-card-full"; card.style.animationDelay = (i*0.1)+"s";
+          card.innerHTML =
+            '<div class="gas-full-image-wrap">' +
+              '<img src="'+ea(st.image)+'" alt="'+ea(st.nameAr)+'" loading="lazy" referrerpolicy="no-referrer" onerror="window.__afmodImageFallback(this)" />' +
+              '<div class="gas-full-image-overlay"></div>' +
+              '<div class="gas-full-image-badge">'+(st.hasGrocery?'<span class="grocery-tag">✓ بقالة</span>':'')+' <span class="gas-pumps-badge">'+e(String(st.pumps))+' مضخات</span></div>' +
+            '</div>' +
+            '<div class="gas-full-body">' +
+              '<div class="gas-full-header">' +
+                '<div>' +
+                  '<h3 class="gas-full-name">'+e(st.nameAr)+'</h3>' +
+                  '<p class="gas-full-name-en">'+e(st.nameEn)+'</p>' +
+                '</div>' +
+                '<div class="gas-full-price-badge">'+e(fp(st.price))+'</div>' +
+              '</div>' +
+              '<div class="gas-full-details">' +
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><div><strong>الموقع</strong><span>'+e(st.locationAr)+'</span></div></div>' +
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="15" y2="22"/><line x1="4" y1="9" x2="14" y2="9"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg><div><strong>عدد المضخات</strong><span>'+e(String(st.pumps))+' مضخة وقود</span></div></div>' +
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/></svg><div><strong>أنواع الوقود</strong><span>'+e(st.fuelTypesAr.join(" — "))+'</span></div></div>' +
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div><strong>الخدمة</strong><span>'+e(st.serviceAr)+'</span></div></div>' +
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><div><strong>سعر الوقود الرسمي</strong><span>'+e(st.pricePerLiterAr)+'</span></div></div>' +
+                (st.hasGrocery ? '<div class="gas-detail-row grocery-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><div><strong>البقالة المرفقة</strong><span>متوفر بقالة بسعر مستقل — <a href="grocery.html">تصفّح البقالات</a></span></div></div>' : '') +
+              '</div>' +
+              (st.notesAr ? '<p class="gas-card-notes">'+e(st.notesAr)+'</p>' : '') +
+              '<div class="gas-card-buy-row">' +
+                '<button class="btn-gas-station btn-buy-station" type="button" data-id="'+ea(st.id)+'">' +
+                  '<span class="btn-label">شراء مشروع المحطة كاملاً</span>' +
+                  '<span class="btn-gas-station-price">'+e(fp(st.price))+'</span>' +
+                '</button>' +
+              '</div>' +
+            '</div>';
+          card.querySelector(".btn-buy-station").addEventListener("click", function () {
+            var btn = this; btn.disabled = true; btn.querySelector(".btn-label").textContent = "جاري الإرسال...";
+            window.afApi.buyGasStation(st.id).then(function () {
+              window.afToast("تم الشراء", "تم تسجيل " + st.nameAr + " باسمك بنجاح.", "success");
+            }).catch(function (err) {
+              var msg = "تعذّر إتمام الشراء.";
+              if (err.status === 402) msg = "الرصيد غير كافٍ.";
+              else if (err.status === 409) msg = "هذه المحطة مملوكة بالفعل.";
+              else if (err.status === 503) msg = "البوت غير متصل.";
+              window.afToast("فشل الشراء", msg, "error");
+            }).then(function () { btn.disabled = false; btn.querySelector(".btn-label").textContent = "شراء مشروع المحطة كاملاً"; });
+          });
+          grid.appendChild(card);
+        });
+      }
+
+      window.afCheckAuth(function (user) {
+        document.getElementById("loading-screen").classList.add("hidden");
+        document.getElementById("page").classList.remove("hidden");
+        window.afRenderHeader(user, "gas");
+        window.afRenderWatermark(user);
+        renderGas(window.GAS_STATIONS || []);
+      });
+    })();
+    </script>
+  </body>
+</html>

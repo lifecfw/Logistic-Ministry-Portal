@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>المقاهي والمخابز | عرب فيرست</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="المقاهي والمخابز | عرب فيرست" />
+    <meta property="og:description" content="المقاهي والمخابز الرسمية في عرب فيرست — AFMOD" />
+    <meta property="og:image" content="/afmod-logo.png" />
+    <link rel="icon" type="image/png" href="afmod-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen"><div class="spinner"></div></div>
+    <div id="page" class="view hidden">
+      <div id="watermark" class="watermark"></div>
+      <div class="texture-overlay"></div>
+      <header class="site-header" id="site-header"></header>
+      <main class="main-content">
+        <section class="container dashboard-section">
+          <div class="dashboard-header">
+            <div>
+              <div class="dashboard-title-row">
+                <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>
+                  <line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/>
+                </svg>
+                <h2>المقاهي والمخابز الرسمية</h2>
+              </div>
+              <p class="dashboard-description">المقاهي والمخابز المرخّصة في عرب فيرست. امتلك مشروعك وأدر مخزونه وأرباحه من البوابة الرسمية.</p>
+            </div>
+            <div class="dashboard-badge dashboard-badge-green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+              <span>معروض رسمي • <span id="cafe-count">0</span> مشاريع</span>
+            </div>
+          </div>
+          <div id="cafe-grid" class="gas-grid-full"></div>
+        </section>
+      </main>
+      <footer class="site-footer"><div class="container footer-content"><img src="afmod-logo.png" alt="AFMOD Seal" class="footer-logo" /><p class="footer-line-en">ARAB FIRST — MINISTRY OF LOGISTICS</p><p class="footer-line-ar">© 2026 Arab First — جميع الحقوق محفوظة</p></div></footer>
+    </div>
+    <div id="toast-container" class="toast-container"></div>
+    <script src="shared.js"></script>
+    <script>
+    (function () {
+      var e = window.escText, ea = window.escAttr, fp = window.formatPrice;
+
+      var SHOPS = [
+        {
+          id: "city-cafe", type: "cafe",
+          nameAr: "مقهى ليبرتي", nameEn: "Liberty Cafe",
+          image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/6/6b/LibertyCafeExterior.jpeg/revision/latest?cb=20230707231445",
+          locationAr: "شارع فريدم — وسط المدينة", hoursAr: "٧ صباحاً — ١١ مساءً",
+          badge: "☕ مقهى",
+          servicesAr: ["قهوة عربية", "كابتشينو وإسبريسو", "شاي فاخر", "مشروبات باردة", "معجنات وكيك", "وجبات إفطار"],
+          supplyAr: ["حبوب قهوة", "حليب طازج", "سكر وتحليات", "أكواب ورقية", "مخبوزات", "كريمة وإضافات"],
+          price: 5_000_000, profitAr: "15K — 25K يومياً",
+          notesAr: "أشهر مقهى في ليبرتي كاونتي. يرتاده المواطنون صباحاً ومساءً. دخل ثابت ومضمون طوال اليوم."
+        },
+        {
+          id: "city-bakery", type: "bakery",
+          nameAr: "مخبزة سبرينغ", nameEn: "Spring Bakery",
+          image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/b/bf/SpringBakeryDay.jpeg/revision/latest?cb=20230630171829",
+          locationAr: "شارع ميبل — سبرينغفيلد", hoursAr: "٦ صباحاً — ١٠ مساءً",
+          badge: "🍞 مخبزة",
+          servicesAr: ["خبز طازج يومي", "كيك وتورتات", "معجنات وكرواسان", "حلويات شرقية وغربية", "قوالب عيد ميلاد", "تجهيز مناسبات"],
+          supplyAr: ["دقيق وطحين", "سكر وعسل", "زبدة وزيت", "بيض طازج", "خميرة ومخمرات", "علب تعبئة"],
+          price: 3_500_000, profitAr: "10K — 20K يومياً",
+          notesAr: "المخبزة الرئيسية في سبرينغفيلد. طلب مرتفع في الصباح والأعياد. مصدر دخل منتظم طوال الأسبوع."
+        }
+      ];
+
+      function renderShops(shops) {
+        var grid = document.getElementById("cafe-grid");
+        document.getElementById("cafe-count").textContent = shops.length;
+        grid.innerHTML = "";
+        shops.forEach(function (sh, i) {
+          var card = document.createElement("div");
+          card.className = "gas-card-full"; card.style.animationDelay = (i*0.1)+"s";
+          var svcsHtml = sh.servicesAr.map(function(s){return '<span class="grocery-item-tag">'+e(s)+'</span>';}).join("");
+          var supplyHtml = sh.supplyAr.map(function(s){return '<span class="grocery-item-tag" style="opacity:.75">'+e(s)+'</span>';}).join("");
+          card.innerHTML =
+            '<div class="gas-full-image-wrap"><img src="'+ea(sh.image)+'" alt="'+ea(sh.nameAr)+'" loading="lazy" referrerpolicy="no-referrer" onerror="window.__afmodImageFallback(this)" /><div class="gas-full-image-overlay"></div><div class="gas-full-image-badge"><span class="grocery-main-badge">'+e(sh.badge)+'</span></div></div>'+
+            '<div class="gas-full-body">'+
+              '<div class="gas-full-header"><div><h3 class="gas-full-name">'+e(sh.nameAr)+'</h3><p class="gas-full-name-en">'+e(sh.nameEn)+'</p></div><div class="gas-full-price-badge">'+e(fp(sh.price))+'</div></div>'+
+              '<div class="gas-full-details">'+
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><div><strong>الموقع</strong><span>'+e(sh.locationAr)+'</span></div></div>'+
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div><strong>ساعات العمل</strong><span>'+e(sh.hoursAr)+'</span></div></div>'+
+                '<div class="gas-detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><div><strong>الدخل اليومي المتوقع</strong><span>'+e(sh.profitAr)+'</span></div></div>'+
+              '</div>'+
+              '<div class="grocery-items-section"><h4>الخدمات والمنتجات</h4><div class="grocery-items-wrap">'+svcsHtml+'</div></div>'+
+              '<div class="grocery-items-section" style="margin-top:.75rem"><h4>المخزون القابل للشراء</h4><div class="grocery-items-wrap">'+supplyHtml+'</div></div>'+
+              (sh.notesAr?'<p class="gas-card-notes">'+e(sh.notesAr)+'</p>':'')+
+              '<div class="gas-card-buy-row"><button class="btn-gas-grocery btn-buy-shop" type="button" data-id="'+ea(sh.id)+'" data-type="'+ea(sh.type)+'"><span class="btn-label">شراء '+e(sh.nameAr)+'</span><span class="btn-gas-grocery-price">'+e(fp(sh.price))+'</span></button></div>'+
+            '</div>';
+          card.querySelector(".btn-buy-shop").addEventListener("click", function(){
+            var btn=this; btn.disabled=true; btn.querySelector(".btn-label").textContent="جاري الإرسال...";
+            window.afApi.buyBusiness(sh.type, sh.id).then(function(){
+              window.afToast("تم الشراء","تم تسجيل "+sh.nameAr+" باسمك بنجاح.","success");
+            }).catch(function(err){
+              var msg="تعذّر إتمام الشراء.";
+              if(err&&err.status===402) msg="الرصيد غير كافٍ.";
+              else if(err&&err.status===409) msg="هذا المشروع مملوك بالفعل.";
+              else if(err&&err.status===503) msg="البوت غير متصل.";
+              window.afToast("فشل الشراء",msg,"error");
+            }).then(function(){btn.disabled=false;btn.querySelector(".btn-label").textContent="شراء "+sh.nameAr;});
+          });
+          grid.appendChild(card);
+        });
+      }
+
+      window.afCheckAuth(function(user){
+        document.getElementById("loading-screen").classList.add("hidden");
+        document.getElementById("page").classList.remove("hidden");
+        window.afRenderHeader(user,"cafes");
+        window.afRenderWatermark(user);
+        renderShops(SHOPS);
+      });
+    })();
+    </script>
+  </body>
+</html>

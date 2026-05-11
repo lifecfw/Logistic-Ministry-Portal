@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>إدارة المشروع | عرب فيرست</title>
+    <meta name="description" content="إدارة مشروعك التجاري في عرب فيرست" />
+    <!-- Open Graph / Embed -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="إدارة المشروع | عرب فيرست" />
+    <meta property="og:description" content="إدارة مشروعك التجاري الرسمي في عرب فيرست — AFMOD Ministry of Logistics" />
+    <meta property="og:image" content="/afmod-logo.png" />
+    <meta property="og:site_name" content="Arab First" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="إدارة المشروع | عرب فيرست" />
+    <meta name="twitter:description" content="إدارة مشروعك التجاري في عرب فيرست" />
+    <meta name="twitter:image" content="/afmod-logo.png" />
+    <link rel="icon" type="image/png" href="afmod-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen"><div class="spinner"></div></div>
+    <div id="page" class="view hidden">
+      <div id="watermark" class="watermark"></div>
+      <div class="texture-overlay"></div>
+      <header class="site-header" id="site-header"></header>
+
+      <main class="main-content">
+        <section class="container dashboard-section">
+
+          <!-- Business header -->
+          <div class="dashboard-header biz-dashboard-header">
+            <div>
+              <a href="my-properties.html" class="biz-back-link">← ممتلكاتي</a>
+              <div class="dashboard-title-row" style="margin-top:0.5rem">
+                <div id="biz-icon" class="biz-icon-wrap"></div>
+                <div>
+                  <h2 id="biz-name">—</h2>
+                  <p id="biz-type-label" class="dashboard-description" style="margin:0"></p>
+                </div>
+              </div>
+            </div>
+            <button id="refresh-btn" class="btn-secondary biz-refresh-btn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1rem;height:1rem">
+                <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+              تحديث
+            </button>
+          </div>
+
+          <!-- Loading / Error -->
+          <div id="biz-loading" class="props-loading"><div class="spinner"></div><p>جاري التحميل…</p></div>
+          <div id="biz-error" class="props-error hidden"><p id="biz-error-msg">تعذّر تحميل بيانات المشروع.</p></div>
+
+          <div id="biz-content" class="hidden">
+
+            <!-- Stat cards -->
+            <div class="biz-stats-grid">
+              <div class="biz-stat-card">
+                <div class="biz-stat-label">المخزون الحالي</div>
+                <div class="biz-stat-value" id="stat-inventory">—</div>
+                <div class="biz-stat-sub" id="stat-hours-left"></div>
+              </div>
+              <div class="biz-stat-card biz-stat-card-gold">
+                <div class="biz-stat-label">الأرباح المتراكمة</div>
+                <div class="biz-stat-value" id="stat-profit">—</div>
+                <div class="biz-stat-sub">جاهزة للسحب</div>
+              </div>
+              <div class="biz-stat-card">
+                <div class="biz-stat-label">معدل الدخل اليومي</div>
+                <div class="biz-stat-value" id="stat-daily-rate">—</div>
+                <div class="biz-stat-sub">عند اكتمال المخزون</div>
+              </div>
+            </div>
+
+            <!-- Charts row -->
+            <div class="biz-charts-row">
+              <!-- Inventory gauge -->
+              <div class="biz-chart-panel">
+                <h4 class="biz-chart-title">مستوى المخزون</h4>
+                <div class="biz-gauge-wrap">
+                  <canvas id="chart-inventory" width="200" height="200"></canvas>
+                  <div class="biz-gauge-center" id="gauge-pct-label">0%</div>
+                </div>
+                <div class="biz-inventory-bar-wrap">
+                  <div class="biz-inventory-bar" id="inventory-bar"></div>
+                </div>
+                <p class="biz-chart-note" id="inventory-note"></p>
+              </div>
+
+              <!-- Profit history -->
+              <div class="biz-chart-panel biz-chart-panel-wide">
+                <h4 class="biz-chart-title">سجل الأرباح</h4>
+                <div class="biz-profit-chart-wrap">
+                  <canvas id="chart-profits"></canvas>
+                </div>
+                <p class="biz-chart-note" id="profit-note" style="margin-top:0.5rem"></p>
+              </div>
+            </div>
+
+            <!-- Withdraw -->
+            <div class="biz-section">
+              <div class="biz-section-header">
+                <h3 class="biz-section-title">سحب الأرباح</h3>
+              </div>
+              <div class="biz-withdraw-row">
+                <div>
+                  <p class="biz-withdraw-desc">الأرباح المتراكمة تُحوَّل فوراً إلى رصيد حسابك في اللعبة عبر البوت.</p>
+                  <div class="biz-withdraw-amount">المبلغ المتاح: <strong id="withdraw-amount-display">$0</strong></div>
+                </div>
+                <button id="withdraw-btn" class="btn-primary biz-withdraw-btn" type="button" disabled>
+                  <span class="btn-label">سحب الأرباح</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Inventory Discount (gas & grocery only) -->
+            <div class="biz-section" id="discount-section" style="display:none">
+              <div class="biz-section-header">
+                <h3 class="biz-section-title">🏷️ خصم المخزون</h3>
+                <p class="biz-section-desc">طبّق خصماً على أسعار المخزون بنسبة تصل إلى <strong>30%</strong>. الخصم يُطبَّق مباشرة على تكلفة الشراء من أرباحك.</p>
+              </div>
+              <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem">
+                <label style="font-size:.82rem;font-weight:700;color:var(--muted);white-space:nowrap">نسبة الخصم: <strong id="discount-value-label" style="color:var(--gold)">0%</strong></label>
+                <input type="range" id="discount-slider" min="0" max="30" step="1" value="0"
+                  style="flex:1;min-width:160px;accent-color:var(--gold);cursor:pointer" />
+                <button id="discount-reset" type="button"
+                  style="background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:.3rem .7rem;font-size:.78rem;cursor:pointer;white-space:nowrap">
+                  إلغاء الخصم
+                </button>
+              </div>
+              <p id="discount-info" style="font-size:.75rem;color:var(--muted)">لا يوجد خصم حالياً — الأسعار كاملة.</p>
+            </div>
+
+            <!-- Store -->
+            <div class="biz-section">
+              <div class="biz-section-header">
+                <h3 class="biz-section-title">متجر المخزون</h3>
+                <p class="biz-section-desc">اشترِ المخزون من أرباحك المتراكمة لإبقاء المشروع يعمل وتوليد الدخل.</p>
+              </div>
+              <div id="store-grid" class="biz-store-grid"></div>
+            </div>
+
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-content">
+          <img src="afmod-logo.png" alt="AFMOD Seal" class="footer-logo" />
+          <p class="footer-line-en">ARAB FIRST — MINISTRY OF LOGISTICS</p>
+          <p class="footer-line-ar">© 2026 Arab First — جميع الحقوق محفوظة</p>
+        </div>
+      </footer>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="shared.js"></script>
+    <script>
+    (function () {
+      var e = window.escText, ea = window.escAttr, fp = window.formatPrice;
+
+      // ── Parse URL params ────────────────────────────────────────────────────
+      var params = new URLSearchParams(window.location.search);
+      var businessId = params.get("id") || "";
+      var bizType    = params.get("type") || "";
+
+      var ALL_TYPES = ["gas","grocery","barber","cafe","mexican","burger","bakery","rickjohns","apparel","dollar","tools","market","jewels","bank","guns"];
+      if (!businessId || !ALL_TYPES.includes(bizType)) {
+        window.location.href = "my-properties.html";
+      }
+
+      // ── Business metadata ───────────────────────────────────────────────────
+      var BIZ_META = {
+        "city-gas":        { nameAr: "محطة المدينة",       image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/8/84/CityGasExterior1.png" },
+        "county-gas":      { nameAr: "محطة المقاطعة",      image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/7/74/CountyGasExterior1.png" },
+        "springfield-gas": { nameAr: "محطة سبرينغفيلد",    image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/c/c0/SpringfieldGasExterior.png" },
+        "city-barber":     { nameAr: "محل الحلاقة",        image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/6/6a/BarberShopExterior1.png/revision/latest?cb=20221001070915" },
+        "city-cafe":       { nameAr: "ليبرتي كافيه",       image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/6/6b/LibertyCafeExterior.jpeg/revision/latest?cb=20230707231445" },
+        "city-mexican":    { nameAr: "لا ميسا المكسيكي",   image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/1/12/LaMesa.jpeg/revision/latest?cb=20230904152643" },
+        "city-burger":     { nameAr: "ثري غايز برقر",               image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/d/d6/ThreeGuys.PNG/revision/latest?cb=20221008175350" },
+        "city-bakery":     { nameAr: "مخبزة سبرينغ",                image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/b/bf/SpringBakeryDay.jpeg/revision/latest?cb=20230630171829" },
+        "city-rickjohns":  { nameAr: "مطعم ريك وجون",               image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/8/8d/RickandJohns.jpeg/revision/latest?cb=20230630171718" },
+        "city-apparel":    { nameAr: "ليبرتي أباريل",                image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/c/c1/LibertyApparel2024.png/revision/latest?cb=20240813212543" },
+        "city-dollar":     { nameAr: "متجر الدولار",                 image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/9/9d/DollarStore2024.png/revision/latest?cb=20240813211541" },
+        "city-tools":      { nameAr: "متجر الأدوات",                 image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/4/4c/ToolStore23.jpeg/revision/latest?cb=20230805224946" },
+        "city-market":     { nameAr: "السوق الريفي",                 image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/a/a4/CountryMarket.jpeg/revision/latest?cb=20230621183857" },
+        "city-jewels":     { nameAr: "فاميلي جوولز",                 image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/b/b7/FamilyJewelsExterior2022.png/revision/latest?cb=20220917204201" },
+        "city-bank":       { nameAr: "بنك ريفر سيتي",                image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/2/26/Imagen_Banco_RC.png/revision/latest?cb=20260410010531" },
+        "city-guns":       { nameAr: "ليبرتي للأسلحة والذخيرة",      image: "https://static.wikia.nocookie.net/emergency-response-liberty-county/images/5/57/LibertyGuns%26Ammo.jpeg/revision/latest?cb=20230701222723" },
+      };
+
+      var meta = BIZ_META[businessId] || { nameAr: businessId, image: "" };
+      var TYPE_LABELS = {
+        gas: "محطة وقود", grocery: "محل بقالة", barber: "محل حلاقة",
+        cafe: "مقهى", bakery: "مخبزة", mexican: "مطعم مكسيكي", burger: "مطعم برقر",
+        rickjohns: "مطعم ريك وجون", apparel: "محل ملابس", dollar: "متجر دولار",
+        tools: "متجر أدوات", market: "سوق ريفي", jewels: "محل مجوهرات",
+        bank: "بنك", guns: "متجر أسلحة"
+      };
+      var typeLabel = TYPE_LABELS[bizType] || bizType;
+
+      // ── Store items ─────────────────────────────────────────────────────────
+      var STORE_ITEMS = {
+        gas: [
+          { id: "barrel-s",  name: "برميل وقود صغير",      icon: "🛢",  inventoryAdd: 25,  price: 75_000 },
+          { id: "barrel-m",  name: "برميل وقود متوسط",     icon: "🛢",  inventoryAdd: 50,  price: 130_000 },
+          { id: "barrel-l",  name: "برميل وقود كبير",      icon: "🛢",  inventoryAdd: 75,  price: 185_000 },
+          { id: "barrel-xl", name: "تعبئة كاملة للخزان",  icon: "⛽",  inventoryAdd: 100, price: 220_000 },
+        ],
+        grocery: [
+          { id: "g-water",     name: "كرتون مياه (24 قنينة)",         icon: "💧",  inventoryAdd: 12, price: 20_000 },
+          { id: "g-juice",     name: "كرتون عصير مشكّل",              icon: "🧃",  inventoryAdd: 10, price: 18_000 },
+          { id: "g-biscuit",   name: "كرتون بسكويت مشكّل",            icon: "🍪",  inventoryAdd: 10, price: 16_000 },
+          { id: "g-rice",      name: "كيس أرز (25 كجم)",               icon: "🍚",  inventoryAdd: 8,  price: 14_000 },
+          { id: "g-oil",       name: "كرتون زيت طعام",                icon: "🫙",  inventoryAdd: 8,  price: 15_000 },
+          { id: "g-milk",      name: "كرتون حليب طويل الأمد",          icon: "🥛",  inventoryAdd: 10, price: 17_000 },
+          { id: "g-flour",     name: "كيس دقيق (25 كجم)",              icon: "🌾",  inventoryAdd: 8,  price: 12_000 },
+          { id: "g-sugar",     name: "كيس سكّر (10 كجم)",              icon: "🍬",  inventoryAdd: 7,  price: 11_000 },
+          { id: "g-dates",     name: "كرتون تمر (3 كجم × 6 علب)",      icon: "🌴",  inventoryAdd: 8,  price: 16_000 },
+          { id: "g-tea",       name: "شاي (100 كيس × 12 علبة)",        icon: "🍵",  inventoryAdd: 7,  price: 14_000 },
+          { id: "g-coffee",    name: "كرتون قهوة عربية",               icon: "☕",  inventoryAdd: 8,  price: 15_000 },
+          { id: "g-tissue",    name: "رزم مناديل ورقية (12 رزمة)",      icon: "🧻",  inventoryAdd: 7,  price: 12_000 },
+          { id: "g-canned",    name: "كرتون معلبات متنوعة",             icon: "🥫",  inventoryAdd: 8,  price: 14_000 },
+          { id: "g-bread",     name: "صندوق خبز طازج",                 icon: "🍞",  inventoryAdd: 6,  price: 10_000 },
+          { id: "g-chips",     name: "كرتون شبس وسناكس",               icon: "🍟",  inventoryAdd: 8,  price: 14_000 },
+          { id: "g-chocolate", name: "كرتون شوكولاتة مشكّلة",          icon: "🍫",  inventoryAdd: 8,  price: 16_000 },
+          { id: "g-egg",       name: "كرتون بيض (30 بيضة × 10)",        icon: "🥚",  inventoryAdd: 10, price: 18_000 },
+          { id: "g-kit-s",     name: "باقة بقالة صغيرة",               icon: "📦",  inventoryAdd: 25, price: 40_000 },
+          { id: "g-kit-m",     name: "باقة بقالة متوسطة",              icon: "📦",  inventoryAdd: 50, price: 70_000 },
+          { id: "g-kit-full",  name: "تعبئة كاملة للمتجر",             icon: "🏪",  inventoryAdd: 100, price: 120_000 },
+        ],
+        barber: [
+          { id: "b-scissors",  name: "مقص احترافي",              icon: "✂️",  inventoryAdd: 8,   price: 18_000 },
+          { id: "b-clipper",   name: "ماكينة حلاقة كهربائية",    icon: "💈",  inventoryAdd: 10,  price: 22_000 },
+          { id: "b-razor",     name: "موس حلاقة احترافي",        icon: "🪒",  inventoryAdd: 7,   price: 14_000 },
+          { id: "b-shampoo",   name: "شامبو احترافي",            icon: "🧴",  inventoryAdd: 6,   price: 12_000 },
+          { id: "b-cond",      name: "بلسم الشعر",               icon: "🧴",  inventoryAdd: 6,   price: 11_000 },
+          { id: "b-dye",       name: "صبغة شعر (مجموعة ألوان)",  icon: "🎨",  inventoryAdd: 10,  price: 20_000 },
+          { id: "b-gel",       name: "جل تصفيف الشعر",           icon: "💧",  inventoryAdd: 7,   price: 14_000 },
+          { id: "b-towels",    name: "مناشف (12 قطعة)",          icon: "🧻",  inventoryAdd: 10,  price: 18_000 },
+          { id: "b-bearoil",   name: "زيت لحية فاخر",            icon: "🧖",  inventoryAdd: 8,   price: 17_000 },
+          { id: "b-wax",       name: "شمع الشعر الاحترافي",      icon: "🕯️", inventoryAdd: 7,   price: 15_000 },
+          { id: "b-pomade",    name: "بومدة كلاسيكية",           icon: "🫧",  inventoryAdd: 7,   price: 14_000 },
+          { id: "b-kit-m",     name: "طقم مستلزمات شهري",        icon: "📦",  inventoryAdd: 30,  price: 55_000 },
+          { id: "b-kit-full",  name: "إمدادات متجر كاملة",       icon: "🏪",  inventoryAdd: 60,  price: 100_000 },
+        ],
+        cafe: [
+          { id: "c-beans",     name: "حبوب قهوة ممتازة",         icon: "☕",  inventoryAdd: 8,   price: 15_000 },
+          { id: "c-milk",      name: "صناديق حليب طازج",         icon: "🥛",  inventoryAdd: 7,   price: 12_000 },
+          { id: "c-sugar",     name: "سكر وتحليات",              icon: "🍬",  inventoryAdd: 5,   price: 8_000 },
+          { id: "c-cups",      name: "أكواب ورقية (200 قطعة)",   icon: "🥤",  inventoryAdd: 7,   price: 11_000 },
+          { id: "c-cold",      name: "بودرة مشروبات باردة",      icon: "🧋",  inventoryAdd: 8,   price: 15_000 },
+          { id: "c-pastry",    name: "معجنات ومخبوزات",          icon: "🍰",  inventoryAdd: 10,  price: 18_000 },
+          { id: "c-espresso",  name: "كبسولات إسبريسو",          icon: "☕",  inventoryAdd: 9,   price: 16_000 },
+          { id: "c-syrup",     name: "شراب نكهات (مجموعة)",      icon: "🍯",  inventoryAdd: 8,   price: 16_000 },
+          { id: "c-tea",       name: "شاي فاخر (مجموعة)",        icon: "🍵",  inventoryAdd: 7,   price: 13_000 },
+          { id: "c-water",     name: "مياه معبأة (صندوق)",       icon: "💧",  inventoryAdd: 6,   price: 10_000 },
+          { id: "c-cream",     name: "كريمة وإضافات",            icon: "🧴",  inventoryAdd: 6,   price: 10_000 },
+          { id: "c-kit-m",     name: "طقم مستلزمات أسبوعي",     icon: "📦",  inventoryAdd: 30,  price: 50_000 },
+          { id: "c-kit-full",  name: "إمدادات مقهى كاملة",      icon: "🏪",  inventoryAdd: 60,  price: 90_000 },
+        ],
+        mexican: [
+          { id: "m-tortilla",  name: "خبز تورتيلا (كرتون)",       icon: "🫓",  inventoryAdd: 8,   price: 14_000 },
+          { id: "m-beef",      name: "لحم بقري مفروم",            icon: "🥩",  inventoryAdd: 9,   price: 17_000 },
+          { id: "m-chicken",   name: "دجاج مشوي",                 icon: "🍗",  inventoryAdd: 9,   price: 16_000 },
+          { id: "m-cheese",    name: "جبنة مكسيكية",              icon: "🧀",  inventoryAdd: 7,   price: 13_000 },
+          { id: "m-salsa",     name: "صلصة سالسا",                icon: "🥫",  inventoryAdd: 7,   price: 12_000 },
+          { id: "m-guac",      name: "غواكامولي",                 icon: "🥑",  inventoryAdd: 8,   price: 15_000 },
+          { id: "m-beans",     name: "فاصولياء مكسيكية",          icon: "🫘",  inventoryAdd: 6,   price: 10_000 },
+          { id: "m-rice",      name: "أرز بالتوابل",              icon: "🍚",  inventoryAdd: 6,   price: 9_000 },
+          { id: "m-lettuce",   name: "خس طازج",                   icon: "🥬",  inventoryAdd: 5,   price: 8_000 },
+          { id: "m-jalap",     name: "خوخو هالاباينيو",           icon: "🌶️", inventoryAdd: 6,   price: 11_000 },
+          { id: "m-lime",      name: "ليمون ومقبلات",             icon: "🍋",  inventoryAdd: 5,   price: 8_000 },
+          { id: "m-kit-m",     name: "مستلزمات مطبخ أسبوعية",    icon: "📦",  inventoryAdd: 30,  price: 48_000 },
+          { id: "m-kit-full",  name: "إمداد مطعم متكامل",         icon: "🏪",  inventoryAdd: 60,  price: 85_000 },
+        ],
+        burger: [
+          { id: "bu-patty",    name: "أقراص لحم برقر",            icon: "🥩",  inventoryAdd: 9,   price: 17_000 },
+          { id: "bu-buns",     name: "خبز برقر (صندوق)",          icon: "🍔",  inventoryAdd: 7,   price: 12_000 },
+          { id: "bu-cheese",   name: "شرائح جبن",                 icon: "🧀",  inventoryAdd: 7,   price: 12_000 },
+          { id: "bu-lettuce",  name: "خس طازج",                   icon: "🥬",  inventoryAdd: 5,   price: 8_000 },
+          { id: "bu-tomato",   name: "طماطم طازجة",               icon: "🍅",  inventoryAdd: 5,   price: 8_000 },
+          { id: "bu-onion",    name: "بصل مقطّع",                 icon: "🧅",  inventoryAdd: 5,   price: 7_000 },
+          { id: "bu-pickle",   name: "مخلل شرائح",                icon: "🥒",  inventoryAdd: 5,   price: 7_000 },
+          { id: "bu-ketchup",  name: "كاتشب (مضخة تجارية)",       icon: "🍅",  inventoryAdd: 6,   price: 10_000 },
+          { id: "bu-mustard",  name: "خردل وصلصات",               icon: "🌭",  inventoryAdd: 5,   price: 9_000 },
+          { id: "bu-mayo",     name: "مايونيز تجاري",             icon: "🥚",  inventoryAdd: 5,   price: 9_000 },
+          { id: "bu-bacon",    name: "بيكون مدخن",                icon: "🥓",  inventoryAdd: 8,   price: 15_000 },
+          { id: "bu-kit-m",    name: "طقم مستلزمات أسبوعي",      icon: "📦",  inventoryAdd: 30,  price: 47_000 },
+          { id: "bu-kit-full", name: "إمداد مطعم متكامل",         icon: "🏪",  inventoryAdd: 60,  price: 82_000 },
+        ],
+        bakery: [
+          { id: "bk-flour",    name: "دقيق (كيس 25 كجم)",         icon: "🌾",  inventoryAdd: 8,   price: 12_000 },
+          { id: "bk-sugar",    name: "سكر وعسل (كرتون)",          icon: "🍯",  inventoryAdd: 7,   price: 11_000 },
+          { id: "bk-butter",   name: "زبدة طازجة",                icon: "🧈",  inventoryAdd: 7,   price: 13_000 },
+          { id: "bk-eggs",     name: "كرتون بيض (30×10)",         icon: "🥚",  inventoryAdd: 8,   price: 14_000 },
+          { id: "bk-milk",     name: "حليب طازج (صناديق)",        icon: "🥛",  inventoryAdd: 7,   price: 12_000 },
+          { id: "bk-yeast",    name: "خميرة ومخمرات",             icon: "🫙",  inventoryAdd: 5,   price: 8_000 },
+          { id: "bk-choc",     name: "شوكولاتة حلوى",             icon: "🍫",  inventoryAdd: 7,   price: 13_000 },
+          { id: "bk-box",      name: "علب تعبئة (200 قطعة)",      icon: "📦",  inventoryAdd: 6,   price: 9_000 },
+          { id: "bk-kit-m",    name: "طقم مخبزة أسبوعي",         icon: "📦",  inventoryAdd: 30,  price: 48_000 },
+          { id: "bk-kit-full", name: "إمداد مخبزة كامل",          icon: "🏪",  inventoryAdd: 60,  price: 85_000 },
+        ],
+        rickjohns: [
+          { id: "rj-beef",     name: "لحوم طازجة",                icon: "🥩",  inventoryAdd: 9,   price: 17_000 },
+          { id: "rj-potato",   name: "بطاطس (50 كجم)",            icon: "🥔",  inventoryAdd: 7,   price: 11_000 },
+          { id: "rj-bread",    name: "خبز محلي (صناديق)",         icon: "🍞",  inventoryAdd: 6,   price: 10_000 },
+          { id: "rj-salad",    name: "خضار سلطة طازجة",           icon: "🥗",  inventoryAdd: 6,   price: 9_000 },
+          { id: "rj-sauce",    name: "صلصات وتوابل",              icon: "🫙",  inventoryAdd: 5,   price: 8_000 },
+          { id: "rj-drink",    name: "مشروبات باردة (صندوق)",     icon: "🥤",  inventoryAdd: 7,   price: 12_000 },
+          { id: "rj-kit-m",    name: "طقم مطعم أسبوعي",          icon: "📦",  inventoryAdd: 30,  price: 46_000 },
+          { id: "rj-kit-full", name: "إمداد مطعم كامل",           icon: "🏪",  inventoryAdd: 60,  price: 80_000 },
+        ],
+        apparel: [
+          { id: "ap-shirts",   name: "قمصان وبلوزات (كرتون)",     icon: "👕",  inventoryAdd: 8,   price: 16_000 },
+          { id: "ap-pants",    name: "بنطلونات جينز",             icon: "👖",  inventoryAdd: 7,   price: 15_000 },
+          { id: "ap-shoes",    name: "أحذية متنوعة",              icon: "👟",  inventoryAdd: 7,   price: 18_000 },
+          { id: "ap-acc",      name: "إكسسوارات موضة",            icon: "💍",  inventoryAdd: 8,   price: 14_000 },
+          { id: "ap-seasonal", name: "تشكيلة موسمية",             icon: "🛍️", inventoryAdd: 10,  price: 22_000 },
+          { id: "ap-kit-m",    name: "طقم متجر شهري",             icon: "📦",  inventoryAdd: 30,  price: 52_000 },
+          { id: "ap-kit-full", name: "إمداد متجر كامل",           icon: "🏪",  inventoryAdd: 60,  price: 92_000 },
+        ],
+        dollar: [
+          { id: "dl-cleaning", name: "مواد تنظيف (كرتون)",        icon: "🧹",  inventoryAdd: 8,   price: 10_000 },
+          { id: "dl-snacks",   name: "سناكس وحلويات (كرتون)",     icon: "🍬",  inventoryAdd: 7,   price: 9_000 },
+          { id: "dl-statio",   name: "قرطاسية متنوعة",            icon: "✏️",  inventoryAdd: 6,   price: 8_000 },
+          { id: "dl-kitchen",  name: "مستلزمات مطبخ بلاستيك",    icon: "🥄",  inventoryAdd: 7,   price: 10_000 },
+          { id: "dl-candle",   name: "شموع وديكور",               icon: "🕯️", inventoryAdd: 5,   price: 7_000 },
+          { id: "dl-kit-m",    name: "طقم متجر أسبوعي",          icon: "📦",  inventoryAdd: 30,  price: 38_000 },
+          { id: "dl-kit-full", name: "إمداد متجر كامل",           icon: "🏪",  inventoryAdd: 60,  price: 68_000 },
+        ],
+        tools: [
+          { id: "tl-power",    name: "أدوات كهربائية",            icon: "🔌",  inventoryAdd: 7,   price: 20_000 },
+          { id: "tl-hand",     name: "أدوات يدوية (طقم)",         icon: "🔧",  inventoryAdd: 8,   price: 16_000 },
+          { id: "tl-paint",    name: "دهانات متنوعة",             icon: "🎨",  inventoryAdd: 7,   price: 14_000 },
+          { id: "tl-plumb",    name: "لوازم سباكة",               icon: "🚿",  inventoryAdd: 6,   price: 12_000 },
+          { id: "tl-safety",   name: "معدات سلامة",               icon: "🦺",  inventoryAdd: 6,   price: 13_000 },
+          { id: "tl-kit-m",    name: "طقم متجر شهري",             icon: "📦",  inventoryAdd: 30,  price: 50_000 },
+          { id: "tl-kit-full", name: "إمداد متجر كامل",           icon: "🏪",  inventoryAdd: 60,  price: 88_000 },
+        ],
+        market: [
+          { id: "mk-veg",      name: "خضروات موسمية (صندوق)",     icon: "🥦",  inventoryAdd: 7,   price: 10_000 },
+          { id: "mk-fruit",    name: "فواكه طازجة (صندوق)",       icon: "🍎",  inventoryAdd: 7,   price: 11_000 },
+          { id: "mk-dairy",    name: "منتجات ألبان",              icon: "🥛",  inventoryAdd: 6,   price: 9_000 },
+          { id: "mk-meat",     name: "لحوم ودواجن طازجة",         icon: "🥩",  inventoryAdd: 8,   price: 15_000 },
+          { id: "mk-honey",    name: "عسل طبيعي وحلويات محلية",   icon: "🍯",  inventoryAdd: 5,   price: 10_000 },
+          { id: "mk-eggs",     name: "بيض طازج (صناديق)",         icon: "🥚",  inventoryAdd: 6,   price: 9_000 },
+          { id: "mk-kit-m",    name: "طقم سوق أسبوعي",           icon: "📦",  inventoryAdd: 30,  price: 40_000 },
+          { id: "mk-kit-full", name: "إمداد سوق كامل",            icon: "🏪",  inventoryAdd: 60,  price: 70_000 },
+        ],
+        jewels: [
+          { id: "jw-gold",     name: "مجوهرات ذهبية",             icon: "💛",  inventoryAdd: 5,   price: 25_000 },
+          { id: "jw-silver",   name: "مجوهرات فضية",              icon: "⚪",  inventoryAdd: 6,   price: 18_000 },
+          { id: "jw-diamond",  name: "أحجار كريمة",               icon: "💎",  inventoryAdd: 4,   price: 30_000 },
+          { id: "jw-rings",    name: "خواتم خطوبة",               icon: "💍",  inventoryAdd: 5,   price: 22_000 },
+          { id: "jw-watch",    name: "ساعات فاخرة",               icon: "⌚",  inventoryAdd: 4,   price: 28_000 },
+          { id: "jw-box",      name: "علب عرض فاخرة",             icon: "🎁",  inventoryAdd: 6,   price: 12_000 },
+          { id: "jw-kit-m",    name: "طقم مجوهرات شهري",         icon: "📦",  inventoryAdd: 25,  price: 75_000 },
+          { id: "jw-kit-full", name: "إمداد محل كامل",            icon: "🏪",  inventoryAdd: 50,  price: 130_000 },
+        ],
+        bank: [
+          { id: "bn-paper",    name: "قرطاسية رسمية",             icon: "📄",  inventoryAdd: 6,   price: 8_000 },
+          { id: "bn-secure",   name: "أنظمة أمن",                 icon: "🔐",  inventoryAdd: 5,   price: 20_000 },
+          { id: "bn-desk",     name: "معدات مكتبية",              icon: "🖥️", inventoryAdd: 5,   price: 15_000 },
+          { id: "bn-atm",      name: "أجهزة صرف آلي (صيانة)",    icon: "🏧",  inventoryAdd: 7,   price: 25_000 },
+          { id: "bn-safe",     name: "خزائن حديدية",              icon: "🗄️", inventoryAdd: 4,   price: 30_000 },
+          { id: "bn-kit-m",    name: "طقم مصرفي شهري",           icon: "📦",  inventoryAdd: 25,  price: 65_000 },
+          { id: "bn-kit-full", name: "إمداد بنك كامل",            icon: "🏪",  inventoryAdd: 50,  price: 115_000 },
+        ],
+        guns: [
+          { id: "gn-ammo-s",   name: "صندوق ذخيرة صغير",         icon: "🔫",  inventoryAdd: 8,   price: 18_000 },
+          { id: "gn-ammo-m",   name: "صندوق ذخيرة متوسط",        icon: "🔫",  inventoryAdd: 10,  price: 25_000 },
+          { id: "gn-clean",    name: "طقم تنظيف أسلحة",          icon: "🧴",  inventoryAdd: 7,   price: 14_000 },
+          { id: "gn-holster",  name: "جلدة وحمالة",               icon: "🦺",  inventoryAdd: 6,   price: 12_000 },
+          { id: "gn-target",   name: "أهداف تدريب (مجموعة)",      icon: "🎯",  inventoryAdd: 6,   price: 10_000 },
+          { id: "gn-scope",    name: "منظار قناص",                icon: "🔭",  inventoryAdd: 5,   price: 20_000 },
+          { id: "gn-safe",     name: "خزنة أمان للأسلحة",         icon: "🗄️", inventoryAdd: 4,   price: 22_000 },
+          { id: "gn-kit-m",    name: "طقم متجر شهري",             icon: "📦",  inventoryAdd: 28,  price: 55_000 },
+          { id: "gn-kit-full", name: "إمداد متجر كامل",           icon: "🏪",  inventoryAdd: 55,  price: 95_000 },
+        ],
+      };
+
+      // ── Daily rate for display ──────────────────────────────────────────────
+      var DAILY_RATES = {
+        gas: "50K — 100K", grocery: "20K — 50K", barber: "15K — 30K",
+        cafe: "15K — 25K", bakery: "10K — 20K", mexican: "20K — 35K", burger: "18K — 30K",
+        rickjohns: "15K — 28K", apparel: "15K — 25K", dollar: "12K — 22K",
+        tools: "15K — 28K", market: "12K — 22K", jewels: "20K — 40K",
+        bank: "30K — 60K", guns: "20K — 35K"
+      };
+      var DAILY_RATE = DAILY_RATES[bizType] || "10K — 30K";
+
+      // ── Discount ──────────────────────────────────────────────────────────
+      var discountPct = 0;
+      if (bizType === "gas" || bizType === "grocery") {
+        document.getElementById("discount-section").style.display = "";
+        var slider = document.getElementById("discount-slider");
+        var discLbl = document.getElementById("discount-value-label");
+        var discInfo = document.getElementById("discount-info");
+        slider.addEventListener("input", function () {
+          discountPct = Number(slider.value);
+          discLbl.textContent = discountPct + "%";
+          if (discountPct > 0) {
+            discInfo.textContent = "الخصم المفعَّل: " + discountPct + "% — الأسعار ستُعرض بعد الخصم.";
+            discInfo.style.color = "var(--green)";
+          } else {
+            discInfo.textContent = "لا يوجد خصم حالياً — الأسعار كاملة.";
+            discInfo.style.color = "";
+          }
+          if (currentState) renderStore(currentState.accumulatedProfit || 0);
+        });
+        document.getElementById("discount-reset").addEventListener("click", function () {
+          slider.value = 0; discountPct = 0;
+          discLbl.textContent = "0%"; discInfo.textContent = "لا يوجد خصم حالياً — الأسعار كاملة."; discInfo.style.color = "";
+          if (currentState) renderStore(currentState.accumulatedProfit || 0);
+        });
+      }
+
+      // ── State ───────────────────────────────────────────────────────────────
+      var currentState = null;
+      var inventoryChart = null;
+      var profitChart    = null;
+
+      // ── API helpers ─────────────────────────────────────────────────────────
+      function apiFetch(path, opts) {
+        opts = opts || {};
+        opts.credentials = "include";
+        opts.headers = opts.headers || {};
+        if (opts.body && typeof opts.body !== "string") {
+          opts.headers["Content-Type"] = "application/json";
+          opts.body = JSON.stringify(opts.body);
+        }
+        return fetch(path, opts).then(function (res) {
+          if (!res.ok) {
+            return res.json().then(function (d) {
+              var err = new Error(d && d.message ? d.message : "Request failed");
+              err.status = res.status; err.data = d; throw err;
+            }, function () { var err = new Error("Request failed"); err.status = res.status; throw err; });
+          }
+          if (res.status === 204) return null;
+          return res.json();
+        });
+      }
+
+      function fetchState() {
+        return apiFetch("/api/business/state?businessId=" + encodeURIComponent(businessId) + "&type=" + bizType);
+      }
+
+      function postRefill(item) {
+        return apiFetch("/api/business/refill", {
+          method: "POST",
+          body: { businessId: businessId, type: bizType, inventoryAdd: item.inventoryAdd, cost: item.price, discountPct: discountPct }
+        });
+      }
+
+      function postWithdraw() {
+        return apiFetch("/api/business/withdraw", {
+          method: "POST",
+          body: { businessId: businessId, type: bizType }
+        });
+      }
+
+      // ── Render header ────────────────────────────────────────────────────────
+      function renderHeader() {
+        document.getElementById("biz-name").textContent = meta.nameAr;
+        document.getElementById("biz-type-label").textContent = typeLabel;
+        var iconWrap = document.getElementById("biz-icon");
+        if (meta.image) {
+          iconWrap.innerHTML = '<img src="' + ea(meta.image) + '" alt="" onerror="window.__afmodImageFallback(this)" referrerpolicy="no-referrer" />';
+        } else {
+          iconWrap.innerHTML = bizType === "gas"
+            ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40"><line x1="3" y1="22" x2="15" y2="22"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg>'
+            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>';
+        }
+      }
+
+      // ── Render state ─────────────────────────────────────────────────────────
+      function renderState(data) {
+        currentState = data;
+        var inv = Math.round(data.inventoryPct);
+        var accProfit = data.accumulatedProfit || 0;
+
+        // Stat cards
+        document.getElementById("stat-inventory").textContent = inv + "%";
+        document.getElementById("stat-profit").textContent = fp(accProfit);
+        document.getElementById("stat-daily-rate").textContent = "$" + DAILY_RATE;
+
+        var hoursLeft = parseFloat(data.hoursLeft || "0");
+        var hoursEl = document.getElementById("stat-hours-left");
+        if (inv <= 0) {
+          hoursEl.textContent = "⚠ المخزون نفد — لا يوجد دخل";
+          hoursEl.style.color = "var(--danger)";
+        } else {
+          hoursEl.textContent = "يكفي لـ " + hoursLeft + " ساعة";
+          hoursEl.style.color = "";
+        }
+
+        // Gauge label
+        document.getElementById("gauge-pct-label").textContent = inv + "%";
+
+        // Progress bar
+        var bar = document.getElementById("inventory-bar");
+        bar.style.width = inv + "%";
+        bar.style.background = inv > 50 ? "#2ecc71" : inv > 20 ? "var(--gold)" : "var(--danger)";
+
+        // Inventory note
+        var noteEl = document.getElementById("inventory-note");
+        if (inv <= 0) {
+          noteEl.textContent = "المخزون نفد. اشترِ مخزوناً جديداً لاستئناف الأرباح.";
+          noteEl.style.color = "var(--danger)";
+        } else {
+          noteEl.textContent = "ينفد بمعدل 4% كل ساعة.";
+          noteEl.style.color = "";
+        }
+
+        // Withdraw
+        var wAmount = document.getElementById("withdraw-amount-display");
+        var wBtn    = document.getElementById("withdraw-btn");
+        wAmount.textContent = fp(accProfit);
+        wBtn.disabled = accProfit <= 0;
+
+        // Profit note
+        var pLog = data.profitLog || [];
+        var profitNoteEl = document.getElementById("profit-note");
+        profitNoteEl.textContent = pLog.length === 0 ? "لا يوجد سجل أرباح حتى الآن. سيبدأ بعد أول تحديث." : "";
+
+        // Update charts
+        updateInventoryChart(inv);
+        updateProfitChart(pLog);
+
+        // Store
+        renderStore(accProfit);
+      }
+
+      // ── Inventory semi-circle gauge ───────────────────────────────────────
+      function updateInventoryChart(pct) {
+        var inv = Math.max(0, Math.min(100, pct));
+        // Semi-circle: total arc = 180°. We draw: red zone 0-20, yellow 20-50, green 50-100
+        // The filled portion = inv% of 180°
+        // We use 3 stacked arcs: filled portion + empty portion + hidden lower half
+        var filled  = inv;
+        var empty   = 100 - inv;
+        var colorFill = inv > 50 ? "#27ae60" : inv > 20 ? "#d4af37" : "#e74c3c";
+
+        if (!inventoryChart) {
+          var ctx = document.getElementById("chart-inventory").getContext("2d");
+
+          // Custom gradient per update
+          function makeGrad(c) {
+            var g = ctx.createLinearGradient(0, 0, 200, 0);
+            if (inv > 50) {
+              g.addColorStop(0, "#e74c3c");
+              g.addColorStop(0.2, "#d4af37");
+              g.addColorStop(1, "#27ae60");
+            } else if (inv > 20) {
+              g.addColorStop(0, "#e74c3c");
+              g.addColorStop(1, "#d4af37");
+            } else {
+              g.addColorStop(0, "#7b1010");
+              g.addColorStop(1, "#e74c3c");
+            }
+            return g;
+          }
+
+          inventoryChart = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+              datasets: [
+                {
+                  data: [filled, empty, 100],
+                  backgroundColor: [colorFill, "rgba(10,31,77,0.07)", "transparent"],
+                  borderWidth: 0,
+                  borderRadius: filled > 0 ? 4 : 0,
+                  hoverOffset: 0
+                }
+              ]
+            },
+            options: {
+              rotation: -90,
+              circumference: 180,
+              cutout: "68%",
+              plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+              },
+              animation: { animateRotate: true, duration: 900, easing: "easeOutQuart" },
+              responsive: false,
+              events: []
+            }
+          });
+        } else {
+          inventoryChart.data.datasets[0].data    = [filled, empty, 100];
+          inventoryChart.data.datasets[0].backgroundColor[0] = colorFill;
+          inventoryChart.update("active");
+        }
+      }
+
+      // ── Profit gradient line chart ────────────────────────────────────────
+      function updateProfitChart(log) {
+        var labels  = log.map(function (l, i) {
+          var d = new Date(Number(l.logged_at));
+          return (d.getHours() < 10 ? "0" : "") + d.getHours() + ":" + (d.getMinutes() < 10 ? "0" : "") + d.getMinutes();
+        });
+        var amounts = log.map(function (l) { return Number(l.amount); });
+
+        if (!profitChart) {
+          var ctx = document.getElementById("chart-profits").getContext("2d");
+
+          // Build gradient fill
+          var grad = ctx.createLinearGradient(0, 0, 0, 260);
+          grad.addColorStop(0,   "rgba(212,175,55,0.55)");
+          grad.addColorStop(0.6, "rgba(212,175,55,0.12)");
+          grad.addColorStop(1,   "rgba(212,175,55,0)");
+
+          profitChart = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: labels,
+              datasets: [{
+                label: "الأرباح",
+                data: amounts,
+                fill: true,
+                backgroundColor: grad,
+                borderColor: "#d4af37",
+                borderWidth: 2.5,
+                pointBackgroundColor: "#d4af37",
+                pointBorderColor: "#fff",
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: "#fff",
+                pointHoverBorderColor: "#d4af37",
+                pointHoverBorderWidth: 3,
+                tension: 0.42
+              }]
+            },
+            options: {
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  backgroundColor: "#0a1f4d",
+                  titleColor: "#d4af37",
+                  bodyColor: "#e8e0c5",
+                  borderColor: "rgba(212,175,55,0.3)",
+                  borderWidth: 1,
+                  padding: 10,
+                  cornerRadius: 8,
+                  callbacks: {
+                    title: function (items) { return items[0].label; },
+                    label: function (ctx) { return "  $" + Number(ctx.raw).toLocaleString("en-US"); }
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  ticks: { font: { family: "'Noto Kufi Arabic'", size: 11 }, color: "#7a8aaa", maxRotation: 0 },
+                  grid: { color: "rgba(10,31,77,0.04)" },
+                  border: { color: "rgba(10,31,77,0.08)" }
+                },
+                y: {
+                  ticks: {
+                    font: { family: "'Noto Kufi Arabic'", size: 11 }, color: "#7a8aaa",
+                    callback: function (v) { return v >= 1_000_000 ? "$"+(v/1_000_000).toFixed(1)+"M" : v >= 1000 ? "$"+Math.round(v/1000)+"K" : "$"+v; }
+                  },
+                  grid: { color: "rgba(10,31,77,0.06)", drawBorder: false },
+                  border: { display: false }
+                }
+              },
+              responsive: true,
+              maintainAspectRatio: false,
+              animation: { duration: 700, easing: "easeOutQuart" },
+              interaction: { mode: "index", intersect: false }
+            }
+          });
+        } else {
+          profitChart.data.labels = labels;
+          profitChart.data.datasets[0].data = amounts;
+          profitChart.update("active");
+        }
+      }
+
+      // ── Render store ──────────────────────────────────────────────────────
+      function renderStore(currentBalance) {
+        var items = STORE_ITEMS[bizType] || [];
+        var grid  = document.getElementById("store-grid");
+        grid.innerHTML = "";
+        var currentInv = currentState ? Math.round(currentState.inventoryPct) : 0;
+
+        items.forEach(function (item) {
+          var finalPrice  = discountPct > 0 ? Math.floor(item.price * (1 - discountPct / 100)) : item.price;
+          var canAfford   = currentBalance >= finalPrice;
+          var wouldExceed = currentInv + item.inventoryAdd > 100;
+          var disabled    = !canAfford || (currentInv >= 100);
+          var priceHtml   = discountPct > 0
+            ? '<span style="text-decoration:line-through;font-size:.75rem;color:var(--muted)">' + fp(item.price) + '</span> <span style="color:var(--green)">' + fp(finalPrice) + '</span>'
+            : fp(finalPrice);
+
+          var card = document.createElement("div");
+          card.className = "biz-store-item" + (disabled ? " biz-store-item-disabled" : "");
+          card.innerHTML =
+            '<div class="biz-store-item-icon">' + item.icon + '</div>' +
+            '<div class="biz-store-item-body">' +
+              '<div class="biz-store-item-name">' + e(item.name) + '</div>' +
+              '<div class="biz-store-item-inv">+' + item.inventoryAdd + '% مخزون</div>' +
+            '</div>' +
+            '<div class="biz-store-item-right">' +
+              '<div class="biz-store-item-price">' + priceHtml + '</div>' +
+              '<button class="btn-primary biz-store-buy-btn" type="button"' + (disabled ? ' disabled' : '') + '>' +
+                '<span class="btn-label">شراء</span>' +
+              '</button>' +
+            '</div>';
+
+          var btn = card.querySelector(".biz-store-buy-btn");
+          if (btn && !disabled) {
+            btn.addEventListener("click", function () {
+              btn.disabled = true;
+              btn.querySelector(".btn-label").textContent = "…";
+              postRefill(item).then(function (data) {
+                window.afToast("تم الشراء", "تمت إضافة " + item.inventoryAdd + "% للمخزون بنجاح.", "success");
+                loadState();
+              }).catch(function (err) {
+                var msg = (err && err.message) || "تعذّر الشراء";
+                if (err && err.status === 402) msg = "الأرباح المتراكمة لا تكفي لهذا الشراء";
+                window.afToast("فشل الشراء", msg, "error");
+                btn.disabled = false;
+                btn.querySelector(".btn-label").textContent = "شراء";
+              });
+            });
+          }
+
+          grid.appendChild(card);
+        });
+      }
+
+      // ── Load / refresh ────────────────────────────────────────────────────
+      function loadState() {
+        fetchState().then(function (data) {
+          document.getElementById("biz-loading").classList.add("hidden");
+          document.getElementById("biz-error").classList.add("hidden");
+          document.getElementById("biz-content").classList.remove("hidden");
+          renderState(data);
+        }).catch(function (err) {
+          document.getElementById("biz-loading").classList.add("hidden");
+          document.getElementById("biz-content").classList.add("hidden");
+          var errEl = document.getElementById("biz-error");
+          errEl.classList.remove("hidden");
+          document.getElementById("biz-error-msg").textContent =
+            "تعذّر تحميل بيانات المشروع. " + ((err && err.message) || "");
+        });
+      }
+
+      // ── Withdraw ──────────────────────────────────────────────────────────
+      document.getElementById("withdraw-btn").addEventListener("click", function () {
+        var btn = this;
+        btn.disabled = true;
+        btn.querySelector(".btn-label").textContent = "جاري السحب…";
+        postWithdraw().then(function (data) {
+          window.afToast("تم السحب", "تم تحويل " + fp(data.withdrawn) + " إلى رصيدك.", "success");
+          loadState();
+        }).catch(function (err) {
+          var msg = (err && err.message) || "تعذّر السحب";
+          window.afToast("فشل السحب", msg, "error");
+          btn.disabled = false;
+          btn.querySelector(".btn-label").textContent = "سحب الأرباح";
+        });
+      });
+
+      // ── Refresh button ────────────────────────────────────────────────────
+      document.getElementById("refresh-btn").addEventListener("click", function () {
+        document.getElementById("biz-loading").classList.remove("hidden");
+        document.getElementById("biz-content").classList.add("hidden");
+        loadState();
+      });
+
+      // ── Init ──────────────────────────────────────────────────────────────
+      window.afCheckAuth(function (user) {
+        document.getElementById("loading-screen").classList.add("hidden");
+        document.getElementById("page").classList.remove("hidden");
+        window.afRenderHeader(user, "my-properties");
+        window.afRenderWatermark(user);
+        renderHeader();
+        loadState();
+      });
+    })();
+    </script>
+  </body>
+</html>
