@@ -675,14 +675,6 @@ router.post("/twitter/admin/remove-follower/:username", async (req, res) => {
   res.json({ ok: true, followerCount: target.followers.length });
 });
 
-// ── Get tweet video ───────────────────────────────────────────────────────────
-router.get("/twitter/tweet/:id/video", async (req, res) => {
-  const user = requireUser(req, res); if (!user) return;
-  const tweet = await getTweetById(req.params.id);
-  if (!tweet?.videoBase64) { res.status(404).json({ error: "no video" }); return; }
-  res.json({ videoBase64: tweet.videoBase64 });
-});
-
 // ── Delete own tweet ──────────────────────────────────────────────────────────
 router.delete("/twitter/tweet/:id", async (req, res) => {
   const user = requireUser(req, res); if (!user) return;
