@@ -10,6 +10,7 @@ import houseRouter from "./house";
 import marketplaceRouter from "./marketplace";
 import gangsRouter from "./gangs";
 import adminRouter from "./admin";
+import bankingRouter from "./banking";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(houseRouter);
 router.use(marketplaceRouter);
 router.use(gangsRouter);
 router.use(adminRouter);
+router.use(bankingRouter);
 
 export default router;

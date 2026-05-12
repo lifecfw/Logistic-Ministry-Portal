@@ -144,6 +144,17 @@
       .btn-tweet { padding: 0.5rem 1.1rem; background: var(--gold); color: #0a1a3d; border: none; border-radius: 999px; font-family: var(--font); font-weight: 700; font-size: 0.88rem; cursor: pointer; }
       .btn-tweet:disabled { opacity: 0.4; cursor: not-allowed; }
 
+      /* Video in tweets */
+      .tweet-vid-wrap { margin-top: 0.5rem; border-radius: 12px; overflow: hidden; background: #000; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+      .tweet-vid-loading { display: flex; align-items: center; justify-content: center; padding: 1.2rem; opacity: 0.6; }
+      /* Admin engage bar */
+      .admin-engage-bar { display: flex; align-items: center; gap: 4px; margin-top: 0.4rem; padding: 0.3rem 0.5rem; background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; flex-wrap: wrap; }
+      .ae-btn { width: 22px; height: 22px; border-radius: 6px; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: #f59e0b; font-size: .85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0; }
+      .ae-btn:hover { background: rgba(245,158,11,0.3); }
+      .ae-input { width: 52px; height: 22px; background: rgba(0,0,0,.3); border: 1px solid rgba(245,158,11,0.3); border-radius: 5px; color: #f0d060; font-size: .75rem; text-align: center; padding: 0 3px; }
+      .ae-set { height: 22px; padding: 0 7px; border-radius: 6px; background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.4); color: #f59e0b; font-size: .75rem; font-weight: 700; cursor: pointer; }
+      .ae-set:hover { background: rgba(245,158,11,0.4); }
+
       /* Tweet card */
       .tweet-card { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.12s; }
       .tweet-card:hover { background: rgba(255,255,255,0.02); }
@@ -448,6 +459,10 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                 </button>
                 <input type="file" id="composer-img-file" accept="image/*" style="display:none" />
+                <button class="composer-img-btn" id="composer-vid-btn" title="إضافة فيديو" style="color:#9333ea;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                </button>
+                <input type="file" id="composer-vid-file" accept="video/*" style="display:none" />
                 <span class="char-count" id="composer-count">280</span>
                 <button class="btn-tweet" id="composer-submit" disabled>تغريد</button>
               </div>
@@ -574,6 +589,10 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
               </button>
               <input type="file" id="modal-composer-img-file" accept="image/*" style="display:none" />
+              <button class="composer-img-btn" id="modal-composer-vid-btn" title="إضافة فيديو" style="color:#9333ea;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              </button>
+              <input type="file" id="modal-composer-vid-file" accept="video/*" style="display:none" />
               <span class="char-count" id="modal-char-count">280</span>
               <button class="btn-tweet" id="modal-composer-submit" disabled>تغريد</button>
             </div>
@@ -1080,6 +1099,8 @@
         html += '</div>';
         if (displayTweet.content) html += '<div class="tweet-content">' + formatHashtags(displayTweet.content) + '</div>';
         if (displayTweet.hasImage) html += '<img class="tweet-img" data-tid="' + escHtml(displayTweet.id || tid) + '" src="" alt="صورة" />';
+        if (displayTweet.hasVideo) html += '<div class="tweet-vid-wrap" data-vtid="' + escHtml(displayTweet.id || tid) + '"><div class="tweet-vid-loading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;color:#9333ea;"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div></div>';
+        if (state.isAdmin) html += '<div class="admin-engage-bar" data-tid="' + escHtml(tid) + '"><span style="font-size:.7rem;color:#f59e0b;font-weight:700;margin-left:.5rem;">⚡ أدمن:</span><span style="font-size:.7rem;color:var(--text-muted);margin-left:.25rem;">لايكات:</span><button class="ae-btn" data-type="likes" data-dir="-1" data-tid="' + escHtml(tid) + '">−</button><input class="ae-input" data-type="likes" data-tid="' + escHtml(tid) + '" type="number" min="0" value="' + (displayTweet.fakeLikeCount || t.fakeLikeCount || 0) + '" /><button class="ae-btn" data-type="likes" data-dir="1" data-tid="' + escHtml(tid) + '">+</button><button class="ae-set" data-type="likes" data-tid="' + escHtml(tid) + '">✓</button><span style="font-size:.7rem;color:var(--text-muted);margin-right:.5rem;margin-left:.25rem;">ريبوست:</span><button class="ae-btn" data-type="retweets" data-dir="-1" data-tid="' + escHtml(tid) + '">−</button><input class="ae-input" data-type="retweets" data-tid="' + escHtml(tid) + '" type="number" min="0" value="' + (displayTweet.fakeRetweetCount || t.fakeRetweetCount || 0) + '" /><button class="ae-btn" data-type="retweets" data-dir="1" data-tid="' + escHtml(tid) + '">+</button><button class="ae-set" data-type="retweets" data-tid="' + escHtml(tid) + '">✓</button></div>';
         // Actions
         html += '<div class="tweet-actions">';
         html += '<button class="tw-action reply" data-tid="' + escHtml(tid) + '" data-text="' + escHtml((displayTweet.content || "").slice(0, 60)) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>' + (displayTweet.replyCount || 0) + '</span></button>';
@@ -1097,6 +1118,48 @@
             imgEl.src = d.imageBase64;
             imgEl.addEventListener("click", function (e) { e.stopPropagation(); openLightbox(d.imageBase64); });
           }).catch(function () { imgEl.style.display = "none"; });
+        }
+        // Load video
+        var vidWrap = card.querySelector(".tweet-vid-wrap");
+        if (vidWrap) {
+          (function (vw) {
+            var vtid = vw.dataset.vtid;
+            apiFetch("/api/twitter/tweet/" + encodeURIComponent(vtid) + "/video").then(function (d) {
+              var vid = document.createElement("video");
+              vid.src = d.videoBase64;
+              vid.controls = true; vid.preload = "metadata";
+              vid.style.cssText = "width:100%;max-height:400px;border-radius:12px;margin-top:0.5rem;background:#000;display:block;";
+              vw.innerHTML = ""; vw.appendChild(vid);
+              vid.addEventListener("click", function (e) { e.stopPropagation(); });
+            }).catch(function () { vw.style.display = "none"; });
+          })(vidWrap);
+        }
+        // Admin engage bar handlers
+        if (state.isAdmin) {
+          card.querySelectorAll(".ae-btn").forEach(function (btn) {
+            btn.addEventListener("click", function (e) {
+              e.stopPropagation();
+              var type = btn.dataset.type, dir = parseInt(btn.dataset.dir), etid = btn.dataset.tid;
+              var inp = card.querySelector('.ae-input[data-type="' + type + '"][data-tid="' + etid + '"]');
+              if (inp) { var v = Math.max(0, (parseInt(inp.value) || 0) + dir); inp.value = v; }
+            });
+          });
+          card.querySelectorAll(".ae-input").forEach(function (inp) {
+            inp.addEventListener("click", function (e) { e.stopPropagation(); });
+            inp.addEventListener("keydown", function (e) { e.stopPropagation(); });
+          });
+          card.querySelectorAll(".ae-set").forEach(function (btn) {
+            btn.addEventListener("click", function (e) {
+              e.stopPropagation();
+              var type = btn.dataset.type, etid = btn.dataset.tid;
+              var inp = card.querySelector('.ae-input[data-type="' + type + '"][data-tid="' + etid + '"]');
+              var count = Math.max(0, parseInt((inp && inp.value) || 0) || 0);
+              var endpoint = "/api/twitter/admin/fake-" + type + "/" + encodeURIComponent(etid);
+              apiFetch(endpoint, { method: "POST", body: { count: count } })
+                .then(function () { toast("✓ تم التحديث", "ok"); })
+                .catch(function () { toast("خطأ", "err"); });
+            });
+          });
         }
         // Load avatars
         card.querySelectorAll(".tweet-avatar[data-has='1']").forEach(function (av) {
@@ -1216,10 +1279,33 @@
         return { getPending: function () { return pendingB64; } };
       }
 
+      // ── Feed inline composer video ────────────────────────────────────────────
+      var feedPendingVideoB64 = null;
+      $("composer-vid-btn").addEventListener("click", function () { $("composer-vid-file").click(); });
+      $("composer-vid-file").addEventListener("change", function (e) {
+        var file = e.target.files[0]; if (!file) return;
+        if (file.size > 50 * 1024 * 1024) { toast("الفيديو يتجاوز 50MB", "err"); e.target.value = ""; return; }
+        toast("جاري تحميل الفيديو...", "ok");
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          feedPendingVideoB64 = ev.target.result;
+          var prev = $("composer-img-preview");
+          prev.innerHTML = '<video src="' + feedPendingVideoB64 + '" style="max-height:120px;border-radius:8px;display:block;" controls></video><button class="img-remove-btn" title="إزالة">✕</button>';
+          prev.querySelector("button").addEventListener("click", function () {
+            feedPendingVideoB64 = null; prev.innerHTML = ""; hide(prev);
+            $("composer-submit").disabled = !$("composer-text").value.trim();
+          });
+          show(prev); $("composer-submit").disabled = false;
+        };
+        reader.readAsDataURL(file);
+        e.target.value = "";
+      });
+
       setupComposerInline("composer-text", "composer-img-btn", "composer-img-file", "composer-img-preview", "composer-count", "composer-submit", function (text, img, reset) {
-        apiFetch("/api/twitter/tweet", { method: "POST", body: { content: text, imageBase64: img || null } }).then(function (tweet) {
-          reset(); toast("تم النشر!", "ok"); loadFeed();
-        }).catch(function () { toast("تعذّر النشر", "err"); reset(); });
+        var vid = feedPendingVideoB64;
+        apiFetch("/api/twitter/tweet", { method: "POST", body: { content: text, imageBase64: img || null, videoBase64: vid || null } }).then(function (tweet) {
+          feedPendingVideoB64 = null; reset(); toast("تم النشر!", "ok"); loadFeed();
+        }).catch(function () { toast("تعذّر النشر", "err"); feedPendingVideoB64 = null; reset(); });
       });
       // ── Compose modal ─────────────────────────────────────────────────────────
       function openComposeModal(replyToId, replyToText) {
@@ -1227,7 +1313,7 @@
         state.modalReplyToText = replyToText || null;
         $("modal-composer-text").value = ""; $("modal-char-count").textContent = "280";
         $("modal-composer-submit").disabled = true; $("modal-composer-img-preview").innerHTML = ""; hide("modal-composer-img-preview");
-        state.modalPendingImageB64 = null;
+        state.modalPendingImageB64 = null; state.modalPendingVideoB64 = null;
         if (replyToId && replyToText) {
           $("modal-reply-preview").textContent = "رداً على: " + replyToText + (replyToText.length >= 60 ? "..." : "");
           show("modal-reply-preview");
@@ -1265,13 +1351,34 @@
         });
         e.target.value = "";
       });
+      $("modal-composer-vid-btn").addEventListener("click", function () { $("modal-composer-vid-file").click(); });
+      $("modal-composer-vid-file").addEventListener("change", function (e) {
+        var file = e.target.files[0]; if (!file) return;
+        if (file.size > 50 * 1024 * 1024) { toast("الفيديو يتجاوز 50MB", "err"); e.target.value = ""; return; }
+        toast("جاري تحميل الفيديو...", "ok");
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          state.modalPendingVideoB64 = ev.target.result;
+          var prev = $("modal-composer-img-preview");
+          prev.innerHTML = '<video src="' + state.modalPendingVideoB64 + '" style="max-height:120px;border-radius:8px;display:block;" controls></video><button class="img-remove-btn">✕</button>';
+          prev.querySelector("button").addEventListener("click", function () {
+            state.modalPendingVideoB64 = null; prev.innerHTML = ""; hide(prev);
+            $("modal-composer-submit").disabled = !$("modal-composer-text").value.trim();
+          });
+          show(prev); $("modal-composer-submit").disabled = false;
+        };
+        reader.readAsDataURL(file);
+        e.target.value = "";
+      });
+
       $("modal-composer-submit").addEventListener("click", function () {
-        var text = $("modal-composer-text").value.trim(), img = state.modalPendingImageB64;
-        if (!text && !img) return;
+        var text = $("modal-composer-text").value.trim(), img = state.modalPendingImageB64, vid = state.modalPendingVideoB64;
+        if (!text && !img && !vid) return;
         var btn = this; btn.disabled = true; btn.textContent = "...";
-        var body = { content: text, imageBase64: img || null };
+        var body = { content: text, imageBase64: img || null, videoBase64: vid || null };
         if (state.modalReplyToId) body.replyTo = state.modalReplyToId;
         apiFetch("/api/twitter/tweet", { method: "POST", body: body }).then(function (tweet) {
+          state.modalPendingVideoB64 = null;
           hide("modal-compose"); toast("تم النشر!", "ok");
           if (state.currentPage === "feed") loadFeed();
           else if (state.currentPage === "tweet") loadTweetDetail(state.viewingTweetId);

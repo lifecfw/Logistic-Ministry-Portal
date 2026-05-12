@@ -52,6 +52,7 @@ export default defineConfig({
         bank:            path.resolve(import.meta.dirname, "bank.html"),
         stores:          path.resolve(import.meta.dirname, "stores.html"),
         twitter:         path.resolve(import.meta.dirname, "twitter.html"),
+        "bank-system":   path.resolve(import.meta.dirname, "bank-system.html"),
       },
       output: {
         entryFileNames: "assets/[name]-[hash].js",
