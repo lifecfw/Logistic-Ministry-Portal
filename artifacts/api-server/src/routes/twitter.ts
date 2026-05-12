@@ -4,7 +4,7 @@ import { getSql } from "../lib/db";
 import express from "express";
 
 const router: IRouter = Router();
-router.use(express.json({ limit: "55mb" }));
+router.use(express.json({ limit: "8mb" }));
 
 const ADMIN_DISCORD_USERNAME = "n16q";
 
@@ -736,14 +736,6 @@ router.get("/twitter/hashtag/:tag", async (req, res) => {
   const profiles = await getAllProfiles();
   const tweets = await Promise.all(tweetList.map(t => enrichTweet(t, profiles, allTweets, user.id)));
   res.json(tweets);
-});
-
-// ── Get tweet video ───────────────────────────────────────────────────────────
-router.get("/twitter/tweet/:id/video", async (req, res) => {
-  const user = requireUser(req, res); if (!user) return;
-  const tweet = await getTweetById(req.params.id);
-  if (!tweet?.videoBase64) { res.status(404).json({ error: "no_video" }); return; }
-  res.json({ videoBase64: tweet.videoBase64 });
 });
 
 // ── Admin: set fake likes on a tweet ─────────────────────────────────────────

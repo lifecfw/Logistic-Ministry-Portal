@@ -59,7 +59,7 @@ const PROTECTED_HTML = new Set([
   "cars.html","gas.html","grocery.html","house-manage.html","house-map.html",
   "houses.html","messages.html","ministry.html","my-properties.html",
   "restaurants.html","social.html","stores.html","twitter.html","marketplace.html",
-  "gangs.html","bank-system.html",
+  "gangs.html",
   "app.js","shared.js","cars.js","gas-stations.js","houses.js","styles.css","admin.html",
 ]);
 
